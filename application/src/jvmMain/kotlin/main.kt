@@ -7,7 +7,7 @@ import cn.yurn.yutori.app.App
 fun main() = application {
     Window(
         title = "YutoriApplication",
-        state = rememberWindowState(WindowPlacement.Maximized),
+        state = rememberWindowState(WindowPlacement.Floating),
         onCloseRequest = ::exitApplication,
     ) {
         App()

@@ -35,8 +35,9 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenModel)
             implementation(libs.voyager.transitions)
-            implementation(libs.coil.core)
+            implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             implementation(libs.qdsfdhvh.image.loader)
             implementation(project(":yutori"))
@@ -60,6 +61,14 @@ kotlin {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("./ReleaseSigning.jks")
+            storePassword = "YutoriApplication"
+            keyAlias = "key0"
+            keyPassword = "YutoriApplication"
+        }
+    }
     namespace = "cn.yurn.yutori.app"
     compileSdk = 34
 
@@ -67,13 +76,18 @@ android {
         minSdk = 26
         targetSdk = 34
 
-        applicationId = "cn.yurn.yutori.app.androidApp"
+        applicationId = "cn.yurn.yutori.app"
         versionCode = 1
         versionName = "1.0.0"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+    buildTypes {
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+        }
     }
 }
 
@@ -83,7 +97,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "cn.yurn.yutori.app.desktopApp"
+            packageName = "cn.yurn.yutori.app"
             packageVersion = "1.0.0"
         }
     }

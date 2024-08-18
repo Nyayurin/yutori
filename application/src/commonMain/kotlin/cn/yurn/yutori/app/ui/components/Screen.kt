@@ -2,10 +2,6 @@ package cn.yurn.yutori.app.ui.components
 
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.rememberTransformableState
-import androidx.compose.foundation.gestures.transformable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,37 +19,25 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import cafe.adriel.voyager.navigator.internal.BackHandler
 import cn.yurn.yutori.Adapter
 import cn.yurn.yutori.app.Chat
+import cn.yurn.yutori.app.ConnectScreenModel
 import cn.yurn.yutori.app.MainViewModel
 import cn.yurn.yutori.app.ScreenSize
 import cn.yurn.yutori.app.onMessageCreated
-import cn.yurn.yutori.message.element.Image
 import cn.yurn.yutori.module.adapter.satori.Satori
 import cn.yurn.yutori.satori
-import coil3.ImageLoader
-import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -64,15 +48,9 @@ object ConnectScreen : Screen {
     override fun Content() {
         val scope = remember { GlobalScope }
         val viewModel = viewModel<MainViewModel>()
-        val (width, height) = viewModel.screen.size
+        val (width, _) = viewModel.screen.size
         val navigator = LocalNavigator.currentOrThrow
-        var host by remember { mutableStateOf("") }
-        var port by remember { mutableIntStateOf(5500) }
-        var path by remember { mutableStateOf("") }
-        var token by remember { mutableStateOf("") }
-        var platform by remember { mutableStateOf("") }
-        var selfId by remember { mutableStateOf("") }
-        var requestChannels by remember { mutableStateOf(true) }
+        val screenModel = rememberScreenModel { ConnectScreenModel() }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
@@ -100,30 +78,30 @@ object ConnectScreen : Screen {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
-                    value = host,
-                    onValueChange = { host = it },
+                    value = screenModel.host,
+                    onValueChange = { screenModel.host = it },
                     singleLine = true,
                     label = { Text(text = "Host") },
                     modifier = Modifier.weight(0.75F)
                 )
                 TextField(
-                    value = port.toString(),
-                    onValueChange = { port = it.toInt() },
+                    value = screenModel.port.toString(),
+                    onValueChange = { screenModel.port = it.toInt() },
                     singleLine = true,
                     label = { Text(text = "port") },
                     modifier = Modifier.weight(0.25F)
                 )
             }
             TextField(
-                value = path,
-                onValueChange = { path = it },
+                value = screenModel.path,
+                onValueChange = { screenModel.path = it },
                 singleLine = true,
                 label = { Text(text = "path") },
                 modifier = Modifier.fillMaxWidth()
             )
             TextField(
-                value = token,
-                onValueChange = { token = it },
+                value = screenModel.token,
+                onValueChange = { screenModel.token = it },
                 singleLine = true,
                 label = { Text(text = "token") },
                 modifier = Modifier.fillMaxWidth()
@@ -133,15 +111,15 @@ object ConnectScreen : Screen {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
-                    value = platform,
-                    onValueChange = { platform = it },
+                    value = screenModel.platform,
+                    onValueChange = { screenModel.platform = it },
                     singleLine = true,
                     label = { Text(text = "platform") },
                     modifier = Modifier.weight(0.5F)
                 )
                 TextField(
-                    value = selfId,
-                    onValueChange = { selfId = it },
+                    value = screenModel.selfId,
+                    onValueChange = { screenModel.selfId = it },
                     singleLine = true,
                     label = { Text(text = "self_id") },
                     modifier = Modifier.weight(0.5F)
@@ -157,8 +135,8 @@ object ConnectScreen : Screen {
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Switch(
-                    checked = requestChannels,
-                    onCheckedChange = { requestChannels = it }
+                    checked = screenModel.requestChannels,
+                    onCheckedChange = { screenModel.requestChannels = it }
                 )
             }
             Button(
@@ -167,18 +145,18 @@ object ConnectScreen : Screen {
                         viewModel.satori?.stop()
                         viewModel.satori = satori {
                             install(Adapter.Satori) {
-                                this.host = host
-                                this.port = port
-                                this.path = path
-                                this.token = token
+                                this.host = screenModel.host
+                                this.port = screenModel.port
+                                this.path = screenModel.path
+                                this.token = screenModel.token
                                 onConnect { _, service, satori ->
                                     cn.yurn.yutori.app.onConnect(
                                         viewModel,
                                         service,
                                         satori,
-                                        platform,
-                                        selfId,
-                                        requestChannels
+                                        screenModel.platform,
+                                        screenModel.selfId,
+                                        screenModel.requestChannels
                                     )
                                 }
                             }
@@ -210,7 +188,7 @@ object HomeScreen : Screen {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
         val viewModel = viewModel<MainViewModel>()
-        val (width, height) = viewModel.screen.size
+        val (width, _) = viewModel.screen.size
         val chats = viewModel.chats
         when (width) {
             ScreenSize.Compact -> {
@@ -219,7 +197,6 @@ object HomeScreen : Screen {
                     onClick = { chat ->
                         chats[chats.indexOf(chat)] = chat.copy(unread = false)
                         navigator.push(ChattingScreen(chat) {
-                            viewModel.chats[viewModel.chats.indexOf(chat)] = chat.copy(unread = false)
                             navigator.pop()
                         })
                     }
@@ -243,11 +220,6 @@ object HomeScreen : Screen {
                     Box(modifier = Modifier.weight(0.7F)) {
                         if (viewModel.chatting != null) {
                             ChattingScreen(viewModel.chatting!!) {
-                                val chat = viewModel.chats.find { it.id == viewModel.chatting!!.id }
-                                if (chat != null) {
-                                    viewModel.chats[viewModel.chats.indexOf(chat)] =
-                                        chat.copy(unread = false)
-                                }
                                 viewModel.chatting = null
                             }.Content()
                         }
@@ -262,19 +234,10 @@ class ChattingScreen(
     private val chat: Chat,
     private val onBack: () -> Unit = {}
 ) : Screen {
-    @OptIn(InternalVoyagerApi::class)
     @Composable
     override fun Content() {
         val scope = rememberCoroutineScope()
         val scrollState = rememberLazyListState()
-        var image by remember { mutableStateOf<Image?>(null) }
-        var scale by remember { mutableFloatStateOf(1F) }
-        var offset by remember { mutableStateOf(Offset.Zero) }
-        val state = rememberTransformableState { zoomChange, panChange, _ ->
-            scale *= zoomChange
-            offset += panChange
-        }
-        val navigator = LocalNavigator.currentOrThrow
         val viewModel = viewModel<MainViewModel>()
 
         Scaffold(
@@ -310,57 +273,8 @@ class ChattingScreen(
                 Messages(
                     messages = viewModel.messages[chat.id]!!,
                     scrollState = scrollState,
-                    onImageClick = { element ->
-                        image = element
-                    },
                     modifier = Modifier.weight(1f)
                 )
-            }
-        }
-
-        val onDisableImageView = {
-            image = null
-            scale = 1F
-            offset = Offset.Zero
-        }
-
-        if (image != null) {
-            Surface(
-                color = Color(0F, 0F, 0F, 0.75F),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .transformable(state = state, lockRotationOnZoomPan = true)
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = onDisableImageView
-                    )
-            ) {
-                AsyncImage(
-                    model = image!!.src,
-                    contentDescription = null,
-                    imageLoader = ImageLoader(LocalPlatformContext.current),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .graphicsLayer(
-                            scaleX = scale,
-                            scaleY = scale,
-                            translationX = offset.x,
-                            translationY = offset.y
-                        )
-                )
-            }
-        }
-
-        BackHandler(true) {
-            if (image != null) {
-                onDisableImageView()
-            } else {
-                val chat = viewModel.chats.find { it.id == chat.id }
-                if (chat != null) {
-                    viewModel.chats[viewModel.chats.indexOf(chat)] = chat.copy(unread = false)
-                }
-                navigator.pop()
             }
         }
     }

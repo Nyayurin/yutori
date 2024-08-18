@@ -1,17 +1,19 @@
 package cn.yurn.yutori.app.ui.components
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -20,6 +22,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cn.yurn.yutori.app.MainViewModel
@@ -56,7 +59,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import coil3.size.Size
+import kotlinx.coroutines.launch
 import kotlin.math.min
 import kotlin.math.roundToInt
 
@@ -101,54 +104,42 @@ fun HrefElement(element: Href, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ImageElement(element: Image, onClick: (Image) -> Unit, modifier: Modifier = Modifier) {
-    val constWidth = 600
-    val constHeight = 720
+fun ImageElement(element: Image, modifier: Modifier = Modifier) {
     val viewModel = viewModel<MainViewModel>()
-    val screenWidth = LocalDensity.current.run { viewModel.screen.width.toPx() }
-    val screenHeight = LocalDensity.current.run { viewModel.screen.height.toPx() }
-    val maxWidth = ((screenWidth / 1080F) * constWidth).roundToInt()
-    val maxHeight = ((screenHeight / 1920F) * constHeight).roundToInt()
-    AsyncImage(
-        model = ImageRequest.Builder(LocalPlatformContext.current)
-            .data(element.src)
-            /*.transformations(object : Transformation {
-                override val cacheKey: String
-                    get() = javaClass.name
-
-                override suspend fun transform(input: Bitmap, size: Size): Bitmap {
-                    val radio = min(
-                        maxWidth / input.width.toDouble(),
-                        maxHeight / input.height.toDouble()
-                    )
-                    val width = (radio * input.width).roundToInt()
-                    val height = (radio * input.height).roundToInt()
-                    val output = createBitmap(width, height, input.config)
-                    output.applyCanvas {
-                        drawBitmap(
-                            input,
-                            null,
-                            Rect(0, 0, width, height),
-                            Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-                        )
-                    }
-                    return output
-                }
-            })*/
-            .crossfade(true)
-            .build(),
-        contentDescription = null,
-        imageLoader = ImageLoader(LocalPlatformContext.current),
-        contentScale = ContentScale.Crop,
-
-        modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = { onClick(element) }
+    val localDensity = LocalDensity.current
+    val screenWidth = localDensity.run { viewModel.screen.width.toPx() }
+    val screenHeight = localDensity.run { viewModel.screen.height.toPx() }
+    val context = LocalPlatformContext.current
+    var size by remember { mutableStateOf<DpSize?>(null) }
+    val scope = rememberCoroutineScope()
+    scope.launch {
+        ImageLoader(context).execute(
+            ImageRequest.Builder(context)
+                .data(element.src)
+                .build()
+        ).image?.let { image ->
+            val constWidth = 600
+            val constHeight = 720
+            val maxWidth = ((screenWidth / 1080F) * constWidth).roundToInt()
+            val maxHeight = ((screenHeight / 1920F) * constHeight).roundToInt()
+            val ratio = min(maxWidth / image.width.toDouble(), maxHeight / image.height.toDouble())
+            size = DpSize(
+                localDensity.run { (ratio * image.width).roundToInt().toDp() },
+                localDensity.run { (ratio * image.height).roundToInt().toDp() }
             )
-    )
+        }
+    }
+    if (size != null) {
+        AsyncImage(
+            model = ImageRequest.Builder(context)
+                .data(element.src)
+                .crossfade(true)
+                .build(),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = modifier.clip(RoundedCornerShape(8.dp)).size(size!!)
+        )
+    }
 }
 
 @Composable
@@ -381,7 +372,6 @@ fun ButtonElement(element: Button, modifier: Modifier = Modifier) {
 @Composable
 fun UnsupportedElement(
     element: MessageElement,
-    onImageClick: (Image) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (element is NodeMessageElement) {
@@ -392,7 +382,7 @@ fun UnsupportedElement(
                     is At -> AtElement(child)
                     is Sharp -> SharpElement(child)
                     is Href -> HrefElement(child)
-                    is Image -> ImageElement(child, onImageClick)
+                    is Image -> ImageElement(child)
                     is Audio -> AudioElement(child)
                     is Video -> VideoElement(child)
                     is File -> FileElement(child)
@@ -414,7 +404,7 @@ fun UnsupportedElement(
                     is Quote -> QuoteElement(child)
                     is Author -> AuthorElement(child)
                     is Button -> ButtonElement(child)
-                    else -> UnsupportedElement(child, onImageClick)
+                    else -> UnsupportedElement(child)
                 }
             }
             return

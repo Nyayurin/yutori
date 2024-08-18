@@ -12,5 +12,4 @@ captures
 local.properties
 xcuserdata/
 Pods/
-*.jks
 *yarn.lock

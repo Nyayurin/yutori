@@ -137,7 +137,6 @@ fun Messages(
     messages: List<Message>,
     scrollState: LazyListState,
     modifier: Modifier = Modifier,
-    onImageClick: (Image) -> Unit = { }
 ) {
     LazyColumn(
         reverseLayout = true,
@@ -154,7 +153,7 @@ fun Messages(
             }.reversed(),
             key = { message -> message.id }
         ) { message ->
-            Message(message = message, onImageClick = onImageClick)
+            Message(message = message)
         }
     }
 }
@@ -287,7 +286,7 @@ private fun BoxScope.UserInputTextField(
 }
 
 @Composable
-fun Message(message: Message, onImageClick: (Image) -> Unit = { }) {
+fun Message(message: Message) {
     val viewModel = viewModel<MainViewModel>()
     Row(modifier = Modifier.padding(top = 8.dp)) {
         val imageLoader = ImageLoader(LocalPlatformContext.current)
@@ -295,7 +294,6 @@ fun Message(message: Message, onImageClick: (Image) -> Unit = { }) {
             AuthorAndTextMessage(
                 message = message,
                 isUserMe = true,
-                onImageClick = onImageClick,
                 modifier = Modifier
                     .padding(start = 64.dp)
                     .weight(1f)
@@ -328,7 +326,6 @@ fun Message(message: Message, onImageClick: (Image) -> Unit = { }) {
             AuthorAndTextMessage(
                 message = message,
                 isUserMe = false,
-                onImageClick = onImageClick,
                 modifier = Modifier
                     .padding(end = 64.dp)
                     .weight(1f)
@@ -342,8 +339,7 @@ fun Message(message: Message, onImageClick: (Image) -> Unit = { }) {
 fun AuthorAndTextMessage(
     message: Message,
     isUserMe: Boolean,
-    modifier: Modifier = Modifier,
-    onImageClick: (Image) -> Unit = { }
+    modifier: Modifier = Modifier
 ) {
     val viewModel = viewModel<MainViewModel>()
     Column(
@@ -358,7 +354,7 @@ fun AuthorAndTextMessage(
             modifier = Modifier
                 .paddingFrom(LastBaseline, after = 8.dp)
         )
-        ClickableMessage(message, isUserMe, onImageClick)
+        ClickableMessage(message, isUserMe)
         Spacer(Modifier.height(8.dp))
     }
 }
@@ -367,11 +363,7 @@ private val ChatBubbleShape = RoundedCornerShape(4.dp, 20.dp, 20.dp, 20.dp)
 private val SelfChatBubbleShape = RoundedCornerShape(20.dp, 4.dp, 20.dp, 20.dp)
 
 @Composable
-fun ClickableMessage(
-    message: Message,
-    isUserMe: Boolean,
-    onImageClick: (Image) -> Unit = { }
-) {
+fun ClickableMessage(message: Message, isUserMe: Boolean) {
     val viewModel = viewModel<MainViewModel>()
     val messages = mutableListOf<MutableList<MessageElement>>(mutableListOf())
     val elements = message.content
@@ -507,11 +499,11 @@ fun ClickableMessage(
                         if (column.isEmpty()) {
                             BrElement()
                         } else {
-                            SelectElement(column[0], onImageClick)
+                            SelectElement(column[0])
                         }
                     } else {
                         Row {
-                            for (element in column) SelectElement(element, onImageClick)
+                            for (element in column) SelectElement(element)
                         }
                     }
                 }
@@ -521,13 +513,13 @@ fun ClickableMessage(
 }
 
 @Composable
-private fun SelectElement(element: MessageElement, onImageClick: (Image) -> Unit = { }) {
+private fun SelectElement(element: MessageElement) {
     when (element) {
         is cn.yurn.yutori.message.element.Text -> TextElement(element)
         is At -> AtElement(element)
         is Sharp -> SharpElement(element)
         is Href -> HrefElement(element)
-        is Image -> ImageElement(element, onImageClick)
+        is Image -> ImageElement(element)
         is Audio -> AudioElement(element)
         is Video -> VideoElement(element)
         is File -> FileElement(element)
@@ -549,6 +541,6 @@ private fun SelectElement(element: MessageElement, onImageClick: (Image) -> Unit
         is Quote -> QuoteElement(element)
         is Author -> AuthorElement(element)
         is Button -> ButtonElement(element)
-        else -> UnsupportedElement(element, onImageClick)
+        else -> UnsupportedElement(element)
     }
 }

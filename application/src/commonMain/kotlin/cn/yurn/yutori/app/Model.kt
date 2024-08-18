@@ -2,12 +2,14 @@ package cn.yurn.yutori.app
 
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import cafe.adriel.voyager.core.model.ScreenModel
 import cn.yurn.yutori.Message
 import cn.yurn.yutori.RootActions
 import cn.yurn.yutori.Satori
@@ -22,6 +24,16 @@ class MainViewModel : ViewModel() {
     val messages: MutableMap<String, MutableList<Message>> = mutableMapOf()
     val chats: MutableList<Chat> = mutableStateListOf()
     var screen: Screen by mutableStateOf(Screen(0.dp, 0.dp))
+}
+
+class ConnectScreenModel : ScreenModel {
+    var host by mutableStateOf("")
+    var port by mutableIntStateOf(5500)
+    var path by mutableStateOf("")
+    var token by mutableStateOf("")
+    var platform by mutableStateOf("")
+    var selfId by mutableStateOf("")
+    var requestChannels by mutableStateOf(true)
 }
 
 fun BoxWithConstraintsScope.updateViewModel(viewModel: MainViewModel) {

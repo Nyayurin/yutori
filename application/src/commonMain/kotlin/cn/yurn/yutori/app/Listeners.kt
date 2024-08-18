@@ -81,8 +81,7 @@ fun Context<MessageEvent>.onMessageCreated(viewModel: MainViewModel) {
         key = event.channel.id,
         defaultValue = { mutableStateListOf() }
     )
-    if (list.find {
-        it.id == event.message.id } != null) return
+    if (list.find { it.id == event.message.id } != null) return
     list += event.message.copy(
         channel = event.channel,
         guild = event.guild,
@@ -109,7 +108,7 @@ fun Context<MessageEvent>.onMessageCreated(viewModel: MainViewModel) {
             viewModel.chats[viewModel.chats.indexOf(chat)] = chat.copy(
                 content = content,
                 updateTime = event.timestamp.toLong(),
-                unread = event.user.id != event.self_id
+                unread = event.channel.id != viewModel.chatting?.id && event.user.id != event.self_id
             )
         }
     }
