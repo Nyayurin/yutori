@@ -24,7 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
+import cafe.adriel.voyager.jetpack.navigatorViewModel
 import cn.yurn.yutori.app.MainViewModel
 import cn.yurn.yutori.decode
 import cn.yurn.yutori.message.element.At
@@ -103,9 +104,10 @@ fun HrefElement(element: Href, modifier: Modifier = Modifier) {
     )
 }
 
+@OptIn(ExperimentalVoyagerApi::class)
 @Composable
 fun ImageElement(element: Image, modifier: Modifier = Modifier) {
-    val viewModel = viewModel<MainViewModel>()
+    val viewModel = navigatorViewModel<MainViewModel>()
     val localDensity = LocalDensity.current
     val screenWidth = localDensity.run { viewModel.screen.width.toPx() }
     val screenHeight = localDensity.run { viewModel.screen.height.toPx() }

@@ -33,23 +33,25 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.lifecycle.viewmodel.compose)
+            implementation(libs.lifecycle.viewModel.compose)
             implementation(libs.voyager.navigator)
+            implementation(libs.voyager.lifecycle.kmp)
             implementation(libs.voyager.screenModel)
             implementation(libs.voyager.transitions)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
-            implementation(libs.qdsfdhvh.image.loader)
             implementation(project(":yutori"))
         }
 
         androidMain.dependencies {
             implementation(compose.uiTooling)
             implementation(libs.androidx.activityCompose)
+            implementation(libs.kotlinx.coroutines.android)
         }
 
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
         }
 
         jsMain.dependencies {

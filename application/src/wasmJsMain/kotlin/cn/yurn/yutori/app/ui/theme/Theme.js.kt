@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.platform.Font
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cn.yurn.yutori.app.MainViewModel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.getFontResourceBytes
@@ -22,14 +21,14 @@ import yutori.application.generated.resources.MiSans_Regular
 import yutori.application.generated.resources.Res
 
 @Composable
-actual fun platformColorScheme(): ColorScheme {
-    val viewModel = viewModel<MainViewModel>()
+actual fun platformColorScheme(viewModel: MainViewModel): ColorScheme {
     return when {
         viewModel.darkMode -> darkScheme
         else -> lightScheme
     }
 }
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 actual fun platformTypography(): Typography {
     val defaultTypography = MaterialTheme.typography

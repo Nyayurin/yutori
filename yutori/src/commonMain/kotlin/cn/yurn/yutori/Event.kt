@@ -106,7 +106,7 @@ object GuildEvents {
     const val Updated = "guild-updated"
     const val Removed = "guild-removed"
     const val Request = "guild-request"
-    val Types = arrayOf(Added, Updated, Removed, Request)
+    val Types = setOf(Added, Updated, Removed, Request)
 }
 
 /**
@@ -122,7 +122,7 @@ object GuildMemberEvents {
     const val Updated = "guild-member-updated"
     const val Removed = "guild-member-removed"
     const val Request = "guild-member-request"
-    val Types = arrayOf(Added, Updated, Removed, Request)
+    val Types = setOf(Added, Updated, Removed, Request)
 }
 
 /**
@@ -137,7 +137,7 @@ object GuildRoleEvents {
     const val Created = "guild-role-created"
     const val Updated = "guild-role-updated"
     const val Deleted = "guild-role-deleted"
-    val Types = arrayOf(Created, Updated, Deleted)
+    val Types = setOf(Created, Updated, Deleted)
 }
 
 /**
@@ -151,7 +151,7 @@ class GuildRoleEvent : SigningEvent(), GuildNotNullEvent, RoleNotNullEvent
 object InteractionEvents {
     const val Button = "interaction/button"
     const val Command = "interaction/command"
-    val Types = arrayOf(Button, Command)
+    val Types = setOf(Button, Command)
 }
 
 /**
@@ -171,7 +171,7 @@ object LoginEvents {
     const val Added = "login-added"
     const val Removed = "login-removed"
     const val Updated = "login-updated"
-    val Types = arrayOf(Added, Removed, Updated)
+    val Types = setOf(Added, Removed, Updated)
 }
 
 /**
@@ -186,7 +186,7 @@ object MessageEvents {
     const val Created = "message-created"
     const val Updated = "message-updated"
     const val Deleted = "message-deleted"
-    val Types = arrayOf(Created, Updated, Deleted)
+    val Types = setOf(Created, Updated, Deleted)
 }
 
 /**
@@ -200,7 +200,7 @@ class MessageEvent : SigningEvent(), ChannelNotNullEvent, MessageNotNullEvent, U
 object ReactionEvents {
     const val Added = "reaction-added"
     const val Removed = "reaction-removed"
-    val Types = arrayOf(Added, Removed)
+    val Types = setOf(Added, Removed)
 }
 
 /**
@@ -213,7 +213,7 @@ class ReactionEvent : SigningEvent()
  */
 object UserEvents {
     const val Friend_Request = "friend-request"
-    val Types = arrayOf(Friend_Request)
+    val Types = setOf(Friend_Request)
 }
 
 /**

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -19,15 +20,16 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewModelScope
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.jetpack.navigatorViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cn.yurn.yutori.Adapter
@@ -38,16 +40,13 @@ import cn.yurn.yutori.app.ScreenSize
 import cn.yurn.yutori.app.onMessageCreated
 import cn.yurn.yutori.module.adapter.satori.Satori
 import cn.yurn.yutori.satori
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 object ConnectScreen : Screen {
-    @OptIn(DelicateCoroutinesApi::class)
+    @OptIn(ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
-        val scope = remember { GlobalScope }
-        val viewModel = viewModel<MainViewModel>()
+        val viewModel = navigatorViewModel<MainViewModel>()
         val (width, _) = viewModel.screen.size
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel { ConnectScreenModel() }
@@ -56,6 +55,7 @@ object ConnectScreen : Screen {
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
+                .safeContentPadding()
                 .padding(
                     horizontal = animateDpAsState(
                         when (width) {
@@ -70,7 +70,6 @@ object ConnectScreen : Screen {
         ) {
             Text(
                 text = "Yutori App",
-                color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleLarge
             )
             Row(
@@ -130,10 +129,7 @@ object ConnectScreen : Screen {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "Request channels",
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                Text(text = "Request channels")
                 Switch(
                     checked = screenModel.requestChannels,
                     onCheckedChange = { screenModel.requestChannels = it }
@@ -141,7 +137,7 @@ object ConnectScreen : Screen {
             }
             Button(
                 onClick = {
-                    scope.launch {
+                    viewModel.viewModelScope.launch {
                         viewModel.satori?.stop()
                         viewModel.satori = satori {
                             install(Adapter.Satori) {
@@ -162,7 +158,7 @@ object ConnectScreen : Screen {
                             }
                             client {
                                 listening {
-                                    message.created { this.onMessageCreated(viewModel) }
+                                    message.created { onMessageCreated(viewModel) }
                                 }
                             }
                         }
@@ -184,10 +180,11 @@ object ConnectScreen : Screen {
 }
 
 object HomeScreen : Screen {
+    @OptIn(ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val viewModel = viewModel<MainViewModel>()
+        val viewModel = navigatorViewModel<MainViewModel>()
         val (width, _) = viewModel.screen.size
         val chats = viewModel.chats
         when (width) {
@@ -199,12 +196,19 @@ object HomeScreen : Screen {
                         navigator.push(ChattingScreen(chat) {
                             navigator.pop()
                         })
-                    }
+                    },
+                    modifier = Modifier
+                        .safeContentPadding()
+                        .fillMaxSize()
                 )
             }
 
             ScreenSize.Medium, ScreenSize.Expanded -> {
-                Row(modifier = Modifier.fillMaxSize()) {
+                Row(
+                    modifier = Modifier
+                        .safeContentPadding()
+                        .fillMaxSize()
+                ) {
                     Surface(
                         color = MaterialTheme.colorScheme.surfaceBright,
                         modifier = Modifier.weight(0.3F)
@@ -234,11 +238,12 @@ class ChattingScreen(
     private val chat: Chat,
     private val onBack: () -> Unit = {}
 ) : Screen {
+    @OptIn(ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
         val scope = rememberCoroutineScope()
         val scrollState = rememberLazyListState()
-        val viewModel = viewModel<MainViewModel>()
+        val viewModel = navigatorViewModel<MainViewModel>()
 
         Scaffold(
             topBar = {

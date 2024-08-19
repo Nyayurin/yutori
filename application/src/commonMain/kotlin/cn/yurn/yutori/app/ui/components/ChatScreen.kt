@@ -54,7 +54,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
+import cafe.adriel.voyager.jetpack.navigatorViewModel
 import cn.yurn.yutori.Message
 import cn.yurn.yutori.app.MainViewModel
 import cn.yurn.yutori.message.element.At
@@ -285,9 +286,10 @@ private fun BoxScope.UserInputTextField(
     }
 }
 
+@OptIn(ExperimentalVoyagerApi::class)
 @Composable
 fun Message(message: Message) {
-    val viewModel = viewModel<MainViewModel>()
+    val viewModel = navigatorViewModel<MainViewModel>()
     Row(modifier = Modifier.padding(top = 8.dp)) {
         val imageLoader = ImageLoader(LocalPlatformContext.current)
         if (message.user!!.id == viewModel.self!!.id.substring("private:".length)) {
@@ -335,13 +337,14 @@ fun Message(message: Message) {
 }
 
 
+@OptIn(ExperimentalVoyagerApi::class)
 @Composable
 fun AuthorAndTextMessage(
     message: Message,
     isUserMe: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val viewModel = viewModel<MainViewModel>()
+    val viewModel = navigatorViewModel<MainViewModel>()
     Column(
         horizontalAlignment = if (isUserMe) Alignment.End else Alignment.Start,
         modifier = modifier
@@ -362,9 +365,10 @@ fun AuthorAndTextMessage(
 private val ChatBubbleShape = RoundedCornerShape(4.dp, 20.dp, 20.dp, 20.dp)
 private val SelfChatBubbleShape = RoundedCornerShape(20.dp, 4.dp, 20.dp, 20.dp)
 
+@OptIn(ExperimentalVoyagerApi::class)
 @Composable
 fun ClickableMessage(message: Message, isUserMe: Boolean) {
-    val viewModel = viewModel<MainViewModel>()
+    val viewModel = navigatorViewModel<MainViewModel>()
     val messages = mutableListOf<MutableList<MessageElement>>(mutableListOf())
     val elements = message.content
         .replace("\r\n", "<br>")

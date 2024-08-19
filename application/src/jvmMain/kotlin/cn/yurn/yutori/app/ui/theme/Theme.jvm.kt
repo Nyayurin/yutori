@@ -10,15 +10,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.font.FontFamily
-import androidx.lifecycle.viewmodel.compose.viewModel
 import cn.yurn.yutori.app.MainViewModel
 import org.jetbrains.compose.resources.Font
 import yutori.application.generated.resources.MiSans_Regular
 import yutori.application.generated.resources.Res
 
 @Composable
-actual fun platformColorScheme(): ColorScheme {
-    val viewModel = viewModel<MainViewModel>()
+actual fun platformColorScheme(viewModel: MainViewModel): ColorScheme {
     return when {
         viewModel.darkMode -> darkScheme
         else -> lightScheme
