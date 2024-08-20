@@ -98,9 +98,14 @@ compose.desktop {
         mainClass = "MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "cn.yurn.yutori.app"
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.AppImage)
+            packageName = "Yutori Application"
             packageVersion = "1.0.0"
+        }
+
+        buildTypes.release.proguard {
+            obfuscate = true
+            configurationFiles.from(project.file("compose-desktop.pro"))
         }
     }
 }
