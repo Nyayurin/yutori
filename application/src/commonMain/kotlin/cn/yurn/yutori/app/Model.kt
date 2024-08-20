@@ -21,6 +21,8 @@ class MainViewModel : ViewModel() {
     var actions: RootActions? by mutableStateOf(null)
     var self: Chat? by mutableStateOf(null)
     var chatting: Chat? by mutableStateOf(null)
+    var platform by mutableStateOf("")
+    var selfId by mutableStateOf("")
     val messages: MutableMap<String, MutableList<Message>> = mutableMapOf()
     val chats: MutableList<Chat> = mutableStateListOf()
     var screen: Screen by mutableStateOf(Screen(0.dp, 0.dp))
@@ -31,8 +33,6 @@ class ConnectScreenModel : ScreenModel {
     var port by mutableIntStateOf(5500)
     var path by mutableStateOf("")
     var token by mutableStateOf("")
-    var platform by mutableStateOf("")
-    var selfId by mutableStateOf("")
     var requestChannels by mutableStateOf(true)
 }
 

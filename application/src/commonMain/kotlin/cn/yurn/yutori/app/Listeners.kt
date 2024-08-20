@@ -3,6 +3,7 @@ package cn.yurn.yutori.app
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.toMutableStateList
 import cn.yurn.yutori.Context
+import cn.yurn.yutori.Login
 import cn.yurn.yutori.MessageEvent
 import cn.yurn.yutori.RootActions
 import cn.yurn.yutori.Satori
@@ -16,17 +17,18 @@ import cn.yurn.yutori.user
 
 suspend fun onConnect(
     viewModel: MainViewModel,
+    logins: List<Login>,
     service: SatoriActionService,
     satori: Satori,
-    platform: String,
-    selfId: String,
     requestChannels: Boolean
 ) {
     if (viewModel.ready) return
     viewModel.ready = true
+    viewModel.platform = logins[0].platform!!
+    viewModel.selfId = logins[0].self_id!!
     viewModel.actions = RootActions(
-        platform = platform,
-        self_id = selfId,
+        platform = viewModel.platform,
+        self_id = viewModel.selfId,
         service = service,
         satori = satori
     )
@@ -54,7 +56,7 @@ suspend fun onConnect(
                 name = user.nick ?: user.name.toString(),
                 content = ""
             )
-            if (user.id == selfId) {
+            if (user.id == viewModel.selfId) {
                 viewModel.self = temp.last()
             }
         }

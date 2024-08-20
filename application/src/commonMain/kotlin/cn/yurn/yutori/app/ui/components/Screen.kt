@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -20,9 +23,15 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
@@ -50,6 +59,11 @@ object ConnectScreen : Screen {
         val (width, _) = viewModel.screen.size
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel { ConnectScreenModel() }
+        var host by remember { mutableStateOf("") }
+        var port by remember { mutableStateOf("") }
+        var path by remember { mutableStateOf("") }
+        var token by remember { mutableStateOf("") }
+        var requestChannels by remember { mutableStateOf(true) }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
@@ -67,9 +81,10 @@ object ConnectScreen : Screen {
                     ).value
                 )
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = "Yutori App",
+                text = "Yutori Application",
                 style = MaterialTheme.typography.titleLarge
             )
             Row(
@@ -77,53 +92,37 @@ object ConnectScreen : Screen {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
-                    value = screenModel.host,
-                    onValueChange = { screenModel.host = it },
+                    value = host,
+                    onValueChange = { host = it },
                     singleLine = true,
                     label = { Text(text = "Host") },
                     modifier = Modifier.weight(0.75F)
                 )
                 TextField(
-                    value = screenModel.port.toString(),
-                    onValueChange = { screenModel.port = it.toInt() },
+                    value = port,
+                    onValueChange = { port = it },
                     singleLine = true,
-                    label = { Text(text = "port") },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                    label = { Text(text = "Port") },
                     modifier = Modifier.weight(0.25F)
                 )
             }
             TextField(
-                value = screenModel.path,
-                onValueChange = { screenModel.path = it },
+                value = path,
+                onValueChange = { path = it },
                 singleLine = true,
-                label = { Text(text = "path") },
+                label = { Text(text = "Path") },
                 modifier = Modifier.fillMaxWidth()
             )
             TextField(
-                value = screenModel.token,
-                onValueChange = { screenModel.token = it },
+                value = token,
+                onValueChange = { token = it },
                 singleLine = true,
-                label = { Text(text = "token") },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
+                visualTransformation = PasswordVisualTransformation(),
+                label = { Text(text = "Token") },
                 modifier = Modifier.fillMaxWidth()
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                TextField(
-                    value = screenModel.platform,
-                    onValueChange = { screenModel.platform = it },
-                    singleLine = true,
-                    label = { Text(text = "platform") },
-                    modifier = Modifier.weight(0.5F)
-                )
-                TextField(
-                    value = screenModel.selfId,
-                    onValueChange = { screenModel.selfId = it },
-                    singleLine = true,
-                    label = { Text(text = "self_id") },
-                    modifier = Modifier.weight(0.5F)
-                )
-            }
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -131,12 +130,17 @@ object ConnectScreen : Screen {
             ) {
                 Text(text = "Request channels")
                 Switch(
-                    checked = screenModel.requestChannels,
-                    onCheckedChange = { screenModel.requestChannels = it }
+                    checked = requestChannels,
+                    onCheckedChange = { requestChannels = it }
                 )
             }
             Button(
                 onClick = {
+                    screenModel.host = host
+                    screenModel.port = port.toInt()
+                    screenModel.path = path
+                    screenModel.token = token
+                    screenModel.requestChannels = requestChannels
                     viewModel.viewModelScope.launch {
                         viewModel.satori?.stop()
                         viewModel.satori = satori {
@@ -145,13 +149,12 @@ object ConnectScreen : Screen {
                                 this.port = screenModel.port
                                 this.path = screenModel.path
                                 this.token = screenModel.token
-                                onConnect { _, service, satori ->
+                                onConnect { logins, service, satori ->
                                     cn.yurn.yutori.app.onConnect(
                                         viewModel,
+                                        logins,
                                         service,
                                         satori,
-                                        screenModel.platform,
-                                        screenModel.selfId,
                                         screenModel.requestChannels
                                     )
                                 }

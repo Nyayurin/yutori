@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -292,7 +293,7 @@ fun Message(message: Message) {
     val viewModel = navigatorViewModel<MainViewModel>()
     Row(modifier = Modifier.padding(top = 8.dp)) {
         val imageLoader = ImageLoader(LocalPlatformContext.current)
-        if (message.user!!.id == viewModel.self!!.id.substring("private:".length)) {
+        if (message.user!!.id == viewModel.selfId) {
             AuthorAndTextMessage(
                 message = message,
                 isUserMe = true,
@@ -351,7 +352,7 @@ fun AuthorAndTextMessage(
     ) {
         Text(
             text = message.member?.nick ?: message.user?.nick ?: message.user?.name
-            ?: if (isUserMe) viewModel.self!!.name else
+            ?: if (isUserMe) viewModel.self?.name.toString() else
                 if (viewModel.chatting!!.id.startsWith("private:")) viewModel.chatting!!.name else "null",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
@@ -497,17 +498,19 @@ fun ClickableMessage(message: Message, isUserMe: Boolean) {
         shape = if (isUserMe) SelfChatBubbleShape else ChatBubbleShape
     ) {
         Surface(color = MaterialTheme.colorScheme.primary) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                for (column in messages) {
-                    if (column.size <= 1) {
-                        if (column.isEmpty()) {
-                            BrElement()
+            SelectionContainer {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    for (column in messages) {
+                        if (column.size <= 1) {
+                            if (column.isEmpty()) {
+                                BrElement()
+                            } else {
+                                SelectElement(column[0])
+                            }
                         } else {
-                            SelectElement(column[0])
-                        }
-                    } else {
-                        Row {
-                            for (element in column) SelectElement(element)
+                            Row {
+                                for (element in column) SelectElement(element)
+                            }
                         }
                     }
                 }
