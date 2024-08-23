@@ -27,6 +27,19 @@ kotlin {
     }
 
     sourceSets {
+        val clientMain by creating {
+            dependsOn(commonMain.get())
+        }
+
+        val webMain by creating {
+            dependsOn(commonMain.get())
+        }
+
+        androidMain.get().dependsOn(clientMain)
+        jvmMain.get().dependsOn(clientMain)
+        jsMain.get().dependsOn(webMain)
+        wasmJsMain.get().dependsOn(webMain)
+
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -43,6 +56,10 @@ kotlin {
             implementation(project(":yutori"))
         }
 
+        clientMain.dependencies {
+            implementation(libs.data.saver.core)
+        }
+
         androidMain.dependencies {
             implementation(compose.uiTooling)
             implementation(libs.androidx.activityCompose)
@@ -52,6 +69,9 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+        }
+
+        webMain.dependencies {
         }
 
         jsMain.dependencies {

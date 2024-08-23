@@ -1,5 +1,7 @@
 package cn.yurn.yutori.app.ui.components
 
+import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,16 +26,44 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
+import cafe.adriel.voyager.jetpack.navigatorViewModel
 import cn.yurn.yutori.app.Chat
+import cn.yurn.yutori.app.MainViewModel
+import cn.yurn.yutori.app.ScreenSize
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 
+@OptIn(ExperimentalVoyagerApi::class)
 @Composable
-fun ChatMenu(chats: List<Chat>, modifier: Modifier = Modifier.fillMaxSize(), onClick: (Chat) -> Unit = {}) {
+fun ChatMenu(
+    chats: List<Chat>,
+    modifier: Modifier = Modifier.fillMaxSize(),
+    onClick: (Chat) -> Unit = {}
+) {
+    val viewModel = navigatorViewModel<MainViewModel>()
     LazyColumn(
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(
+            animateDpAsState(
+                when (viewModel.screen.size.first) {
+                    ScreenSize.Compact -> 8.dp
+                    ScreenSize.Medium -> 16.dp
+                    ScreenSize.Expanded -> 32.dp
+                },
+                TweenSpec(600)
+            ).value
+        ),
+        verticalArrangement = Arrangement.spacedBy(
+            animateDpAsState(
+                when (viewModel.screen.size.first) {
+                    ScreenSize.Compact -> 8.dp
+                    ScreenSize.Medium -> 16.dp
+                    ScreenSize.Expanded -> 32.dp
+                },
+                TweenSpec(600)
+            ).value
+        ),
         modifier = modifier
     ) {
         items(

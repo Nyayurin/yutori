@@ -104,10 +104,10 @@ fun ChattingTopBar(
             .clip(RoundedCornerShape(bottomStart = 25.dp, bottomEnd = 25.dp))
             .shadow(8.dp),
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            navigationIconContentColor = MaterialTheme.colorScheme.primary,
-            titleContentColor = MaterialTheme.colorScheme.primary,
-            actionIconContentColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            navigationIconContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            actionIconContentColor = MaterialTheme.colorScheme.onSecondaryContainer
         ),
         title = {
             Text(
@@ -143,6 +143,8 @@ fun Messages(
     LazyColumn(
         reverseLayout = true,
         state = scrollState,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Bottom),
         modifier = modifier.fillMaxSize()
     ) {
         val now = Clock.System.now().toEpochMilliseconds()
@@ -177,7 +179,7 @@ fun UserInput(
 
     Surface(
         tonalElevation = 2.dp,
-        contentColor = MaterialTheme.colorScheme.secondary,
+        contentColor = MaterialTheme.colorScheme.secondaryContainer,
         modifier = Modifier
             .imePadding()
             .clip(RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp))
@@ -291,15 +293,19 @@ private fun BoxScope.UserInputTextField(
 @Composable
 fun Message(message: Message) {
     val viewModel = navigatorViewModel<MainViewModel>()
-    Row(modifier = Modifier.padding(top = 8.dp)) {
+    val isUserMe = message.user!!.id == viewModel.selfId
+    Row(
+        horizontalArrangement = when {
+            isUserMe -> Arrangement.End
+            else -> Arrangement.Start
+        },
+        modifier = Modifier.fillMaxWidth()
+    ) {
         val imageLoader = ImageLoader(LocalPlatformContext.current)
-        if (message.user!!.id == viewModel.selfId) {
+        if (isUserMe) {
             AuthorAndTextMessage(
                 message = message,
-                isUserMe = true,
-                modifier = Modifier
-                    .padding(start = 64.dp)
-                    .weight(1f)
+                isUserMe = true
             )
             AsyncImage(
                 model = message.user!!.avatar,
@@ -307,7 +313,7 @@ fun Message(message: Message) {
                 imageLoader = imageLoader,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .padding(start = 16.dp)
                     .size(50.dp)
                     .border(3.dp, MaterialTheme.colorScheme.surface, CircleShape)
                     .clip(CircleShape)
@@ -320,7 +326,7 @@ fun Message(message: Message) {
                 imageLoader = imageLoader,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .padding(end = 16.dp)
                     .size(50.dp)
                     .border(3.dp, MaterialTheme.colorScheme.surface, CircleShape)
                     .clip(CircleShape)
@@ -328,10 +334,7 @@ fun Message(message: Message) {
             )
             AuthorAndTextMessage(
                 message = message,
-                isUserMe = false,
-                modifier = Modifier
-                    .padding(end = 64.dp)
-                    .weight(1f)
+                isUserMe = false
             )
         }
     }
@@ -497,7 +500,7 @@ fun ClickableMessage(message: Message, isUserMe: Boolean) {
         elevation = CardDefaults.cardElevation(8.dp),
         shape = if (isUserMe) SelfChatBubbleShape else ChatBubbleShape
     ) {
-        Surface(color = MaterialTheme.colorScheme.primary) {
+        Surface(color = MaterialTheme.colorScheme.surfaceContainer) {
             SelectionContainer {
                 Column(modifier = Modifier.padding(16.dp)) {
                     for (column in messages) {

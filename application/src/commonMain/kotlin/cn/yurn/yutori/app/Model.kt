@@ -2,7 +2,6 @@ package cn.yurn.yutori.app
 
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -28,12 +27,12 @@ class MainViewModel : ViewModel() {
     var screen: Screen by mutableStateOf(Screen(0.dp, 0.dp))
 }
 
-class ConnectScreenModel : ScreenModel {
-    var host by mutableStateOf("")
-    var port by mutableIntStateOf(5500)
-    var path by mutableStateOf("")
-    var token by mutableStateOf("")
-    var requestChannels by mutableStateOf(true)
+expect class ConnectScreenModel() : ScreenModel {
+    var host: String
+    var port: Int
+    var path: String
+    var token: String
+    var requestChannels: Boolean
 }
 
 fun BoxWithConstraintsScope.updateViewModel(viewModel: MainViewModel) {

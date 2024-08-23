@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -59,17 +60,17 @@ object ConnectScreen : Screen {
         val (width, _) = viewModel.screen.size
         val navigator = LocalNavigator.currentOrThrow
         val screenModel = rememberScreenModel { ConnectScreenModel() }
-        var host by remember { mutableStateOf("") }
-        var port by remember { mutableStateOf("") }
-        var path by remember { mutableStateOf("") }
-        var token by remember { mutableStateOf("") }
-        var requestChannels by remember { mutableStateOf(true) }
+        var host by remember { mutableStateOf(screenModel.host) }
+        var port by remember { mutableStateOf(screenModel.port.toString()) }
+        var path by remember { mutableStateOf(screenModel.path) }
+        var token by remember { mutableStateOf(screenModel.token) }
+        var requestChannels by remember { mutableStateOf(screenModel.requestChannels) }
 
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .safeContentPadding()
+                .safeDrawingPadding()
                 .padding(
                     horizontal = animateDpAsState(
                         when (width) {
@@ -273,17 +274,11 @@ class ChattingScreen(
                 )
             }
         ) { paddingValues ->
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                Messages(
-                    messages = viewModel.messages[chat.id]!!,
-                    scrollState = scrollState,
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            Messages(
+                messages = viewModel.messages[chat.id]!!,
+                scrollState = scrollState,
+                modifier = Modifier.padding(paddingValues)
+            )
         }
     }
 }
