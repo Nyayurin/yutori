@@ -1,16 +1,19 @@
 package cn.yurn.yutori.app.ui.components
 
-import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -31,6 +34,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -74,40 +78,41 @@ object ConnectScreen : Screen {
                 .padding(
                     horizontal = animateDpAsState(
                         when (width) {
-                            ScreenSize.Compact -> 32.dp
-                            ScreenSize.Medium -> 64.dp
-                            ScreenSize.Expanded -> 128.dp
+                            ScreenSize.Compact -> 16.dp
+                            ScreenSize.Medium -> 32.dp
+                            ScreenSize.Expanded -> 64.dp
                         },
-                        TweenSpec(600)
+                        tween(600)
                     ).value
                 )
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(
-                text = "Yutori Application",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                TextField(
-                    value = host,
-                    onValueChange = { host = it },
-                    singleLine = true,
-                    label = { Text(text = "Host") },
-                    modifier = Modifier.weight(0.75F)
-                )
-                TextField(
-                    value = port,
-                    onValueChange = { port = it },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                    label = { Text(text = "Port") },
-                    modifier = Modifier.weight(0.25F)
+            AnimatedContent(width) {
+                Text(
+                    text = "Yutori Application",
+                    style = when (width) {
+                        ScreenSize.Compact -> MaterialTheme.typography.titleLarge
+                        ScreenSize.Medium -> MaterialTheme.typography.displaySmall
+                        ScreenSize.Expanded -> MaterialTheme.typography.displayLarge
+                    }
                 )
             }
+            TextField(
+                value = host,
+                onValueChange = { host = it },
+                singleLine = true,
+                label = { Text(text = "Host") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            TextField(
+                value = port,
+                onValueChange = { port = it },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                label = { Text(text = "Port") },
+                modifier = Modifier.fillMaxWidth()
+            )
             TextField(
                 value = path,
                 onValueChange = { path = it },
@@ -170,11 +175,12 @@ object ConnectScreen : Screen {
                     }
                     navigator.push(HomeScreen)
                 },
-                modifier = Modifier.imePadding()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .imePadding()
             ) {
                 Text(
                     text = "Connect",
-                    modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -191,46 +197,53 @@ object HomeScreen : Screen {
         val viewModel = navigatorViewModel<MainViewModel>()
         val (width, _) = viewModel.screen.size
         val chats = viewModel.chats
-        when (width) {
-            ScreenSize.Compact -> {
+        Row(
+            modifier = Modifier
+                .safeDrawingPadding()
+                .fillMaxSize()
+        ) {
+            Surface(
+                color = animateColorAsState(
+                    when (width) {
+                        ScreenSize.Compact -> Color.Unspecified
+                        else -> MaterialTheme.colorScheme.surfaceBright
+                    },
+                    tween(600)
+                ).value,
+                modifier = Modifier
+                    .fillMaxWidth(
+                        animateFloatAsState(
+                            when (width) {
+                                ScreenSize.Compact -> 1F
+                                else -> 0.3F
+                            },
+                            tween(600)
+                        ).value
+                    )
+                    .fillMaxHeight()
+            ) {
                 ChatMenu(
                     chats = chats,
                     onClick = { chat ->
                         chats[chats.indexOf(chat)] = chat.copy(unread = false)
-                        navigator.push(ChattingScreen(chat) {
-                            navigator.pop()
-                        })
-                    },
-                    modifier = Modifier
-                        .safeContentPadding()
-                        .fillMaxSize()
+                        when (width) {
+                            ScreenSize.Compact -> {
+                                navigator.push(ChattingScreen(chat) {
+                                    navigator.pop()
+                                })
+                            }
+
+                            else -> viewModel.chatting = chat
+                        }
+                    }
                 )
             }
-
-            ScreenSize.Medium, ScreenSize.Expanded -> {
-                Row(
-                    modifier = Modifier
-                        .safeContentPadding()
-                        .fillMaxSize()
-                ) {
-                    Surface(
-                        color = MaterialTheme.colorScheme.surfaceBright,
-                        modifier = Modifier.weight(0.3F)
-                    ) {
-                        ChatMenu(
-                            chats = chats,
-                            onClick = { chat ->
-                                chats[chats.indexOf(chat)] = chat.copy(unread = false)
-                                viewModel.chatting = chat
-                            }
-                        )
-                    }
-                    Box(modifier = Modifier.weight(0.7F)) {
-                        if (viewModel.chatting != null) {
-                            ChattingScreen(viewModel.chatting!!) {
-                                viewModel.chatting = null
-                            }.Content()
-                        }
+            if (width != ScreenSize.Compact) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    if (viewModel.chatting != null) {
+                        ChattingScreen(viewModel.chatting!!) {
+                            viewModel.chatting = null
+                        }.Content()
                     }
                 }
             }

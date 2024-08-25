@@ -1,7 +1,7 @@
 package cn.yurn.yutori.app.ui.components
 
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,20 +48,18 @@ fun ChatMenu(
             animateDpAsState(
                 when (viewModel.screen.size.first) {
                     ScreenSize.Compact -> 8.dp
-                    ScreenSize.Medium -> 16.dp
-                    ScreenSize.Expanded -> 32.dp
+                    else -> 16.dp
                 },
-                TweenSpec(600)
+                tween(600)
             ).value
         ),
         verticalArrangement = Arrangement.spacedBy(
             animateDpAsState(
                 when (viewModel.screen.size.first) {
                     ScreenSize.Compact -> 8.dp
-                    ScreenSize.Medium -> 16.dp
-                    ScreenSize.Expanded -> 32.dp
+                    else -> 16.dp
                 },
-                TweenSpec(600)
+                tween(600)
             ).value
         ),
         modifier = modifier

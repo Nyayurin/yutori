@@ -82,6 +82,7 @@ import cn.yurn.yutori.message.element.Strikethrough
 import cn.yurn.yutori.message.element.Strong
 import cn.yurn.yutori.message.element.Sub
 import cn.yurn.yutori.message.element.Sup
+import cn.yurn.yutori.message.element.Text
 import cn.yurn.yutori.message.element.Underline
 import cn.yurn.yutori.message.element.Video
 import cn.yurn.yutori.satori
@@ -293,19 +294,15 @@ private fun BoxScope.UserInputTextField(
 @Composable
 fun Message(message: Message) {
     val viewModel = navigatorViewModel<MainViewModel>()
-    val isUserMe = message.user!!.id == viewModel.selfId
-    Row(
-        horizontalArrangement = when {
-            isUserMe -> Arrangement.End
-            else -> Arrangement.Start
-        },
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    Row(modifier = Modifier.fillMaxWidth()) {
         val imageLoader = ImageLoader(LocalPlatformContext.current)
-        if (isUserMe) {
+        if (message.user!!.id == viewModel.selfId) {
             AuthorAndTextMessage(
                 message = message,
-                isUserMe = true
+                isUserMe = true,
+                modifier = Modifier
+                    .padding(start = 64.dp)
+                    .weight(1F)
             )
             AsyncImage(
                 model = message.user!!.avatar,
@@ -334,7 +331,10 @@ fun Message(message: Message) {
             )
             AuthorAndTextMessage(
                 message = message,
-                isUserMe = false
+                isUserMe = false,
+                modifier = Modifier
+                    .padding(end = 64.dp)
+                    .weight(1F)
             )
         }
     }
@@ -380,7 +380,7 @@ fun ClickableMessage(message: Message, isUserMe: Boolean) {
         .replace("\n", "<br>")
         .toElements(viewModel.satori ?: satori { })
     for ((index, element) in elements.withIndex()) when (element) {
-        is cn.yurn.yutori.message.element.Text -> messages.last() += element
+        is Text -> messages.last() += element
         is At -> messages.last() += element
         is Sharp -> messages.last() += element
         is Href -> messages.last() += element
@@ -506,7 +506,7 @@ fun ClickableMessage(message: Message, isUserMe: Boolean) {
                     for (column in messages) {
                         if (column.size <= 1) {
                             if (column.isEmpty()) {
-                                BrElement()
+                                BrMessageElementViewer.Content(Br())
                             } else {
                                 SelectElement(column[0])
                             }
@@ -525,32 +525,32 @@ fun ClickableMessage(message: Message, isUserMe: Boolean) {
 @Composable
 private fun SelectElement(element: MessageElement) {
     when (element) {
-        is cn.yurn.yutori.message.element.Text -> TextElement(element)
-        is At -> AtElement(element)
-        is Sharp -> SharpElement(element)
-        is Href -> HrefElement(element)
-        is Image -> ImageElement(element)
-        is Audio -> AudioElement(element)
-        is Video -> VideoElement(element)
-        is File -> FileElement(element)
-        is Bold -> BoldElement(element)
-        is Strong -> StrongElement(element)
-        is Idiomatic -> IdiomaticElement(element)
-        is Em -> EmElement(element)
-        is Underline -> UnderlineElement(element)
-        is Ins -> InsElement(element)
-        is Strikethrough -> StrikethroughElement(element)
-        is Delete -> DeleteElement(element)
-        is Spl -> SplElement(element)
-        is Code -> CodeElement(element)
-        is Sup -> SupElement(element)
-        is Sub -> SubElement(element)
-        is Br -> BrElement()
-        is Paragraph -> ParagraphElement(element)
-        is cn.yurn.yutori.message.element.Message -> MessageElement(element)
-        is Quote -> QuoteElement(element)
-        is Author -> AuthorElement(element)
-        is Button -> ButtonElement(element)
-        else -> UnsupportedElement(element)
+        is Text -> TextMessageElementViewer.Content(element)
+        is At -> AtMessageElementViewer.Content(element)
+        is Sharp -> SharpMessageElementViewer.Content(element)
+        is Href -> HrefMessageElementViewer.Content(element)
+        is Image -> ImageMessageElementViewer.Content(element)
+        is Audio -> AudioMessageElementViewer.Content(element)
+        is Video -> VideoMessageElementViewer.Content(element)
+        is File -> FileMessageElementViewer.Content(element)
+        is Bold -> BoldMessageElementViewer.Content(element)
+        is Strong -> StrongMessageElementViewer.Content(element)
+        is Idiomatic -> IdiomaticMessageElementViewer.Content(element)
+        is Em -> EmMessageElementViewer.Content(element)
+        is Underline -> UnderlineMessageElementViewer.Content(element)
+        is Ins -> InsMessageElementViewer.Content(element)
+        is Strikethrough -> StrikethroughMessageElementViewer.Content(element)
+        is Delete -> DeleteMessageElementViewer.Content(element)
+        is Spl -> SplMessageElementViewer.Content(element)
+        is Code -> CodeMessageElementViewer.Content(element)
+        is Sup -> SupMessageElementViewer.Content(element)
+        is Sub -> SubMessageElementViewer.Content(element)
+        is Br -> BrMessageElementViewer.Content(element)
+        is Paragraph -> ParagraphMessageElementViewer.Content(element)
+        is cn.yurn.yutori.message.element.Message -> MessageMessageElementViewer.Content(element)
+        is Quote -> QuoteMessageElementViewer.Content(element)
+        is Author -> AuthorMessageElementViewer.Content(element)
+        is Button -> ButtonMessageElementViewer.Content(element)
+        else -> UnsupportedMessageElementViewer.Content(element)
     }
 }
