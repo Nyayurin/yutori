@@ -235,6 +235,7 @@ object HomeScreen : Screen {
 
                             else -> viewModel.chatting = chat
                         }
+                        viewModel.update()
                     }
                 )
             }

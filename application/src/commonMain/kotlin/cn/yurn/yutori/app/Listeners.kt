@@ -121,6 +121,7 @@ suspend fun onConnect(
         val response = viewModel.actions!!.message.list(channel_id = chat.id)
         viewModel.messages[chat.id] = response.data.toMutableStateList()
     }
+    viewModel.update()
 }
 
 fun Context<MessageEvent>.onMessageCreated(viewModel: MainViewModel) {
@@ -207,4 +208,5 @@ fun Context<MessageEvent>.onMessageCreated(viewModel: MainViewModel) {
         }
     }
     viewModel.chats.sortByDescending { it.updateTime }
+    viewModel.update()
 }

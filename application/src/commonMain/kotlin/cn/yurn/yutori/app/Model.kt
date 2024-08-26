@@ -1,10 +1,6 @@
 package cn.yurn.yutori.app
 
 import androidx.compose.foundation.layout.BoxWithConstraintsScope
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -13,18 +9,20 @@ import cn.yurn.yutori.Message
 import cn.yurn.yutori.RootActions
 import cn.yurn.yutori.Satori
 
-class MainViewModel : ViewModel() {
-    var ready = false
-    var darkMode by mutableStateOf(false)
-    var satori: Satori? by mutableStateOf(null)
-    var actions: RootActions? by mutableStateOf(null)
-    var self: Chat? by mutableStateOf(null)
-    var chatting: Chat? by mutableStateOf(null)
-    var platform by mutableStateOf("")
-    var selfId by mutableStateOf("")
-    val messages: MutableMap<String, MutableList<Message>> = mutableMapOf()
-    val chats: MutableList<Chat> = mutableStateListOf()
-    var screen: Screen by mutableStateOf(Screen(0.dp, 0.dp))
+expect class MainViewModel() : ViewModel {
+    var ready: Boolean
+    var darkMode: Boolean
+    var satori: Satori?
+    var actions: RootActions?
+    var self: Chat?
+    var chatting: Chat?
+    var platform: String
+    var selfId: String
+    val messages: MutableMap<String, MutableList<Message>>
+    val chats: MutableList<Chat>
+    var screen: Screen
+
+    fun update()
 }
 
 expect class ConnectScreenModel() : ScreenModel {
