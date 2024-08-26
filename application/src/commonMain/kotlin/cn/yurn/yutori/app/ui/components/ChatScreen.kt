@@ -278,14 +278,16 @@ private fun BoxScope.UserInputTextField(
                 lastFocusState = state.isFocused
             },
         cursorBrush = SolidColor(LocalContentColor.current),
-        textStyle = LocalTextStyle.current.copy(color = LocalContentColor.current)
+        textStyle =  MaterialTheme.typography.bodyLarge.copy(
+            color = MaterialTheme.colorScheme.onSecondaryContainer
+        )
     )
 
-    val disableContentColor = MaterialTheme.colorScheme.onSurfaceVariant
     if (textFieldValue.text.isEmpty() && !focusState) {
         Text(
             text = "Message",
-            style = MaterialTheme.typography.bodyLarge.copy(color = disableContentColor)
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }
