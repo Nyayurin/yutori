@@ -9,8 +9,10 @@ import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import cafe.adriel.voyager.jetpack.navigatorViewModel
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.FadeTransition
+import cn.yurn.yutori.Satori
 import cn.yurn.yutori.app.ui.components.ConnectScreen
 import cn.yurn.yutori.app.ui.theme.YutoriAPPTheme
+import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalVoyagerApi::class)
 @Composable
@@ -28,3 +30,5 @@ fun App() {
         }
     }
 }
+
+expect fun platformSatoriAsync(scope: CoroutineScope, satori: Satori)

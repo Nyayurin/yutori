@@ -47,11 +47,11 @@ import cafe.adriel.voyager.jetpack.navigatorViewModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cn.yurn.yutori.Adapter
-import cn.yurn.yutori.app.Chat
 import cn.yurn.yutori.app.ConnectScreenModel
 import cn.yurn.yutori.app.MainViewModel
 import cn.yurn.yutori.app.ScreenSize
 import cn.yurn.yutori.app.onMessageCreated
+import cn.yurn.yutori.app.platformSatoriAsync
 import cn.yurn.yutori.module.adapter.satori.Satori
 import cn.yurn.yutori.satori
 import kotlinx.coroutines.launch
@@ -147,32 +147,30 @@ object ConnectScreen : Screen {
                     screenModel.path = path
                     screenModel.token = token
                     screenModel.requestChannels = requestChannels
-                    viewModel.viewModelScope.launch {
-                        viewModel.satori?.stop()
-                        viewModel.satori = satori {
-                            install(Adapter.Satori) {
-                                this.host = screenModel.host
-                                this.port = screenModel.port
-                                this.path = screenModel.path
-                                this.token = screenModel.token
-                                onConnect { logins, service, satori ->
-                                    cn.yurn.yutori.app.onConnect(
-                                        viewModel,
-                                        logins,
-                                        service,
-                                        satori,
-                                        screenModel.requestChannels
-                                    )
-                                }
-                            }
-                            client {
-                                listening {
-                                    message.created { onMessageCreated(viewModel) }
-                                }
+                    viewModel.satori?.stop()
+                    viewModel.satori = satori {
+                        install(Adapter.Satori) {
+                            this.host = screenModel.host
+                            this.port = screenModel.port
+                            this.path = screenModel.path
+                            this.token = screenModel.token
+                            onConnect { logins, service, satori ->
+                                cn.yurn.yutori.app.onConnect(
+                                    viewModel,
+                                    logins,
+                                    service,
+                                    satori,
+                                    screenModel.requestChannels
+                                )
                             }
                         }
-                        viewModel.satori!!.start()
+                        client {
+                            listening {
+                                message.created { onMessageCreated(viewModel) }
+                            }
+                        }
                     }
+                    platformSatoriAsync(viewModel.viewModelScope, viewModel.satori!!)
                     navigator.push(HomeScreen)
                 },
                 modifier = Modifier
@@ -226,14 +224,9 @@ object HomeScreen : Screen {
                     chats = chats,
                     onClick = { chat ->
                         chats[chats.indexOf(chat)] = chat.copy(unread = false)
-                        when (width) {
-                            ScreenSize.Compact -> {
-                                navigator.push(ChattingScreen(chat) {
-                                    navigator.pop()
-                                })
-                            }
-
-                            else -> viewModel.chatting = chat
+                        viewModel.chatting = chat
+                        if (width == ScreenSize.Compact) {
+                            navigator.push(ChattingScreen)
                         }
                         viewModel.update()
                     }
@@ -242,9 +235,7 @@ object HomeScreen : Screen {
             if (width != ScreenSize.Compact) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     if (viewModel.chatting != null) {
-                        ChattingScreen(viewModel.chatting!!) {
-                            viewModel.chatting = null
-                        }.Content()
+                        ChattingScreen.Content()
                     }
                 }
             }
@@ -252,22 +243,26 @@ object HomeScreen : Screen {
     }
 }
 
-class ChattingScreen(
-    private val chat: Chat,
-    private val onBack: () -> Unit = {}
-) : Screen {
+object ChattingScreen : Screen {
     @OptIn(ExperimentalVoyagerApi::class)
     @Composable
     override fun Content() {
         val scope = rememberCoroutineScope()
         val scrollState = rememberLazyListState()
         val viewModel = navigatorViewModel<MainViewModel>()
+        val (width, _) = viewModel.screen.size
+        val navigator = LocalNavigator.currentOrThrow
 
         Scaffold(
             topBar = {
                 ChattingTopBar(
-                    channelName = chat.name,
-                    onBack = onBack
+                    channelName = viewModel.chatting!!.name,
+                    onBack = {
+                        when (width) {
+                            ScreenSize.Compact -> navigator.pop()
+                            else -> viewModel.chatting = null
+                        }
+                    }
                 )
             },
             bottomBar = {
@@ -275,7 +270,7 @@ class ChattingScreen(
                     onMessageSent = { content ->
                         scope.launch {
                             viewModel.actions!!.message.create(
-                                channel_id = chat.id,
+                                channel_id = viewModel.chatting!!.id,
                                 content = content
                             )
                         }
@@ -289,7 +284,7 @@ class ChattingScreen(
             }
         ) { paddingValues ->
             Messages(
-                messages = viewModel.messages[chat.id]!!,
+                messages = viewModel.messages[viewModel.chatting!!.id]!!,
                 scrollState = scrollState,
                 modifier = Modifier.padding(paddingValues)
             )
