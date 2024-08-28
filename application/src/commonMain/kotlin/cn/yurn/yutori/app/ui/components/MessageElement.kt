@@ -1,5 +1,6 @@
 package cn.yurn.yutori.app.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -89,7 +90,7 @@ object TextMessageElementViewer : MessageElementViewer<Text>() {
     override fun ContentInQuote(element: Text) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -101,7 +102,7 @@ object AtMessageElementViewer : MessageElementViewer<At>() {
     override fun Content(element: At) {
         Text(
             text = preview(element),
-            color = MaterialTheme.colorScheme.inversePrimary,
+            color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.bodyLarge
         )
     }
@@ -110,8 +111,8 @@ object AtMessageElementViewer : MessageElementViewer<At>() {
     override fun ContentInQuote(element: At) {
         Text(
             text = preview(element),
-            color = MaterialTheme.colorScheme.inversePrimary,
-            style = MaterialTheme.typography.bodyLarge
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -123,7 +124,7 @@ object SharpMessageElementViewer : MessageElementViewer<Sharp>() {
     override fun Content(element: Sharp) {
         Text(
             text = preview(element),
-            color = MaterialTheme.colorScheme.inversePrimary,
+            color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.bodyLarge
         )
     }
@@ -132,8 +133,8 @@ object SharpMessageElementViewer : MessageElementViewer<Sharp>() {
     override fun ContentInQuote(element: Sharp) {
         Text(
             text = preview(element),
-            color = MaterialTheme.colorScheme.inversePrimary,
-            style = MaterialTheme.typography.bodyLarge
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -145,7 +146,7 @@ object HrefMessageElementViewer : MessageElementViewer<Href>() {
     override fun Content(element: Href) {
         Text(
             text = element.children.joinToString(""),
-            color = MaterialTheme.colorScheme.inversePrimary,
+            color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.bodyLarge,
             textDecoration = TextDecoration.Underline
         )
@@ -155,8 +156,8 @@ object HrefMessageElementViewer : MessageElementViewer<Href>() {
     override fun ContentInQuote(element: Href) {
         Text(
             text = element.children.joinToString(""),
-            color = MaterialTheme.colorScheme.inversePrimary,
-            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.bodyMedium,
             textDecoration = TextDecoration.Underline
         )
     }
@@ -210,7 +211,7 @@ object ImageMessageElementViewer : MessageElementViewer<Image>() {
     override fun ContentInQuote(element: Image) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -230,7 +231,7 @@ object AudioMessageElementViewer : MessageElementViewer<Audio>() {
     override fun ContentInQuote(element: Audio) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -250,7 +251,7 @@ object VideoMessageElementViewer : MessageElementViewer<Video>() {
     override fun ContentInQuote(element: Video) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -270,7 +271,7 @@ object FileMessageElementViewer : MessageElementViewer<File>() {
     override fun ContentInQuote(element: File) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -291,7 +292,7 @@ object BoldMessageElementViewer : MessageElementViewer<Bold>() {
     override fun ContentInQuote(element: Bold) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
     }
@@ -313,7 +314,7 @@ object StrongMessageElementViewer : MessageElementViewer<Strong>() {
     override fun ContentInQuote(element: Strong) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
         )
     }
@@ -335,7 +336,7 @@ object IdiomaticMessageElementViewer : MessageElementViewer<Idiomatic>() {
     override fun ContentInQuote(element: Idiomatic) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             fontStyle = FontStyle.Italic
         )
     }
@@ -357,7 +358,7 @@ object EmMessageElementViewer : MessageElementViewer<Em>() {
     override fun ContentInQuote(element: Em) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             fontStyle = FontStyle.Italic
         )
     }
@@ -379,7 +380,7 @@ object UnderlineMessageElementViewer : MessageElementViewer<Underline>() {
     override fun ContentInQuote(element: Underline) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             textDecoration = TextDecoration.Underline
         )
     }
@@ -401,7 +402,7 @@ object InsMessageElementViewer : MessageElementViewer<Ins>() {
     override fun ContentInQuote(element: Ins) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             textDecoration = TextDecoration.Underline
         )
     }
@@ -423,7 +424,7 @@ object StrikethroughMessageElementViewer : MessageElementViewer<Strikethrough>()
     override fun ContentInQuote(element: Strikethrough) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             textDecoration = TextDecoration.LineThrough
         )
     }
@@ -445,7 +446,7 @@ object DeleteMessageElementViewer : MessageElementViewer<Delete>() {
     override fun ContentInQuote(element: Delete) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             textDecoration = TextDecoration.LineThrough
         )
     }
@@ -466,7 +467,7 @@ object SplMessageElementViewer : MessageElementViewer<Spl>() {
     override fun ContentInQuote(element: Spl) {
         Text(
             text = "Unsupported element: $element",
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -486,7 +487,7 @@ object CodeMessageElementViewer : MessageElementViewer<Code>() {
     override fun ContentInQuote(element: Code) {
         Text(
             text = "Unsupported element: $element",
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -506,7 +507,7 @@ object SupMessageElementViewer : MessageElementViewer<Sup>() {
     override fun ContentInQuote(element: Sup) {
         Text(
             text = "Unsupported element: $element",
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -526,7 +527,7 @@ object SubMessageElementViewer : MessageElementViewer<Sub>() {
     override fun ContentInQuote(element: Sub) {
         Text(
             text = "Unsupported element: $element",
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -560,7 +561,7 @@ object ParagraphMessageElementViewer : MessageElementViewer<Paragraph>() {
     override fun ContentInQuote(element: Paragraph) {
         Text(
             text = element.children.joinToString(""),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -580,7 +581,7 @@ object MessageMessageElementViewer : MessageElementViewer<Message>() {
     override fun ContentInQuote(element: Message) {
         Text(
             text = "Unsupported element: $element",
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -595,7 +596,10 @@ object QuoteMessageElementViewer : MessageElementViewer<Quote>() {
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)
         ) {
-            Column(modifier = Modifier.padding(8.dp, 4.dp)) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier.padding(8.dp, 4.dp)
+            ) {
                 for (child in element.children) when (child) {
                     is Text -> TextMessageElementViewer.ContentInQuote(child)
                     is At -> AtMessageElementViewer.ContentInQuote(child)
@@ -633,7 +637,7 @@ object QuoteMessageElementViewer : MessageElementViewer<Quote>() {
     override fun ContentInQuote(element: Quote) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -652,8 +656,8 @@ object AuthorMessageElementViewer : MessageElementViewer<Author>() {
     @Composable
     override fun ContentInQuote(element: Author) {
         Text(
-            text = "Unsupported element: $element",
-            style = MaterialTheme.typography.bodyLarge
+            text = element.name ?: "null",
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -673,7 +677,7 @@ object ButtonMessageElementViewer : MessageElementViewer<Button>() {
     override fun ContentInQuote(element: Button) {
         Text(
             text = "Unsupported element: $element",
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -731,7 +735,7 @@ object UnsupportedMessageElementViewer : MessageElementViewer<MessageElement>() 
     override fun ContentInQuote(element: MessageElement) {
         Text(
             text = preview(element),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }

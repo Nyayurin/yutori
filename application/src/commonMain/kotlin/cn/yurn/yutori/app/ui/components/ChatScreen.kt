@@ -504,7 +504,10 @@ fun ClickableMessage(message: Message, isUserMe: Boolean) {
     ) {
         Surface(color = MaterialTheme.colorScheme.surfaceContainer) {
             SelectionContainer {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(16.dp)
+                ) {
                     for (column in messages) {
                         if (column.size <= 1) {
                             if (column.isEmpty()) {
