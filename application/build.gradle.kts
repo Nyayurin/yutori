@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.compose)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.plugin.serialization)
+    alias(libs.plugins.serialization)
 }
 
 kotlin {
@@ -122,6 +122,7 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.AppImage)
             packageName = "Yutori Application"
             packageVersion = "1.0.0"
+            jvmArgs("-Dfile.encoding=UTF-8")
         }
 
         buildTypes.release.proguard {

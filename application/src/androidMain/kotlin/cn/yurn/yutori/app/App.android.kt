@@ -6,14 +6,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.lifecycle.viewModelScope
-import cn.yurn.yutori.Adapter
 import cn.yurn.yutori.Satori
-import cn.yurn.yutori.module.adapter.satori.Satori
-import cn.yurn.yutori.satori
 import com.funny.data_saver.core.DataSaverPreferences
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 class AppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

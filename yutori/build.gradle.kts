@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     alias(libs.plugins.multiplatform)
-    alias(libs.plugins.plugin.serialization)
+    alias(libs.plugins.serialization)
     alias(libs.plugins.android.library)
     id("convention.publication")
 }
