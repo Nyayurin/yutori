@@ -14,8 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.jetpack.navigatorViewModel
 import cn.yurn.yutori.app.MainViewModel
 
 val lightScheme = lightColorScheme(
@@ -94,10 +92,8 @@ val darkScheme = darkColorScheme(
     surfaceContainerHighest = surfaceContainerHighestDark,
 )
 
-@OptIn(ExperimentalVoyagerApi::class)
 @Composable
-fun YutoriAPPTheme(content: @Composable () -> Unit) {
-    val viewModel = navigatorViewModel { MainViewModel() }
+fun YutoriAPPTheme(viewModel: MainViewModel, content: @Composable () -> Unit) {
     var init by remember { mutableStateOf(false) }
     if (!init) {
         init = true

@@ -48,10 +48,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.lifecycle.viewModel.compose)
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.lifecycle.kmp)
-            implementation(libs.voyager.screenModel)
-            implementation(libs.voyager.transitions)
+            implementation(libs.navigation.compose)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             implementation(project(":yutori"))
@@ -63,7 +60,7 @@ kotlin {
 
         androidMain.dependencies {
             implementation(compose.uiTooling)
-            implementation(libs.androidx.activityCompose)
+            implementation(libs.activity.compose)
             implementation(libs.kotlinx.coroutines.android)
         }
 

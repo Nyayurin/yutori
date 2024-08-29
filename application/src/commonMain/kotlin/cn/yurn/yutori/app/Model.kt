@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import cafe.adriel.voyager.core.model.ScreenModel
 import cn.yurn.yutori.Message
 import cn.yurn.yutori.RootActions
 import cn.yurn.yutori.Satori
@@ -25,7 +24,7 @@ expect class MainViewModel() : ViewModel {
     fun update()
 }
 
-expect class ConnectScreenModel() : ScreenModel {
+expect class ConnectScreenModel() {
     var host: String
     var port: Int
     var path: String

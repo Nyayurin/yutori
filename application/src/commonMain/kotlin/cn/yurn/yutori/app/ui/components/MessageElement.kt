@@ -24,8 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.jetpack.navigatorViewModel
 import cn.yurn.yutori.app.MainViewModel
 import cn.yurn.yutori.decode
 import cn.yurn.yutori.message.element.At
@@ -69,7 +67,7 @@ abstract class MessageElementViewer<T : MessageElement> {
     abstract fun preview(element: T): String
 
     @Composable
-    abstract fun Content(element: T)
+    abstract fun Content(element: T, viewModel: MainViewModel)
 
     @Composable
     abstract fun ContentInQuote(element: T)
@@ -79,7 +77,7 @@ object TextMessageElementViewer : MessageElementViewer<Text>() {
     override fun preview(element: Text) = element.text.decode()
 
     @Composable
-    override fun Content(element: Text) {
+    override fun Content(element: Text, viewModel: MainViewModel) {
         Text(
             text = preview(element),
             style = MaterialTheme.typography.bodyLarge
@@ -99,7 +97,7 @@ object AtMessageElementViewer : MessageElementViewer<At>() {
     override fun preview(element: At) = "@${element.name}"
 
     @Composable
-    override fun Content(element: At) {
+    override fun Content(element: At, viewModel: MainViewModel) {
         Text(
             text = preview(element),
             color = MaterialTheme.colorScheme.primary,
@@ -121,7 +119,7 @@ object SharpMessageElementViewer : MessageElementViewer<Sharp>() {
     override fun preview(element: Sharp) = "#${element.name}"
 
     @Composable
-    override fun Content(element: Sharp) {
+    override fun Content(element: Sharp, viewModel: MainViewModel) {
         Text(
             text = preview(element),
             color = MaterialTheme.colorScheme.primary,
@@ -143,7 +141,7 @@ object HrefMessageElementViewer : MessageElementViewer<Href>() {
     override fun preview(element: Href) = "[链接]"
 
     @Composable
-    override fun Content(element: Href) {
+    override fun Content(element: Href, viewModel: MainViewModel) {
         Text(
             text = element.children.joinToString(""),
             color = MaterialTheme.colorScheme.primary,
@@ -166,10 +164,8 @@ object HrefMessageElementViewer : MessageElementViewer<Href>() {
 object ImageMessageElementViewer : MessageElementViewer<Image>() {
     override fun preview(element: Image) = "[图片]"
 
-    @OptIn(ExperimentalVoyagerApi::class)
     @Composable
-    override fun Content(element: Image) {
-        val viewModel = navigatorViewModel<MainViewModel>()
+    override fun Content(element: Image, viewModel: MainViewModel) {
         val localDensity = LocalDensity.current
         val screenWidth = localDensity.run { viewModel.screen.width.toPx() }
         val screenHeight = localDensity.run { viewModel.screen.height.toPx() }
@@ -220,7 +216,7 @@ object AudioMessageElementViewer : MessageElementViewer<Audio>() {
     override fun preview(element: Audio) = "[语音]"
 
     @Composable
-    override fun Content(element: Audio) {
+    override fun Content(element: Audio, viewModel: MainViewModel) {
         Text(
             text = "Unsupported element: $element",
             style = MaterialTheme.typography.bodyLarge
@@ -240,7 +236,7 @@ object VideoMessageElementViewer : MessageElementViewer<Video>() {
     override fun preview(element: Video) = "[视频]"
 
     @Composable
-    override fun Content(element: Video) {
+    override fun Content(element: Video, viewModel: MainViewModel) {
         Text(
             text = "Unsupported element: $element",
             style = MaterialTheme.typography.bodyLarge
@@ -260,7 +256,7 @@ object FileMessageElementViewer : MessageElementViewer<File>() {
     override fun preview(element: File) = "[文件]"
 
     @Composable
-    override fun Content(element: File) {
+    override fun Content(element: File, viewModel: MainViewModel) {
         Text(
             text = "Unsupported element: $element",
             style = MaterialTheme.typography.bodyLarge
@@ -280,7 +276,7 @@ object BoldMessageElementViewer : MessageElementViewer<Bold>() {
     override fun preview(element: Bold) = element.children.joinToString("")
 
     @Composable
-    override fun Content(element: Bold) {
+    override fun Content(element: Bold, viewModel: MainViewModel) {
         Text(
             text = preview(element),
             style = MaterialTheme.typography.bodyLarge,
@@ -302,7 +298,7 @@ object StrongMessageElementViewer : MessageElementViewer<Strong>() {
     override fun preview(element: Strong) = element.children.joinToString("")
 
     @Composable
-    override fun Content(element: Strong) {
+    override fun Content(element: Strong, viewModel: MainViewModel) {
         Text(
             text = preview(element),
             style = MaterialTheme.typography.bodyLarge,
@@ -324,7 +320,7 @@ object IdiomaticMessageElementViewer : MessageElementViewer<Idiomatic>() {
     override fun preview(element: Idiomatic) = element.children.joinToString("")
 
     @Composable
-    override fun Content(element: Idiomatic) {
+    override fun Content(element: Idiomatic, viewModel: MainViewModel) {
         Text(
             text = preview(element),
             style = MaterialTheme.typography.bodyLarge,
@@ -346,7 +342,7 @@ object EmMessageElementViewer : MessageElementViewer<Em>() {
     override fun preview(element: Em) = element.children.joinToString("")
 
     @Composable
-    override fun Content(element: Em) {
+    override fun Content(element: Em, viewModel: MainViewModel) {
         Text(
             text = preview(element),
             style = MaterialTheme.typography.bodyLarge,
@@ -368,7 +364,7 @@ object UnderlineMessageElementViewer : MessageElementViewer<Underline>() {
     override fun preview(element: Underline) = element.children.joinToString("")
 
     @Composable
-    override fun Content(element: Underline) {
+    override fun Content(element: Underline, viewModel: MainViewModel) {
         Text(
             text = preview(element),
             style = MaterialTheme.typography.bodyLarge,
@@ -390,7 +386,7 @@ object InsMessageElementViewer : MessageElementViewer<Ins>() {
     override fun preview(element: Ins) = element.children.joinToString("")
 
     @Composable
-    override fun Content(element: Ins) {
+    override fun Content(element: Ins, viewModel: MainViewModel) {
         Text(
             text = preview(element),
             style = MaterialTheme.typography.bodyLarge,
@@ -412,7 +408,7 @@ object StrikethroughMessageElementViewer : MessageElementViewer<Strikethrough>()
     override fun preview(element: Strikethrough) = element.children.joinToString("")
 
     @Composable
-    override fun Content(element: Strikethrough) {
+    override fun Content(element: Strikethrough, viewModel: MainViewModel) {
         Text(
             text = preview(element),
             style = MaterialTheme.typography.bodyLarge,
@@ -434,7 +430,7 @@ object DeleteMessageElementViewer : MessageElementViewer<Delete>() {
     override fun preview(element: Delete) = element.children.joinToString("")
 
     @Composable
-    override fun Content(element: Delete) {
+    override fun Content(element: Delete, viewModel: MainViewModel) {
         Text(
             text = preview(element),
             style = MaterialTheme.typography.bodyLarge,
@@ -456,7 +452,7 @@ object SplMessageElementViewer : MessageElementViewer<Spl>() {
     override fun preview(element: Spl) = "[剧透]"
 
     @Composable
-    override fun Content(element: Spl) {
+    override fun Content(element: Spl, viewModel: MainViewModel) {
         Text(
             text = "Unsupported element: $element",
             style = MaterialTheme.typography.bodyLarge
@@ -476,7 +472,7 @@ object CodeMessageElementViewer : MessageElementViewer<Code>() {
     override fun preview(element: Code) = "[代码]"
 
     @Composable
-    override fun Content(element: Code) {
+    override fun Content(element: Code, viewModel: MainViewModel) {
         Text(
             text = "Unsupported element: $element",
             style = MaterialTheme.typography.bodyLarge
@@ -496,7 +492,7 @@ object SupMessageElementViewer : MessageElementViewer<Sup>() {
     override fun preview(element: Sup) = "[上标]"
 
     @Composable
-    override fun Content(element: Sup) {
+    override fun Content(element: Sup, viewModel: MainViewModel) {
         Text(
             text = "Unsupported element: $element",
             style = MaterialTheme.typography.bodyLarge
@@ -516,7 +512,7 @@ object SubMessageElementViewer : MessageElementViewer<Sub>() {
     override fun preview(element: Sub) = "[下标]"
 
     @Composable
-    override fun Content(element: Sub) {
+    override fun Content(element: Sub, viewModel: MainViewModel) {
         Text(
             text = "Unsupported element: $element",
             style = MaterialTheme.typography.bodyLarge
@@ -536,7 +532,7 @@ object BrMessageElementViewer : MessageElementViewer<Br>() {
     override fun preview(element: Br) = ""
 
     @Composable
-    override fun Content(element: Br) {
+    override fun Content(element: Br, viewModel: MainViewModel) {
         Text(text = preview(element))
     }
 
@@ -550,7 +546,7 @@ object ParagraphMessageElementViewer : MessageElementViewer<Paragraph>() {
     override fun preview(element: Paragraph) = "[段落]"
 
     @Composable
-    override fun Content(element: Paragraph) {
+    override fun Content(element: Paragraph, viewModel: MainViewModel) {
         Text(
             text = element.children.joinToString(""),
             style = MaterialTheme.typography.bodyLarge
@@ -570,7 +566,7 @@ object MessageMessageElementViewer : MessageElementViewer<Message>() {
     override fun preview(element: Message) = "[消息]"
 
     @Composable
-    override fun Content(element: Message) {
+    override fun Content(element: Message, viewModel: MainViewModel) {
         Text(
             text = "Unsupported element: $element",
             style = MaterialTheme.typography.bodyLarge
@@ -590,7 +586,7 @@ object QuoteMessageElementViewer : MessageElementViewer<Quote>() {
     override fun preview(element: Quote) = "[引用]"
 
     @Composable
-    override fun Content(element: Quote) {
+    override fun Content(element: Quote, viewModel: MainViewModel) {
         Surface(
             color = Color(0, 0, 0, 50),
             shape = RoundedCornerShape(8.dp),
@@ -646,7 +642,7 @@ object AuthorMessageElementViewer : MessageElementViewer<Author>() {
     override fun preview(element: Author) = "[作者]"
 
     @Composable
-    override fun Content(element: Author) {
+    override fun Content(element: Author, viewModel: MainViewModel) {
         Text(
             text = "Unsupported element: $element",
             style = MaterialTheme.typography.bodyLarge
@@ -666,7 +662,7 @@ object ButtonMessageElementViewer : MessageElementViewer<Button>() {
     override fun preview(element: Button) = "[按钮]"
 
     @Composable
-    override fun Content(element: Button) {
+    override fun Content(element: Button, viewModel: MainViewModel) {
         Text(
             text = "Unsupported element: $element",
             style = MaterialTheme.typography.bodyLarge
@@ -688,38 +684,38 @@ object UnsupportedMessageElementViewer : MessageElementViewer<MessageElement>() 
     }
 
     @Composable
-    override fun Content(element: MessageElement) {
+    override fun Content(element: MessageElement, viewModel: MainViewModel) {
         if (element is NodeMessageElement) {
             if (element.children.size > 0) {
                 for (child in element.children) {
                     when (child) {
-                        is Text -> TextMessageElementViewer.apply { Content(child) }
-                        is At -> AtMessageElementViewer.apply { Content(child) }
-                        is Sharp -> SharpMessageElementViewer.apply { Content(child) }
-                        is Href -> HrefMessageElementViewer.apply { Content(child) }
-                        is Image -> ImageMessageElementViewer.apply { Content(child) }
-                        is Audio -> AudioMessageElementViewer.apply { Content(child) }
-                        is Video -> VideoMessageElementViewer.apply { Content(child) }
-                        is File -> FileMessageElementViewer.apply { Content(child) }
-                        is Bold -> BoldMessageElementViewer.apply { Content(child) }
-                        is Strong -> StrongMessageElementViewer.apply { Content(child) }
-                        is Idiomatic -> IdiomaticMessageElementViewer.apply { Content(child) }
-                        is Em -> EmMessageElementViewer.apply { Content(child) }
-                        is Underline -> UnderlineMessageElementViewer.apply { Content(child) }
-                        is Ins -> InsMessageElementViewer.apply { Content(child) }
-                        is Strikethrough -> StrikethroughMessageElementViewer.apply { Content(child) }
-                        is Delete -> DeleteMessageElementViewer.apply { Content(child) }
-                        is Spl -> SplMessageElementViewer.apply { Content(child) }
-                        is Code -> CodeMessageElementViewer.apply { Content(child) }
-                        is Sup -> SupMessageElementViewer.apply { Content(child) }
-                        is Sub -> SubMessageElementViewer.apply { Content(child) }
-                        is Br -> BrMessageElementViewer.apply { Content(child) }
-                        is Paragraph -> ParagraphMessageElementViewer.apply { Content(child) }
-                        is Message -> MessageMessageElementViewer.apply { Content(child) }
-                        is Quote -> QuoteMessageElementViewer.apply { Content(child) }
-                        is Author -> AuthorMessageElementViewer.apply { Content(child) }
-                        is Button -> ButtonMessageElementViewer.apply { Content(child) }
-                        else -> Content(child)
+                        is Text -> TextMessageElementViewer.apply { Content(child, viewModel) }
+                        is At -> AtMessageElementViewer.apply { Content(child, viewModel) }
+                        is Sharp -> SharpMessageElementViewer.apply { Content(child, viewModel) }
+                        is Href -> HrefMessageElementViewer.apply { Content(child, viewModel) }
+                        is Image -> ImageMessageElementViewer.apply { Content(child, viewModel) }
+                        is Audio -> AudioMessageElementViewer.apply { Content(child, viewModel) }
+                        is Video -> VideoMessageElementViewer.apply { Content(child, viewModel) }
+                        is File -> FileMessageElementViewer.apply { Content(child, viewModel) }
+                        is Bold -> BoldMessageElementViewer.apply { Content(child, viewModel) }
+                        is Strong -> StrongMessageElementViewer.apply { Content(child, viewModel) }
+                        is Idiomatic -> IdiomaticMessageElementViewer.apply { Content(child, viewModel) }
+                        is Em -> EmMessageElementViewer.apply { Content(child, viewModel) }
+                        is Underline -> UnderlineMessageElementViewer.apply { Content(child, viewModel) }
+                        is Ins -> InsMessageElementViewer.apply { Content(child, viewModel) }
+                        is Strikethrough -> StrikethroughMessageElementViewer.apply { Content(child, viewModel) }
+                        is Delete -> DeleteMessageElementViewer.apply { Content(child, viewModel) }
+                        is Spl -> SplMessageElementViewer.apply { Content(child, viewModel) }
+                        is Code -> CodeMessageElementViewer.apply { Content(child, viewModel) }
+                        is Sup -> SupMessageElementViewer.apply { Content(child, viewModel) }
+                        is Sub -> SubMessageElementViewer.apply { Content(child, viewModel) }
+                        is Br -> BrMessageElementViewer.apply { Content(child, viewModel) }
+                        is Paragraph -> ParagraphMessageElementViewer.apply { Content(child, viewModel) }
+                        is Message -> MessageMessageElementViewer.apply { Content(child, viewModel) }
+                        is Quote -> QuoteMessageElementViewer.apply { Content(child, viewModel) }
+                        is Author -> AuthorMessageElementViewer.apply { Content(child, viewModel) }
+                        is Button -> ButtonMessageElementViewer.apply { Content(child, viewModel) }
+                        else -> Content(child, viewModel)
                     }
                 }
                 return

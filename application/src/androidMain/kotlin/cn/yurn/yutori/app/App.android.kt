@@ -6,19 +6,31 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.navigation.NavDeepLinkRequest
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import cn.yurn.yutori.Satori
 import com.funny.data_saver.core.DataSaverPreferences
 import kotlinx.coroutines.CoroutineScope
 
 class AppActivity : ComponentActivity() {
+    private lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = applicationContext
         enableEdgeToEdge()
         setContent {
             DataSaverObject.dataSaver = DataSaverPreferences(applicationContext, false)
-            App()
+            navController = rememberNavController()
+            App(navController)
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        navController.popBackStack(route = "connect", inclusive = false)
+        navController.navigate("home")
+        navController.navigate(NavDeepLinkRequest.Builder.fromUri(intent.data!!).build())
     }
 
     companion object {

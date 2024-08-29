@@ -26,8 +26,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.jetpack.navigatorViewModel
 import cn.yurn.yutori.app.Chat
 import cn.yurn.yutori.app.MainViewModel
 import cn.yurn.yutori.app.ScreenSize
@@ -35,14 +33,13 @@ import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 
-@OptIn(ExperimentalVoyagerApi::class)
 @Composable
 fun ChatMenu(
     chats: List<Chat>,
+    viewModel: MainViewModel,
     modifier: Modifier = Modifier.fillMaxSize(),
     onClick: (Chat) -> Unit = {}
 ) {
-    val viewModel = navigatorViewModel<MainViewModel>()
     LazyColumn(
         contentPadding = PaddingValues(
             animateDpAsState(

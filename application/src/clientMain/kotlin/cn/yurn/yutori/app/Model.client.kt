@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import cafe.adriel.voyager.core.model.ScreenModel
 import cn.yurn.yutori.Message
 import cn.yurn.yutori.RootActions
 import cn.yurn.yutori.Satori
@@ -19,7 +18,7 @@ object DataSaverObject {
     lateinit var dataSaver: DataSaverInterface
 }
 
-actual class ConnectScreenModel : ScreenModel {
+actual class ConnectScreenModel {
     actual var host by mutableDataSaverStateOf(DataSaverObject.dataSaver, "host", "")
     actual var port by mutableDataSaverStateOf(DataSaverObject.dataSaver, "port", 0)
     actual var path by mutableDataSaverStateOf(DataSaverObject.dataSaver, "path", "")

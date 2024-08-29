@@ -33,7 +33,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -55,9 +54,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.jetpack.navigatorViewModel
 import cn.yurn.yutori.Message
+import cn.yurn.yutori.app.Chat
 import cn.yurn.yutori.app.MainViewModel
 import cn.yurn.yutori.message.element.At
 import cn.yurn.yutori.message.element.Audio
@@ -138,7 +136,9 @@ fun ChattingTopBar(
 @Composable
 fun Messages(
     messages: List<Message>,
+    chatting: Chat,
     scrollState: LazyListState,
+    viewModel: MainViewModel,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -158,7 +158,11 @@ fun Messages(
             }.reversed(),
             key = { message -> message.id }
         ) { message ->
-            Message(message = message)
+            Message(
+                message = message,
+                chatting = chatting,
+                viewModel = viewModel
+            )
         }
     }
 }
@@ -292,16 +296,16 @@ private fun BoxScope.UserInputTextField(
     }
 }
 
-@OptIn(ExperimentalVoyagerApi::class)
 @Composable
-fun Message(message: Message) {
-    val viewModel = navigatorViewModel<MainViewModel>()
+fun Message(message: Message, chatting: Chat, viewModel: MainViewModel) {
     Row(modifier = Modifier.fillMaxWidth()) {
         val imageLoader = ImageLoader(LocalPlatformContext.current)
         if (message.user!!.id == viewModel.selfId) {
             AuthorAndTextMessage(
                 message = message,
+                chatting = chatting,
                 isUserMe = true,
+                viewModel = viewModel,
                 modifier = Modifier
                     .padding(start = 64.dp)
                     .weight(1F)
@@ -333,7 +337,9 @@ fun Message(message: Message) {
             )
             AuthorAndTextMessage(
                 message = message,
+                chatting = chatting,
                 isUserMe = false,
+                viewModel = viewModel,
                 modifier = Modifier
                     .padding(end = 64.dp)
                     .weight(1F)
@@ -343,14 +349,14 @@ fun Message(message: Message) {
 }
 
 
-@OptIn(ExperimentalVoyagerApi::class)
 @Composable
 fun AuthorAndTextMessage(
     message: Message,
+    chatting: Chat,
     isUserMe: Boolean,
+    viewModel: MainViewModel,
     modifier: Modifier = Modifier
 ) {
-    val viewModel = navigatorViewModel<MainViewModel>()
     Column(
         horizontalAlignment = if (isUserMe) Alignment.End else Alignment.Start,
         modifier = modifier
@@ -358,12 +364,12 @@ fun AuthorAndTextMessage(
         Text(
             text = message.member?.nick ?: message.user?.nick ?: message.user?.name
             ?: if (isUserMe) viewModel.self?.name.toString() else
-                if (viewModel.chatting!!.id.startsWith("private:")) viewModel.chatting!!.name else "null",
+                if (chatting.id.startsWith("private:")) chatting.name else "null",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .paddingFrom(LastBaseline, after = 8.dp)
         )
-        ClickableMessage(message, isUserMe)
+        ClickableMessage(message, isUserMe, viewModel)
         Spacer(Modifier.height(8.dp))
     }
 }
@@ -371,10 +377,8 @@ fun AuthorAndTextMessage(
 private val ChatBubbleShape = RoundedCornerShape(4.dp, 20.dp, 20.dp, 20.dp)
 private val SelfChatBubbleShape = RoundedCornerShape(20.dp, 4.dp, 20.dp, 20.dp)
 
-@OptIn(ExperimentalVoyagerApi::class)
 @Composable
-fun ClickableMessage(message: Message, isUserMe: Boolean) {
-    val viewModel = navigatorViewModel<MainViewModel>()
+fun ClickableMessage(message: Message, isUserMe: Boolean, viewModel: MainViewModel) {
     val messages = mutableListOf<MutableList<MessageElement>>(mutableListOf())
     val elements = message.content
         .replace("\r\n", "<br>")
@@ -511,13 +515,13 @@ fun ClickableMessage(message: Message, isUserMe: Boolean) {
                     for (column in messages) {
                         if (column.size <= 1) {
                             if (column.isEmpty()) {
-                                BrMessageElementViewer.Content(Br())
+                                BrMessageElementViewer.Content(Br(), viewModel)
                             } else {
-                                SelectElement(column[0])
+                                SelectElement(column[0], viewModel)
                             }
                         } else {
                             Row {
-                                for (element in column) SelectElement(element)
+                                for (element in column) SelectElement(element, viewModel)
                             }
                         }
                     }
@@ -528,34 +532,34 @@ fun ClickableMessage(message: Message, isUserMe: Boolean) {
 }
 
 @Composable
-private fun SelectElement(element: MessageElement) {
+private fun SelectElement(element: MessageElement, viewModel: MainViewModel) {
     when (element) {
-        is Text -> TextMessageElementViewer.Content(element)
-        is At -> AtMessageElementViewer.Content(element)
-        is Sharp -> SharpMessageElementViewer.Content(element)
-        is Href -> HrefMessageElementViewer.Content(element)
-        is Image -> ImageMessageElementViewer.Content(element)
-        is Audio -> AudioMessageElementViewer.Content(element)
-        is Video -> VideoMessageElementViewer.Content(element)
-        is File -> FileMessageElementViewer.Content(element)
-        is Bold -> BoldMessageElementViewer.Content(element)
-        is Strong -> StrongMessageElementViewer.Content(element)
-        is Idiomatic -> IdiomaticMessageElementViewer.Content(element)
-        is Em -> EmMessageElementViewer.Content(element)
-        is Underline -> UnderlineMessageElementViewer.Content(element)
-        is Ins -> InsMessageElementViewer.Content(element)
-        is Strikethrough -> StrikethroughMessageElementViewer.Content(element)
-        is Delete -> DeleteMessageElementViewer.Content(element)
-        is Spl -> SplMessageElementViewer.Content(element)
-        is Code -> CodeMessageElementViewer.Content(element)
-        is Sup -> SupMessageElementViewer.Content(element)
-        is Sub -> SubMessageElementViewer.Content(element)
-        is Br -> BrMessageElementViewer.Content(element)
-        is Paragraph -> ParagraphMessageElementViewer.Content(element)
-        is cn.yurn.yutori.message.element.Message -> MessageMessageElementViewer.Content(element)
-        is Quote -> QuoteMessageElementViewer.Content(element)
-        is Author -> AuthorMessageElementViewer.Content(element)
-        is Button -> ButtonMessageElementViewer.Content(element)
-        else -> UnsupportedMessageElementViewer.Content(element)
+        is Text -> TextMessageElementViewer.Content(element, viewModel)
+        is At -> AtMessageElementViewer.Content(element, viewModel)
+        is Sharp -> SharpMessageElementViewer.Content(element, viewModel)
+        is Href -> HrefMessageElementViewer.Content(element, viewModel)
+        is Image -> ImageMessageElementViewer.Content(element, viewModel)
+        is Audio -> AudioMessageElementViewer.Content(element, viewModel)
+        is Video -> VideoMessageElementViewer.Content(element, viewModel)
+        is File -> FileMessageElementViewer.Content(element, viewModel)
+        is Bold -> BoldMessageElementViewer.Content(element, viewModel)
+        is Strong -> StrongMessageElementViewer.Content(element, viewModel)
+        is Idiomatic -> IdiomaticMessageElementViewer.Content(element, viewModel)
+        is Em -> EmMessageElementViewer.Content(element, viewModel)
+        is Underline -> UnderlineMessageElementViewer.Content(element, viewModel)
+        is Ins -> InsMessageElementViewer.Content(element, viewModel)
+        is Strikethrough -> StrikethroughMessageElementViewer.Content(element, viewModel)
+        is Delete -> DeleteMessageElementViewer.Content(element, viewModel)
+        is Spl -> SplMessageElementViewer.Content(element, viewModel)
+        is Code -> CodeMessageElementViewer.Content(element, viewModel)
+        is Sup -> SupMessageElementViewer.Content(element, viewModel)
+        is Sub -> SubMessageElementViewer.Content(element, viewModel)
+        is Br -> BrMessageElementViewer.Content(element, viewModel)
+        is Paragraph -> ParagraphMessageElementViewer.Content(element, viewModel)
+        is cn.yurn.yutori.message.element.Message -> MessageMessageElementViewer.Content(element, viewModel)
+        is Quote -> QuoteMessageElementViewer.Content(element, viewModel)
+        is Author -> AuthorMessageElementViewer.Content(element, viewModel)
+        is Button -> ButtonMessageElementViewer.Content(element, viewModel)
+        else -> UnsupportedMessageElementViewer.Content(element, viewModel)
     }
 }
