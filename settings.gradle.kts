@@ -18,3 +18,4 @@ dependencyResolutionManagement {
 }
 include(":example")
 include(":application")
+include(":yhchat")

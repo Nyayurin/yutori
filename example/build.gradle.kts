@@ -17,7 +17,7 @@ kotlin {
         }
     }
 
-    @OptIn(ExperimentalWasmDsl::class)
+    /*@OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         nodejs()
         binaries.executable()
@@ -26,21 +26,22 @@ kotlin {
     js {
         nodejs()
         binaries.executable()
-    }
+    }*/
 
     mingwX64("native").binaries.executable()
 
     sourceSets {
         commonMain.dependencies {
             implementation(project(":yutori"))
+            implementation(project(":yhchat"))
         }
 
         jvmMain.dependencies {
 
         }
 
-        jsMain.dependencies {
+        /*jsMain.dependencies {
 
-        }
+        }*/
     }
 }

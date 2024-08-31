@@ -2,12 +2,10 @@ package cn.yurn.yutori.example
 
 import cn.yurn.yutori.Adapter
 import cn.yurn.yutori.module.adapter.satori.Satori
+import cn.yurn.yutori.module.adapter.yhchat.YhChat
 import cn.yurn.yutori.satori
 import co.touchlab.kermit.Logger
 import co.touchlab.kermit.Severity
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 
 suspend fun bot(tokenArg: String) {
     Logger.setMinSeverity(Severity.Info)
@@ -15,6 +13,10 @@ suspend fun bot(tokenArg: String) {
         install(Adapter.Satori) {
             host = "127.0.0.1"
             token = tokenArg
+        }
+        install(Adapter.YhChat) {
+            token = "token"
+            selfId = "self_id"
         }
         client {
             listening {
