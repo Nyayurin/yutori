@@ -60,5 +60,17 @@ data class Message(
 
 @Serializable
 data class Content(
-    val text: String
+    val text: String?,
+    val imageUrl: String?,
+    val fileName: String?,
+    val fileUrl: String?,
+    val button: Button?
+)
+
+@Serializable
+data class Button(
+    val text: String,
+    val actionType: Int,
+    val url: String,
+    val value: String
 )

@@ -8,9 +8,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.parameter
-import io.ktor.client.request.post
+import io.ktor.client.request.request
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
 import io.ktor.http.URLProtocol
 import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
@@ -37,26 +38,66 @@ class SatoriActionService(val properties: YhChatProperties, val name: String) : 
             })
         }
     }.use { client ->
-        val response = client.post {
+        val response = client.request {
+            val suffix = "$resource.$method"
+            this.method = when (suffix) {
+                "message.create", "message.update", "message.delete" -> HttpMethod.Post
+                "message.list" -> HttpMethod.Get
+                else -> throw RuntimeException("Unsupported Action: $suffix")
+            }
             url {
                 protocol = URLProtocol.HTTPS
                 host = "chat-go.jwzhd.com"
                 parameter("token", properties.token)
-                appendPathSegments("open-apis", "v1", "bot", "send")
+                appendPathSegments(
+                    "open-apis", "v1", "bot", when (suffix) {
+                        "message.create" -> "send"
+                        "message.update" -> "edit"
+                        "message.delete" -> "recall"
+                        "message.list" -> "messages"
+                        else -> throw RuntimeException("Unsupported Action: $suffix")
+                    }
+                )
             }
             contentType(ContentType.Application.Json)
             val channelId = content["channel_id"] as String
             val message = (content["content"] as String).replace("\\n", "\n")
             setBody(
                 buildJsonObject {
-                    put("recvId", channelId.removePrefix("private:"))
-                    put("recvType", when {
-                        channelId.startsWith("private:") -> "user"
-                        else -> "group"
-                    })
-                    put("contentType", "text")
-                    putJsonObject("content") {
-                        put("text", message)
+                    when (suffix) {
+                        "message.create", "message.delete", "message.update" -> {
+                            when (suffix) {
+                                "message.create", "message.delete" -> {
+                                    put("msgId", content["message_id"] as String)
+                                }
+                            }
+                            put("recvId", channelId.removePrefix("private:"))
+                            put(
+                                "recvType", when {
+                                    channelId.startsWith("private:") -> "user"
+                                    else -> "group"
+                                }
+                            )
+
+                            when (suffix) {
+                                "message.create", "message.update" -> {
+                                    put("contentType", "text")
+                                    putJsonObject("content") {
+                                        put("text", message)
+                                    }
+                                }
+                            }
+                        }
+
+                        "message.list" -> {
+                            put("chat-id", channelId.removePrefix("private:"))
+                            put(
+                                "chat-type", when {
+                                    channelId.startsWith("private:") -> "user"
+                                    else -> "group"
+                                }
+                            )
+                        }
                     }
                 }
             )
