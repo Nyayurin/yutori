@@ -77,8 +77,7 @@ fun App(
                     }
                     composable(
                         route = "chatting/{id}",
-                        arguments = listOf(navArgument("id") { type = NavType.StringType }),
-                        deepLinks = listOf(navDeepLink { uriPattern = "yapp://chatting/{id}" })
+                        arguments = listOf(navArgument("id") { type = NavType.StringType })
                     ) { backStackEntry ->
                         ChattingScreen(navController, viewModel, backStackEntry.arguments!!.getString("id")!!)
                     }

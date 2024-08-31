@@ -11,6 +11,7 @@ import android.os.IBinder
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.RemoteInput
 import androidx.core.net.toUri
 import cn.yurn.yutori.Satori
 import cn.yurn.yutori.channel
@@ -20,13 +21,11 @@ import cn.yurn.yutori.toElements
 import cn.yurn.yutori.user
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class SatoriService : Service() {
     private lateinit var notificationManager: NotificationManager
-    private val job = SupervisorJob()
-    private val scope = CoroutineScope(Dispatchers.IO + job)
+    private val scope = CoroutineScope(Dispatchers.IO)
     private var notifications = 0
 
     override fun onCreate() {
@@ -60,22 +59,31 @@ class SatoriService : Service() {
                         // for ActivityCompat#requestPermissions for more details.
                         return@created
                     }
-                    val pendingIntent: PendingIntent = PendingIntent.getActivity(
+                    val pendingIntent = PendingIntent.getActivity(
                         applicationContext,
                         0,
                         Intent().apply {
                             action = Intent.ACTION_VIEW
-                            data = "yapp://chatting/${event.channel.id}".toUri()
+                            data = "yapp://chatting".toUri()
+                            putExtra("channel_id", event.channel.id)
                         },
                         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                     )
-                    /*var remoteInput: RemoteInput = RemoteInput.Builder("reply")
+                    val remoteInput = RemoteInput.Builder("reply")
                         .setLabel("回复")
                         .build()
-                    val replyPendingIntent: PendingIntent = PendingIntent.getBroadcast(applicationContext,
-                        event.id.toInt(),
-                        getMessageReplyIntent(conversation.getConversationId()),
-                        PendingIntent.FLAG_UPDATE_CURRENT)*/
+                    val replyPendingIntent = PendingIntent.getBroadcast(
+                        applicationContext,
+                        0,
+                        Intent(applicationContext, NotificationReplyReceiver::class.java).apply {
+                            putExtra("notification_id", notifications)
+                            putExtra("channel_id", event.channel.id)
+                        },
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+                    )
+                    val action = NotificationCompat.Action.Builder(R.drawable.icon, "回复", replyPendingIntent)
+                        .addRemoteInput(remoteInput)
+                        .build()
                     val isPrivate = event.channel.id.startsWith("private:")
                     NotificationManagerCompat.from(applicationContext).notify(
                         notifications++,
@@ -85,6 +93,7 @@ class SatoriService : Service() {
                                 ?: event.user.name else event.guild?.name)
                             .setContentText(previewMessageContent(event.message.content.toElements(satori)))
                             .setContentIntent(pendingIntent)
+                            .addAction(action)
                             .setAutoCancel(true)
                             .build()
                     )
@@ -93,11 +102,6 @@ class SatoriService : Service() {
         }
         scope.launch { satori.start() }
         return super.onStartCommand(intent, flags, startId)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

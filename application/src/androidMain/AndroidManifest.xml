@@ -16,7 +16,7 @@
             android:name=".AppActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:launchMode="singleInstance"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustNothing"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,6 +34,7 @@
             android:foregroundServiceType="specialUse"
             android:exported="false">
         </service>
+        <receiver android:name=".NotificationReplyReceiver" />
     </application>
 
 </manifest>
