@@ -17,5 +17,6 @@ dependencyResolutionManagement {
     }
 }
 include(":example")
-include(":application")
+include(":satori")
 include(":yhchat")
+include(":application")

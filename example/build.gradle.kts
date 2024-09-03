@@ -33,6 +33,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":yutori"))
+            implementation(project(":satori"))
             implementation(project(":yhchat"))
         }
 

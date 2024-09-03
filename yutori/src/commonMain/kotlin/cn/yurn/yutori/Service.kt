@@ -2,16 +2,13 @@
 
 package cn.yurn.yutori
 
-import io.ktor.util.reflect.TypeInfo
-
 interface ActionService {
     suspend fun send(
         resource: String,
         method: String,
         platform: String?,
         self_id: String?,
-        content: Map<String, Any?>,
-        typeInfo: TypeInfo
+        content: Map<String, Any?>
     ): Any
 
     suspend fun upload(

@@ -2,8 +2,6 @@
 
 package cn.yurn.yutori.message.element
 
-import com.fleeksoft.ksoup.nodes.Element
-
 class Quote(
     id: String? = null,
     forward: Boolean? = null
@@ -12,7 +10,9 @@ class Quote(
     var forward: Boolean? by properties
 
     companion object : MessageElementContainer("id" to "", "forward" to false) {
-        override operator fun invoke(element: Element) = Quote()
+        override operator fun invoke(
+            attributes: Map<String, Any?>
+        ) = Quote()
     }
 }
 
@@ -26,6 +26,8 @@ class Author(
     var avatar: String? by properties
 
     companion object : MessageElementContainer("id" to "", "name" to "", "avatar" to "") {
-        override operator fun invoke(element: Element) = Author()
+        override operator fun invoke(
+            attributes: Map<String, Any?>
+        ) = Author()
     }
 }

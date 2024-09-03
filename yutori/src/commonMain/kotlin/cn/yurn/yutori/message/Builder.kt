@@ -30,7 +30,7 @@ import cn.yurn.yutori.message.element.Underline
 import cn.yurn.yutori.message.element.Video
 
 inline fun message(satori: Satori, block: MessageBuilder.() -> Unit) =
-    MessageBuilder(satori).apply(block).buildMessage()
+    MessageBuilder(satori).apply(block).elements
 
 interface ChildedMessageBuilder {
     val elements: MutableList<MessageElement>
@@ -38,8 +38,6 @@ interface ChildedMessageBuilder {
     operator fun set(index: Int, element: MessageElement) {
         elements[index] = element
     }
-
-    fun buildMessage(): String
 }
 
 interface PropertiedMessageBuilder : ChildedMessageBuilder {
@@ -150,9 +148,6 @@ open class MessageBuilder(val satori: Satori) : ChildedMessageBuilder {
 
     inline fun button(block: Button.() -> Unit) =
         Button(satori).apply(block).buildElement().apply { elements += this }
-
-    override fun buildMessage() = elements.joinToString("") { it.toString() }
-    override fun toString() = elements.joinToString("") { it.toString() }
 
     @BuilderMarker
     class Node(private val name: String, satori: Satori) : MessageBuilder(satori),

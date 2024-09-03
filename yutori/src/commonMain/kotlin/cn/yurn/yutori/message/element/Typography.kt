@@ -2,16 +2,18 @@
 
 package cn.yurn.yutori.message.element
 
-import com.fleeksoft.ksoup.nodes.Element
-
 class Br : NodeMessageElement("br") {
     companion object : MessageElementContainer() {
-        override operator fun invoke(element: Element) = Br()
+        override operator fun invoke(
+            attributes: Map<String, Any?>
+        ) = Br()
     }
 }
 class Paragraph : NodeMessageElement("p") {
     companion object : MessageElementContainer() {
-        override operator fun invoke(element: Element) = Paragraph()
+        override operator fun invoke(
+            attributes: Map<String, Any?>
+        ) = Paragraph()
     }
 }
 class Message(
@@ -22,6 +24,8 @@ class Message(
     var forward: Boolean? by properties
 
     companion object : MessageElementContainer("id" to "", "forward" to false) {
-        override operator fun invoke(element: Element) = Message()
+        override operator fun invoke(
+            attributes: Map<String, Any?>
+        ) = Message()
     }
 }

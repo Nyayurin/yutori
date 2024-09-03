@@ -2,6 +2,8 @@
 
 package cn.yurn.yutori
 
+import cn.yurn.yutori.message.ExtendedMessageBuilder
+import cn.yurn.yutori.message.MessageBuilder
 import cn.yurn.yutori.message.element.At
 import cn.yurn.yutori.message.element.Audio
 import cn.yurn.yutori.message.element.Author
@@ -16,7 +18,9 @@ import cn.yurn.yutori.message.element.Href
 import cn.yurn.yutori.message.element.Idiomatic
 import cn.yurn.yutori.message.element.Image
 import cn.yurn.yutori.message.element.Ins
+import cn.yurn.yutori.message.element.Message
 import cn.yurn.yutori.message.element.MessageElementContainer
+import cn.yurn.yutori.message.element.Paragraph
 import cn.yurn.yutori.message.element.Quote
 import cn.yurn.yutori.message.element.Sharp
 import cn.yurn.yutori.message.element.Spl
@@ -26,11 +30,6 @@ import cn.yurn.yutori.message.element.Sub
 import cn.yurn.yutori.message.element.Sup
 import cn.yurn.yutori.message.element.Underline
 import cn.yurn.yutori.message.element.Video
-import cn.yurn.yutori.message.ExtendedMessageBuilder
-import cn.yurn.yutori.message.MessageBuilder
-import cn.yurn.yutori.message.element.*
-import cn.yurn.yutori.message.element.Message
-import cn.yurn.yutori.message.element.Paragraph
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -95,8 +94,8 @@ class Satori(val name: String) {
 
     fun client(block: Client.() -> Unit) = client.block()
     fun server(block: Server.() -> Unit) = server.block()
-    suspend fun start() = modules.filterIsInstance<Adapter>().forEach { adapter ->
-        coroutineScope {
+    suspend fun start() = coroutineScope {
+        modules.filterIsInstance<Adapter>().forEach { adapter ->
             launch {
                 adapter.start(this@Satori)
             }

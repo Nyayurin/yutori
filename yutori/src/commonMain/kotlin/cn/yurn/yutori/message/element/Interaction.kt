@@ -2,8 +2,6 @@
 
 package cn.yurn.yutori.message.element
 
-import com.fleeksoft.ksoup.nodes.Element
-
 class Button(
     id: String? = null,
     type: String? = null,
@@ -18,6 +16,8 @@ class Button(
     var theme: String? by properties
 
     companion object : MessageElementContainer("id" to "", "type" to "", "href" to "", "text" to "", "theme" to "") {
-        override operator fun invoke(element: Element) = Button()
+        override operator fun invoke(
+            attributes: Map<String, Any?>
+        ) = Button()
     }
 }

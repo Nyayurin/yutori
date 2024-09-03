@@ -2,42 +2,41 @@
 
 package cn.yurn.yutori.message.element
 
-import cn.yurn.yutori.encode
-import com.fleeksoft.ksoup.nodes.Element
-
 abstract class MessageElementContainer(vararg pairs: Pair<String, Any>) {
     val properties_default = mutableMapOf(*pairs)
-    abstract operator fun invoke(element: Element): NodeMessageElement
+    abstract operator fun invoke(attributes: Map<String, Any?> = mapOf()): NodeMessageElement
 }
 
 abstract class MessageElement {
     abstract override fun toString(): String
 }
 
-open class NodeMessageElement(val node_name: String, vararg pairs: Pair<String, Any?>) : MessageElement() {
+open class NodeMessageElement(
+    val node_name: String,
+    vararg pairs: Pair<String, Any?>
+) : MessageElement() {
     val properties = mutableMapOf(*pairs)
     val children = mutableListOf<MessageElement>()
 
     override fun toString() = buildString {
-        append("<$node_name")
-        for (item in properties) {
-            val key = item.key
-            val value = item.value ?: continue
-            append(" ").append(
-                when (value) {
-                    is String -> "$key=\"${value.encode()}\""
-                    is Number -> "$key=\"$value\""
-                    is Boolean -> if (value) key else ""
-                    else -> throw Exception("Invalid type")
+        append(node_name)
+        if (properties.isNotEmpty()) {
+            append(properties.entries
+                .filter { (_, value) -> value != null }
+                .joinToString(",", "(", ")") { (key, value) ->
+                    "$key=${
+                        when (value) {
+                            is String -> "\"$value\""
+                            is Number -> value
+                            is Boolean -> value
+                            else -> throw Exception("Invalid type: $key = $value")
+                        }
+                    }"
                 }
             )
         }
-        if (children.isEmpty()) {
-            append("/>")
-        } else {
-            append(">")
-            for (item in children) append(item)
-            append("</$node_name>")
+        if (children.isNotEmpty()) {
+            append(children.joinToString(",", "{", "}") { it.toString() })
         }
     }
 
@@ -50,9 +49,5 @@ open class NodeMessageElement(val node_name: String, vararg pairs: Pair<String, 
             return child.select(element) ?: continue
         }
         return null
-    }
-
-    companion object : MessageElementContainer() {
-        override operator fun invoke(element: Element) = NodeMessageElement(element.tagName())
     }
 }

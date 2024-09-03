@@ -2,8 +2,6 @@
 
 package cn.yurn.yutori.message.element
 
-import com.fleeksoft.ksoup.nodes.Element
-
 class Image(
     src: String,
     title: String? = null,
@@ -35,7 +33,9 @@ class Image(
         "width" to 0,
         "height" to 0
     ) {
-        override operator fun invoke(element: Element) = Image(element.attr("src"))
+        override operator fun invoke(
+            attributes: Map<String, Any?>
+        ) = Image(attributes["src"] as String)
     }
 }
 
@@ -70,7 +70,9 @@ class Audio(
         "duration" to 0,
         "poster" to ""
     ) {
-        override operator fun invoke(element: Element) = Audio(element.attr("src"))
+        override operator fun invoke(
+            attributes: Map<String, Any?>
+        ) = Audio(attributes["src"] as String)
     }
 }
 
@@ -113,7 +115,9 @@ class Video(
         "duration" to 0,
         "poster" to ""
     ) {
-        override operator fun invoke(element: Element) = Video(element.attr("src"))
+        override operator fun invoke(
+            attributes: Map<String, Any?>
+        ) = Video(attributes["src"] as String)
     }
 }
 
@@ -144,6 +148,8 @@ class File(
         "timeout" to "",
         "poster" to ""
     ) {
-        override operator fun invoke(element: Element) = File(element.attr("src"))
+        override operator fun invoke(
+            attributes: Map<String, Any?>
+        ) = File(attributes["src"] as String)
     }
 }
