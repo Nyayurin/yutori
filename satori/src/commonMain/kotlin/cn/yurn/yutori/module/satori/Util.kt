@@ -80,12 +80,12 @@ private fun parseElement(satori: Satori, node: Node): MessageElement = when (nod
     else -> throw MessageElementParsingException(node.toString())
 }
 
-fun List<MessageElement>.serialize() = joinToString("") { element ->
-    when (element) {
-        is Text -> element.serialize()
-        is NodeMessageElement -> element.serialize()
-        else -> unsupported("Unknown element type: $element")
-    }
+fun List<MessageElement>.serialize() = joinToString("") { it.serialize() }
+
+fun MessageElement.serialize() = when (this) {
+    is Text -> serialize()
+    is NodeMessageElement -> serialize()
+    else -> unsupported("Unknown element type: $this")
 }
 
 private fun Text.serialize() = text.encode()
