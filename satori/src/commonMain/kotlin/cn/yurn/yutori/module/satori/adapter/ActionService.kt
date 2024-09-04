@@ -8,20 +8,46 @@
 package cn.yurn.yutori.module.satori.adapter
 
 import cn.yurn.yutori.ActionService
+import cn.yurn.yutori.BidiPagingList
+import cn.yurn.yutori.Channel
 import cn.yurn.yutori.FormData
+import cn.yurn.yutori.Guild
+import cn.yurn.yutori.GuildMember
+import cn.yurn.yutori.GuildRole
+import cn.yurn.yutori.Message
+import cn.yurn.yutori.PagingList
 import cn.yurn.yutori.SatoriProperties
+import cn.yurn.yutori.User
 import cn.yurn.yutori.message.element.MessageElement
+import cn.yurn.yutori.module.satori.ChannelSerializer
+import cn.yurn.yutori.module.satori.GuildMemberSerializer
+import cn.yurn.yutori.module.satori.GuildRoleSerializer
+import cn.yurn.yutori.module.satori.GuildSerializer
+import cn.yurn.yutori.module.satori.LoginSerializer
+import cn.yurn.yutori.module.satori.MessageSerializer
+import cn.yurn.yutori.module.satori.UserSerializer
 import cn.yurn.yutori.module.satori.serialize
 import co.touchlab.kermit.Logger
-import io.ktor.client.*
-import io.ktor.client.call.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
+import io.ktor.client.request.headers
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.*
+import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import io.ktor.http.URLBuilder
+import io.ktor.http.appendPathSegments
+import io.ktor.http.contentType
+import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.core.use
+import korlibs.io.lang.unsupported
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 
 class SatoriActionService(val properties: SatoriProperties, val name: String) : ActionService {
@@ -85,84 +111,84 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
         val body = response.bodyAsText()
         when (resource) {
             "channel" -> when (method) {
-                "get" -> TODO()
-                "list" -> TODO()
-                "create" -> TODO()
-                "update" -> TODO()
-                "delete" -> TODO()
-                "mute" -> TODO()
-                else -> TODO()
+                "get" -> Json.decodeFromString(ChannelSerializer, body)
+                "list" -> Json.decodeFromString<PagingList<Channel>>(body)
+                "create" -> Json.decodeFromString(ChannelSerializer, body)
+                "update" -> Unit
+                "delete" -> Unit
+                "mute" -> Unit
+                else -> unsupported("Unsupported action: $resource.$method")
             }
 
             "user.channel" -> when (method) {
-                "create" -> TODO()
-                else -> TODO()
+                "create" -> Json.decodeFromString(ChannelSerializer, body)
+                else -> unsupported("Unsupported action: $resource.$method")
             }
 
             "guild" -> when (method) {
-                "get" -> TODO()
-                "list" -> TODO()
-                "approve" -> TODO()
-                else -> TODO()
+                "get" -> Json.decodeFromString(GuildSerializer, body)
+                "list" -> Json.decodeFromString<PagingList<Guild>>(body)
+                "approve" -> Unit
+                else -> unsupported("Unsupported action: $resource.$method")
             }
 
             "guild.member" -> when (method) {
-                "get" -> TODO()
-                "list" -> TODO()
-                "kick" -> TODO()
-                "mute" -> TODO()
-                "approve" -> TODO()
-                else -> TODO()
+                "get" -> Json.decodeFromString(GuildMemberSerializer, body)
+                "list" -> Json.decodeFromString<PagingList<GuildMember>>(body)
+                "kick" -> Unit
+                "mute" -> Unit
+                "approve" -> Unit
+                else -> unsupported("Unsupported action: $resource.$method")
             }
 
             "guild.member.role" -> when (method) {
-                "set" -> TODO()
-                "unset" -> TODO()
-                else -> TODO()
+                "set" -> Unit
+                "unset" -> Unit
+                else -> unsupported("Unsupported action: $resource.$method")
             }
 
             "guild.role" -> when (method) {
-                "list" -> TODO()
-                "create" -> TODO()
-                "update" -> TODO()
-                "delete" -> TODO()
-                else -> TODO()
+                "list" -> Json.decodeFromString<PagingList<GuildRole>>(body)
+                "create" -> Json.decodeFromString(GuildRoleSerializer, body)
+                "update" -> Unit
+                "delete" -> Unit
+                else -> unsupported("Unsupported action: $resource.$method")
             }
 
             "login" -> when (method) {
-                "get" -> TODO()
-                else -> TODO()
+                "get" -> Json.decodeFromString(LoginSerializer, body)
+                else -> unsupported("Unsupported action: $resource.$method")
             }
 
             "message" -> when (method) {
-                "create" -> TODO()
-                "get" -> TODO()
-                "delete" -> TODO()
-                "update" -> TODO()
-                "list" -> TODO()
-                else -> TODO()
+                "create" -> Json.decodeFromString(ListSerializer(MessageSerializer), body)
+                "get" -> Json.decodeFromString(MessageSerializer, body)
+                "delete" -> Unit
+                "update" -> Unit
+                "list" -> Json.decodeFromString<BidiPagingList<Message>>(body)
+                else -> unsupported("Unsupported action: $resource.$method")
             }
 
             "reaction" -> when (method) {
-                "create" -> TODO()
-                "delete" -> TODO()
-                "clear" -> TODO()
-                "list" -> TODO()
-                else -> TODO()
+                "create" -> Unit
+                "delete" -> Unit
+                "clear" -> Unit
+                "list" -> Json.decodeFromString<PagingList<User>>(body)
+                else -> unsupported("Unsupported action: $resource.$method")
             }
 
             "user" -> when (method) {
-                "get" -> TODO()
-                else -> TODO()
+                "get" -> Json.decodeFromString(UserSerializer, body)
+                else -> unsupported("Unsupported action: $resource.$method")
             }
 
             "friend" -> when (method) {
-                "list" -> TODO()
-                "approve" -> TODO()
-                else -> TODO()
+                "list" -> Json.decodeFromString<PagingList<User>>(body)
+                "approve" -> Unit
+                else -> unsupported("Unsupported action: $resource.$method")
             }
 
-            else -> TODO()
+            else -> unsupported("Unsupported action: $resource.$method")
         }
     }
 
