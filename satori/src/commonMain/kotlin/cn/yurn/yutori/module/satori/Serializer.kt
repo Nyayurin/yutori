@@ -1,5 +1,6 @@
 package cn.yurn.yutori.module.satori
 
+import cn.yurn.yutori.BidiPagingList
 import cn.yurn.yutori.Channel
 import cn.yurn.yutori.Event
 import cn.yurn.yutori.Guild
@@ -9,6 +10,7 @@ import cn.yurn.yutori.Interaction
 import cn.yurn.yutori.Login
 import cn.yurn.yutori.Message
 import cn.yurn.yutori.NumberParsingException
+import cn.yurn.yutori.PagingList
 import cn.yurn.yutori.SigningEvent
 import cn.yurn.yutori.User
 import cn.yurn.yutori.satori
@@ -33,6 +35,7 @@ import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -184,7 +187,7 @@ object EventSerializer : KSerializer<Event<SigningEvent>> {
 
 object InteractionArgvSerializer : KSerializer<Interaction.Argv> {
     @OptIn(ExperimentalSerializationApi::class)
-    override val descriptor = buildClassSerialDescriptor("Event") {
+    override val descriptor = buildClassSerialDescriptor("InteractionArgv") {
         element<String>("name")
         element("arguments", listSerialDescriptor(DynamicLookupSerializer.descriptor))
         element("options", DynamicLookupSerializer.descriptor)
@@ -213,7 +216,7 @@ object InteractionArgvSerializer : KSerializer<Interaction.Argv> {
 }
 
 object InteractionButtonSerializer : KSerializer<Interaction.Button> {
-    override val descriptor = buildClassSerialDescriptor("Event") {
+    override val descriptor = buildClassSerialDescriptor("InteractionButton") {
         element<String>("id")
     }
 
@@ -233,7 +236,7 @@ object InteractionButtonSerializer : KSerializer<Interaction.Button> {
 }
 
 object ChannelSerializer : KSerializer<Channel> {
-    override val descriptor = buildClassSerialDescriptor("Event") {
+    override val descriptor = buildClassSerialDescriptor("Channel") {
         element<String>("id")
         element("type", NumberSerializer.descriptor)
         element<String?>("name")
@@ -263,7 +266,7 @@ object ChannelSerializer : KSerializer<Channel> {
 }
 
 object GuildSerializer : KSerializer<Guild> {
-    override val descriptor = buildClassSerialDescriptor("Event") {
+    override val descriptor = buildClassSerialDescriptor("Guild") {
         element<String>("id")
         element<String?>("name")
         element<String?>("avatar")
@@ -290,7 +293,7 @@ object GuildSerializer : KSerializer<Guild> {
 }
 
 object LoginSerializer : KSerializer<Login> {
-    override val descriptor = buildClassSerialDescriptor("Event") {
+    override val descriptor = buildClassSerialDescriptor("Login") {
         element("user", UserSerializer.descriptor)
         element<String?>("self_id")
         element<String?>("platform")
@@ -326,7 +329,7 @@ object LoginSerializer : KSerializer<Login> {
 }
 
 object GuildMemberSerializer : KSerializer<GuildMember> {
-    override val descriptor = buildClassSerialDescriptor("Event") {
+    override val descriptor = buildClassSerialDescriptor("GuildMember") {
         element("user", UserSerializer.descriptor)
         element<String?>("nick")
         element<String?>("avatar")
@@ -357,7 +360,7 @@ object GuildMemberSerializer : KSerializer<GuildMember> {
 
 object MessageSerializer : KSerializer<Message> {
     @OptIn(ExperimentalSerializationApi::class)
-    override val descriptor = buildClassSerialDescriptor("Event") {
+    override val descriptor = buildClassSerialDescriptor("Message") {
         element<String>("id")
         element("content", listSerialDescriptor(String.serializer().descriptor))
         element("channel", ChannelSerializer.descriptor)
@@ -401,7 +404,7 @@ object MessageSerializer : KSerializer<Message> {
 }
 
 object UserSerializer : KSerializer<User> {
-    override val descriptor = buildClassSerialDescriptor("Event") {
+    override val descriptor = buildClassSerialDescriptor("User") {
         element<String>("id")
         element<String?>("name")
         element<String?>("nick")
@@ -434,7 +437,7 @@ object UserSerializer : KSerializer<User> {
 }
 
 object GuildRoleSerializer : KSerializer<GuildRole> {
-    override val descriptor = buildClassSerialDescriptor("Event") {
+    override val descriptor = buildClassSerialDescriptor("GuildRole") {
         element<String>("id")
         element<String?>("name")
     }
@@ -453,6 +456,59 @@ object GuildRoleSerializer : KSerializer<GuildRole> {
         return GuildRole(
             id = json["id"]!!.jsonPrimitive.content,
             name = json["name"]?.jsonPrimitive?.content,
+        )
+    }
+}
+
+class PagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : KSerializer<PagingList<T>> {
+    @OptIn(ExperimentalSerializationApi::class)
+    override val descriptor = buildClassSerialDescriptor("PagingList") {
+        element("data", listSerialDescriptor(dataSerializer.descriptor))
+        element<String?>("next")
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    override fun serialize(encoder: Encoder, value: PagingList<T>) {
+        encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
+            encodeSerializableElement(descriptor, 0, ListSerializer(dataSerializer), value.data)
+            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.next)
+        }
+    }
+
+    override fun deserialize(decoder: Decoder): PagingList<T> {
+        decoder as JsonDecoder
+        val json = decoder.decodeJsonElement().jsonObject.toMutableMap()
+        return PagingList(
+            data = Json.decodeFromJsonElement(ListSerializer(dataSerializer), json["data"]!!),
+            next = json["next"]?.jsonPrimitive?.content,
+        )
+    }
+}
+
+class BidiPagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : KSerializer<BidiPagingList<T>> {
+    @OptIn(ExperimentalSerializationApi::class)
+    override val descriptor = buildClassSerialDescriptor("BidiPagingList") {
+        element("data", listSerialDescriptor(dataSerializer.descriptor))
+        element<String?>("prev")
+        element<String?>("next")
+    }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    override fun serialize(encoder: Encoder, value: BidiPagingList<T>) {
+        encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
+            encodeSerializableElement(descriptor, 0, ListSerializer(dataSerializer), value.data)
+            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.prev)
+            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.next)
+        }
+    }
+
+    override fun deserialize(decoder: Decoder): BidiPagingList<T> {
+        decoder as JsonDecoder
+        val json = decoder.decodeJsonElement().jsonObject.toMutableMap()
+        return BidiPagingList(
+            data = Json.decodeFromJsonElement(ListSerializer(dataSerializer), json["data"]!!),
+            prev = json["prev"]?.jsonPrimitive?.content,
+            next = json["next"]?.jsonPrimitive?.content,
         )
     }
 }

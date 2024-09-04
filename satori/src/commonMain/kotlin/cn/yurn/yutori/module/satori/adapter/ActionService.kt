@@ -8,23 +8,17 @@
 package cn.yurn.yutori.module.satori.adapter
 
 import cn.yurn.yutori.ActionService
-import cn.yurn.yutori.BidiPagingList
-import cn.yurn.yutori.Channel
 import cn.yurn.yutori.FormData
-import cn.yurn.yutori.Guild
-import cn.yurn.yutori.GuildMember
-import cn.yurn.yutori.GuildRole
-import cn.yurn.yutori.Message
-import cn.yurn.yutori.PagingList
 import cn.yurn.yutori.SatoriProperties
-import cn.yurn.yutori.User
 import cn.yurn.yutori.message.element.MessageElement
+import cn.yurn.yutori.module.satori.BidiPagingListSerializer
 import cn.yurn.yutori.module.satori.ChannelSerializer
 import cn.yurn.yutori.module.satori.GuildMemberSerializer
 import cn.yurn.yutori.module.satori.GuildRoleSerializer
 import cn.yurn.yutori.module.satori.GuildSerializer
 import cn.yurn.yutori.module.satori.LoginSerializer
 import cn.yurn.yutori.module.satori.MessageSerializer
+import cn.yurn.yutori.module.satori.PagingListSerializer
 import cn.yurn.yutori.module.satori.UserSerializer
 import cn.yurn.yutori.module.satori.serialize
 import co.touchlab.kermit.Logger
@@ -112,7 +106,7 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
         when (resource) {
             "channel" -> when (method) {
                 "get" -> Json.decodeFromString(ChannelSerializer, body)
-                "list" -> Json.decodeFromString<PagingList<Channel>>(body)
+                "list" -> Json.decodeFromString(PagingListSerializer(ChannelSerializer), body)
                 "create" -> Json.decodeFromString(ChannelSerializer, body)
                 "update" -> Unit
                 "delete" -> Unit
@@ -127,14 +121,14 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
 
             "guild" -> when (method) {
                 "get" -> Json.decodeFromString(GuildSerializer, body)
-                "list" -> Json.decodeFromString<PagingList<Guild>>(body)
+                "list" -> Json.decodeFromString(PagingListSerializer(GuildSerializer), body)
                 "approve" -> Unit
                 else -> unsupported("Unsupported action: $resource.$method")
             }
 
             "guild.member" -> when (method) {
                 "get" -> Json.decodeFromString(GuildMemberSerializer, body)
-                "list" -> Json.decodeFromString<PagingList<GuildMember>>(body)
+                "list" -> Json.decodeFromString(PagingListSerializer(GuildMemberSerializer), body)
                 "kick" -> Unit
                 "mute" -> Unit
                 "approve" -> Unit
@@ -148,7 +142,7 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
             }
 
             "guild.role" -> when (method) {
-                "list" -> Json.decodeFromString<PagingList<GuildRole>>(body)
+                "list" -> Json.decodeFromString(PagingListSerializer(GuildRoleSerializer), body)
                 "create" -> Json.decodeFromString(GuildRoleSerializer, body)
                 "update" -> Unit
                 "delete" -> Unit
@@ -165,7 +159,7 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
                 "get" -> Json.decodeFromString(MessageSerializer, body)
                 "delete" -> Unit
                 "update" -> Unit
-                "list" -> Json.decodeFromString<BidiPagingList<Message>>(body)
+                "list" -> Json.decodeFromString(BidiPagingListSerializer(MessageSerializer), body)
                 else -> unsupported("Unsupported action: $resource.$method")
             }
 
@@ -173,7 +167,7 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
                 "create" -> Unit
                 "delete" -> Unit
                 "clear" -> Unit
-                "list" -> Json.decodeFromString<PagingList<User>>(body)
+                "list" -> Json.decodeFromString(PagingListSerializer(UserSerializer), body)
                 else -> unsupported("Unsupported action: $resource.$method")
             }
 
@@ -183,7 +177,7 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
             }
 
             "friend" -> when (method) {
-                "list" -> Json.decodeFromString<PagingList<User>>(body)
+                "list" -> Json.decodeFromString(PagingListSerializer(UserSerializer), body)
                 "approve" -> Unit
                 else -> unsupported("Unsupported action: $resource.$method")
             }
