@@ -19,8 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.navigation.navDeepLink
-import cn.yurn.yutori.Satori
+import cn.yurn.yutori.Yutori
 import cn.yurn.yutori.app.ui.components.ChattingScreen
 import cn.yurn.yutori.app.ui.components.ConnectScreen
 import cn.yurn.yutori.app.ui.components.HomeScreen
@@ -87,4 +86,4 @@ fun App(
     }
 }
 
-expect fun platformSatoriAsync(scope: CoroutineScope, satori: Satori)
+expect fun platformSatoriAsync(scope: CoroutineScope, yutori: Yutori)

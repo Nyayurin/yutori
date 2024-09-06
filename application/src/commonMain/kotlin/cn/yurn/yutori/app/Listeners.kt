@@ -6,7 +6,7 @@ import cn.yurn.yutori.Context
 import cn.yurn.yutori.Login
 import cn.yurn.yutori.MessageEvent
 import cn.yurn.yutori.RootActions
-import cn.yurn.yutori.Satori
+import cn.yurn.yutori.Yutori
 import cn.yurn.yutori.channel
 import cn.yurn.yutori.guild
 import cn.yurn.yutori.member
@@ -20,7 +20,7 @@ suspend fun onConnect(
     viewModel: MainViewModel,
     logins: List<Login>,
     service: SatoriActionService,
-    satori: Satori,
+    yutori: Yutori,
     requestChannels: Boolean
 ) {
     if (viewModel.ready) return
@@ -31,7 +31,7 @@ suspend fun onConnect(
         platform = viewModel.platform,
         self_id = viewModel.selfId,
         service = service,
-        satori = satori
+        yutori = yutori
     )
     if (!requestChannels) return
     var next: String? = null
@@ -101,7 +101,7 @@ fun Context<MessageEvent>.onMessageCreated(viewModel: MainViewModel) {
             append(event.nick())
         }
         append(": ")
-        append(previewMessageContent(event.message.content.toElements(satori)))
+        append(previewMessageContent(event.message.content.toElements(yutori)))
     }
     if (viewModel.chats.find { it.id == event.channel.id } == null) {
         viewModel.chats += Chat(

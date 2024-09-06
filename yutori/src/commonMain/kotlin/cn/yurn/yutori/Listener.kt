@@ -23,9 +23,9 @@ class ListenersContainer {
 
     fun any(listener: suspend Context<SigningEvent>.() -> Unit) = any.add { it.listener() }
 
-    suspend operator fun invoke(event: Event<SigningEvent>, satori: Satori, service: ActionService) {
+    suspend operator fun invoke(event: Event<SigningEvent>, yutori: Yutori, service: ActionService) {
         try {
-            val context = Context(RootActions(event.platform, event.self_id, service, satori), event, satori)
+            val context = Context(RootActions(event.platform, event.self_id, service, yutori), event, yutori)
             for (listener in this.any) listener(context)
             guild(context)
             interaction(context)
@@ -35,7 +35,7 @@ class ListenersContainer {
             friend(context)
             for (container in containers.values) container(context)
         } catch (e: EventParsingException) {
-            Logger.e(satori.name, e) { "event: $event" }
+            Logger.e(yutori.name, e) { "event: $event" }
         }
     }
 

@@ -13,7 +13,7 @@ import cn.yurn.yutori.NumberParsingException
 import cn.yurn.yutori.PagingList
 import cn.yurn.yutori.SigningEvent
 import cn.yurn.yutori.User
-import cn.yurn.yutori.satori
+import cn.yurn.yutori.yutori
 import korlibs.io.lang.unsupported
 import kotlinx.serialization.ContextualSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -35,7 +35,6 @@ import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.boolean
-import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
@@ -389,7 +388,7 @@ object MessageSerializer : KSerializer<Message> {
         decoder as JsonDecoder
         val json = decoder.decodeJsonElement().jsonObject.toMutableMap()
         val contentXml = json["content"]!!.jsonPrimitive.content
-        val content = contentXml.deserialize(satori { })
+        val content = contentXml.deserialize(yutori { })
         return Message(
             id = json["id"]!!.jsonPrimitive.content,
             content = content,

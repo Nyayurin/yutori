@@ -64,7 +64,7 @@ data class Content(
     val imageUrl: String? = null,
     val fileName: String? = null,
     val fileUrl: String? = null,
-    val button: Button? = null
+    val buttons: List<Button>? = null
 )
 
 @Serializable
@@ -74,3 +74,30 @@ data class Button(
     val url: String,
     val value: String
 )
+
+@Serializable
+data class MessageInfo(
+    val msgId: String,
+    val recvId: String,
+    val recvType: String
+)
+
+@Serializable
+data class Messages(
+    val list: List<Message>,
+    val total: Int
+) {
+    @Serializable
+    data class Message(
+        val msgId: String,
+        val parentId: String,
+        val senderId: String,
+        val senderType: String,
+        val senderNickname: String,
+        val contentType: String,
+        val content: Content,
+        val sendTime: Long,
+        val commandId: Int,
+        val commandName: String
+    )
+}

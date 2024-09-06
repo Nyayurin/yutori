@@ -13,7 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import androidx.core.net.toUri
-import cn.yurn.yutori.Satori
+import cn.yurn.yutori.Yutori
 import cn.yurn.yutori.channel
 import cn.yurn.yutori.guild
 import cn.yurn.yutori.message
@@ -41,7 +41,7 @@ class SatoriService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        satori.client {
+        yutori.adapter {
             listening {
                 message.created {
                     if (event.user.id == event.self_id) return@created
@@ -91,7 +91,7 @@ class SatoriService : Service() {
                             .setSmallIcon(R.drawable.icon)
                             .setContentTitle(event.channel.name ?: if (isPrivate) event.user.nick
                                 ?: event.user.name else event.guild?.name)
-                            .setContentText(previewMessageContent(event.message.content.toElements(satori)))
+                            .setContentText(previewMessageContent(event.message.content.toElements(yutori)))
                             .setContentIntent(pendingIntent)
                             .addAction(action)
                             .setAutoCancel(true)
@@ -100,13 +100,13 @@ class SatoriService : Service() {
                 }
             }
         }
-        scope.launch { satori.start() }
+        scope.launch { yutori.start() }
         return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     companion object {
-        lateinit var satori: Satori
+        lateinit var yutori: Yutori
     }
 }

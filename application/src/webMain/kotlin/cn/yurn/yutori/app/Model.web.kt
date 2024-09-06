@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import cn.yurn.yutori.Message
 import cn.yurn.yutori.RootActions
-import cn.yurn.yutori.Satori
+import cn.yurn.yutori.Yutori
 
 actual class ConnectScreenModel {
     actual var host by mutableStateOf("")
@@ -21,7 +21,7 @@ actual class ConnectScreenModel {
 actual class MainViewModel actual constructor() : ViewModel() {
     actual var ready: Boolean = false
     actual var darkMode: Boolean by mutableStateOf(false)
-    actual var satori: Satori? by mutableStateOf(null)
+    actual var yutori: Yutori? by mutableStateOf(null)
     actual var actions: RootActions? by mutableStateOf(null)
     actual var self: Chat? by mutableStateOf(null)
     actual var chatting: Chat? by mutableStateOf(null)

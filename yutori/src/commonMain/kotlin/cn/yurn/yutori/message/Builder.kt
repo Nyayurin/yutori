@@ -3,7 +3,7 @@
 package cn.yurn.yutori.message
 
 import cn.yurn.yutori.BuilderMarker
-import cn.yurn.yutori.Satori
+import cn.yurn.yutori.Yutori
 import cn.yurn.yutori.message.element.At
 import cn.yurn.yutori.message.element.Audio
 import cn.yurn.yutori.message.element.Author
@@ -29,8 +29,8 @@ import cn.yurn.yutori.message.element.Text
 import cn.yurn.yutori.message.element.Underline
 import cn.yurn.yutori.message.element.Video
 
-inline fun message(satori: Satori, block: MessageBuilder.() -> Unit) =
-    MessageBuilder(satori).apply(block).elements
+inline fun message(yutori: Yutori, block: MessageBuilder.() -> Unit) =
+    MessageBuilder(yutori).apply(block).elements
 
 interface ChildedMessageBuilder {
     val elements: MutableList<MessageElement>
@@ -57,107 +57,107 @@ interface PropertiedMessageBuilder : ChildedMessageBuilder {
 }
 
 abstract class ExtendedMessageBuilder(builder: MessageBuilder) {
-    val satori: Satori = builder.satori
+    val yutori: Yutori = builder.yutori
     val elements: MutableList<MessageElement> = builder.elements
 }
 
 @BuilderMarker
-open class MessageBuilder(val satori: Satori) : ChildedMessageBuilder {
+open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
     override val elements = mutableListOf<MessageElement>()
     val builders = mutableMapOf<String, ExtendedMessageBuilder>().apply {
-        for ((key, value) in satori.message_builders) this[key] = value(this@MessageBuilder)
+        for ((key, value) in yutori.message_builders) this[key] = value(this@MessageBuilder)
     }
 
     fun element(element: MessageElement) = elements.add(element)
 
     inline fun text(block: () -> String) = Text(block()).apply { elements += this }
     inline fun node(name: String, block: Node.() -> Unit) =
-        Node(name, satori).apply(block).buildElement().apply { elements += this }
+        Node(name, yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun at(block: At.() -> Unit) =
-        At(satori).apply(block).buildElement().apply { elements += this }
+        At(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun sharp(block: Sharp.() -> Unit) =
-        Sharp(satori).apply(block).buildElement().apply { elements += this }
+        Sharp(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun a(block: Href.() -> Unit) =
-        Href(satori).apply(block).buildElement().apply { elements += this }
+        Href(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun img(block: Image.() -> Unit) =
-        Image(satori).apply(block).buildElement().apply { elements += this }
+        Image(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun audio(block: Audio.() -> Unit) =
-        Audio(satori).apply(block).buildElement().apply { elements += this }
+        Audio(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun video(block: Video.() -> Unit) =
-        Video(satori).apply(block).buildElement().apply { elements += this }
+        Video(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun file(block: File.() -> Unit) =
-        File(satori).apply(block).buildElement().apply { elements += this }
+        File(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun b(block: Bold.() -> Unit) =
-        Bold(satori).apply(block).buildElement().apply { elements += this }
+        Bold(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun strong(block: Bold.() -> Unit) =
-        Bold(satori).apply(block).buildElement().apply { elements += this }
+        Bold(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun i(block: Idiomatic.() -> Unit) =
-        Idiomatic(satori).apply(block).buildElement().apply { elements += this }
+        Idiomatic(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun em(block: Idiomatic.() -> Unit) =
-        Idiomatic(satori).apply(block).buildElement().apply { elements += this }
+        Idiomatic(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun u(block: Underline.() -> Unit) =
-        Underline(satori).apply(block).buildElement().apply { elements += this }
+        Underline(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun ins(block: Underline.() -> Unit) =
-        Underline(satori).apply(block).buildElement().apply { elements += this }
+        Underline(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun s(block: Delete.() -> Unit) =
-        Delete(satori).apply(block).buildElement().apply { elements += this }
+        Delete(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun del(block: Delete.() -> Unit) =
-        Delete(satori).apply(block).buildElement().apply { elements += this }
+        Delete(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun spl(block: Spl.() -> Unit) =
-        Spl(satori).apply(block).buildElement().apply { elements += this }
+        Spl(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun code(block: Code.() -> Unit) =
-        Code(satori).apply(block).buildElement().apply { elements += this }
+        Code(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun sup(block: Sup.() -> Unit) =
-        Sup(satori).apply(block).buildElement().apply { elements += this }
+        Sup(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun sub(block: Sub.() -> Unit) =
-        Sub(satori).apply(block).buildElement().apply { elements += this }
+        Sub(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun br(block: Br.() -> Unit) =
-        Br(satori).apply(block).buildElement().apply { elements += this }
+        Br(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun p(block: Paragraph.() -> Unit) =
-        Paragraph(satori).apply(block).buildElement().apply { elements += this }
+        Paragraph(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun message(block: Message.() -> Unit) =
-        Message(satori).apply(block).buildElement().apply { elements += this }
+        Message(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun quote(block: Quote.() -> Unit) =
-        Quote(satori).apply(block).buildElement().apply { elements += this }
+        Quote(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun author(block: Author.() -> Unit) =
-        Author(satori).apply(block).buildElement().apply { elements += this }
+        Author(yutori).apply(block).buildElement().apply { elements += this }
 
     inline fun button(block: Button.() -> Unit) =
-        Button(satori).apply(block).buildElement().apply { elements += this }
+        Button(yutori).apply(block).buildElement().apply { elements += this }
 
     @BuilderMarker
-    class Node(private val name: String, satori: Satori) : MessageBuilder(satori),
+    class Node(private val name: String, yutori: Yutori) : MessageBuilder(yutori),
         PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>()
         override fun buildElement(): NodeMessageElement = buildElement(NodeMessageElement(name))
     }
 
     @BuilderMarker
-    class At(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class At(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties =
             mutableMapOf<String, Any?>("id" to null, "name" to null, "role" to null, "type" to null)
         var id: String? by properties
@@ -168,7 +168,7 @@ open class MessageBuilder(val satori: Satori) : ChildedMessageBuilder {
     }
 
     @BuilderMarker
-    class Sharp(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Sharp(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>("id" to "", "name" to null)
         var id: String by properties
         var name: String? by properties
@@ -176,14 +176,14 @@ open class MessageBuilder(val satori: Satori) : ChildedMessageBuilder {
     }
 
     @BuilderMarker
-    class Href(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Href(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>("href" to "")
         var href: String by properties
         override fun buildElement() = buildElement(Href(href))
     }
 
     @BuilderMarker
-    class Image(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Image(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>(
             "src" to "", "title" to null, "cache" to null, "timeout" to null, "width" to null, "height" to null
         )
@@ -197,7 +197,7 @@ open class MessageBuilder(val satori: Satori) : ChildedMessageBuilder {
     }
 
     @BuilderMarker
-    class Audio(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Audio(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>(
             "src" to "", "title" to null, "cache" to null, "timeout" to null, "duration" to null, "poster" to null
         )
@@ -211,7 +211,7 @@ open class MessageBuilder(val satori: Satori) : ChildedMessageBuilder {
     }
 
     @BuilderMarker
-    class Video(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Video(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>(
             "src" to "", "title" to null, "cache" to null, "timeout" to null, "width" to null, "height" to null,
             "duration" to null, "poster" to null
@@ -229,7 +229,7 @@ open class MessageBuilder(val satori: Satori) : ChildedMessageBuilder {
     }
 
     @BuilderMarker
-    class File(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class File(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>(
             "src" to "", "title" to null, "cache" to null, "timeout" to null, "poster" to null
         )
@@ -242,67 +242,67 @@ open class MessageBuilder(val satori: Satori) : ChildedMessageBuilder {
     }
 
     @BuilderMarker
-    class Bold(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Bold(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>()
         override fun buildElement() = buildElement(Bold())
     }
 
     @BuilderMarker
-    class Idiomatic(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Idiomatic(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>()
         override fun buildElement() = buildElement(Idiomatic())
     }
 
     @BuilderMarker
-    class Underline(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Underline(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>()
         override fun buildElement() = buildElement(Underline())
     }
 
     @BuilderMarker
-    class Delete(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Delete(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>()
         override fun buildElement() = buildElement(Strikethrough())
     }
 
     @BuilderMarker
-    class Spl(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Spl(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>()
         override fun buildElement() = buildElement(Spl())
     }
 
     @BuilderMarker
-    class Code(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Code(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>()
         override fun buildElement() = buildElement(Code())
     }
 
     @BuilderMarker
-    class Sup(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Sup(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>()
         override fun buildElement() = buildElement(Sup())
     }
 
     @BuilderMarker
-    class Sub(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Sub(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>()
         override fun buildElement() = buildElement(Sub())
     }
 
     @BuilderMarker
-    class Br(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Br(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>()
         override fun buildElement() = buildElement(Br())
     }
 
     @BuilderMarker
-    class Paragraph(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Paragraph(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>()
         override fun buildElement() = buildElement(Paragraph())
     }
 
     @BuilderMarker
-    class Message(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Message(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>("id" to null, "forward" to null)
         var id: String? by properties
         var forward: Boolean? by properties
@@ -310,7 +310,7 @@ open class MessageBuilder(val satori: Satori) : ChildedMessageBuilder {
     }
 
     @BuilderMarker
-    class Quote(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Quote(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>("id" to null, "forward" to null)
         var id: String? by properties
         var forward: Boolean? by properties
@@ -318,7 +318,7 @@ open class MessageBuilder(val satori: Satori) : ChildedMessageBuilder {
     }
 
     @BuilderMarker
-    class Author(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Author(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties = mutableMapOf<String, Any?>("id" to null, "name" to null, "avatar" to null)
         var id: String? by properties
         var name: String? by properties
@@ -327,7 +327,7 @@ open class MessageBuilder(val satori: Satori) : ChildedMessageBuilder {
     }
 
     @BuilderMarker
-    class Button(satori: Satori) : MessageBuilder(satori), PropertiedMessageBuilder {
+    class Button(yutori: Yutori) : MessageBuilder(yutori), PropertiedMessageBuilder {
         override val properties =
             mutableMapOf<String, Any?>("id" to null, "type" to null, "href" to null, "text" to null, "theme" to null)
         var id: String? by properties

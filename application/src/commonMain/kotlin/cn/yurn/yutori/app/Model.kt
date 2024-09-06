@@ -6,12 +6,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import cn.yurn.yutori.Message
 import cn.yurn.yutori.RootActions
-import cn.yurn.yutori.Satori
+import cn.yurn.yutori.Yutori
 
 expect class MainViewModel() : ViewModel {
     var ready: Boolean
     var darkMode: Boolean
-    var satori: Satori?
+    var yutori: Yutori?
     var actions: RootActions?
     var self: Chat?
     var chatting: Chat?

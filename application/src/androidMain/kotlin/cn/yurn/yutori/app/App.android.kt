@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import cn.yurn.yutori.Satori
+import cn.yurn.yutori.Yutori
 import com.funny.data_saver.core.DataSaverPreferences
 import kotlinx.coroutines.CoroutineScope
 
@@ -43,7 +43,7 @@ class AppActivity : ComponentActivity() {
     }
 }
 
-actual fun platformSatoriAsync(scope: CoroutineScope, satori: Satori) {
-    SatoriService.satori = satori
+actual fun platformSatoriAsync(scope: CoroutineScope, yutori: Yutori) {
+    SatoriService.yutori = yutori
     context.startForegroundService(Intent(context, SatoriService::class.java))
 }

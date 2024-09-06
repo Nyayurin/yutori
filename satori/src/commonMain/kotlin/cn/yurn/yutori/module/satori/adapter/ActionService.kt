@@ -40,7 +40,6 @@ import io.ktor.http.contentType
 import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.core.use
-import korlibs.io.lang.unsupported
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 
@@ -111,19 +110,19 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
                 "update" -> Unit
                 "delete" -> Unit
                 "mute" -> Unit
-                else -> unsupported("Unsupported action: $resource.$method")
+                else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
             }
 
             "user.channel" -> when (method) {
                 "create" -> Json.decodeFromString(ChannelSerializer, body)
-                else -> unsupported("Unsupported action: $resource.$method")
+                else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
             }
 
             "guild" -> when (method) {
                 "get" -> Json.decodeFromString(GuildSerializer, body)
                 "list" -> Json.decodeFromString(PagingListSerializer(GuildSerializer), body)
                 "approve" -> Unit
-                else -> unsupported("Unsupported action: $resource.$method")
+                else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
             }
 
             "guild.member" -> when (method) {
@@ -132,13 +131,13 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
                 "kick" -> Unit
                 "mute" -> Unit
                 "approve" -> Unit
-                else -> unsupported("Unsupported action: $resource.$method")
+                else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
             }
 
             "guild.member.role" -> when (method) {
                 "set" -> Unit
                 "unset" -> Unit
-                else -> unsupported("Unsupported action: $resource.$method")
+                else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
             }
 
             "guild.role" -> when (method) {
@@ -146,12 +145,12 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
                 "create" -> Json.decodeFromString(GuildRoleSerializer, body)
                 "update" -> Unit
                 "delete" -> Unit
-                else -> unsupported("Unsupported action: $resource.$method")
+                else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
             }
 
             "login" -> when (method) {
                 "get" -> Json.decodeFromString(LoginSerializer, body)
-                else -> unsupported("Unsupported action: $resource.$method")
+                else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
             }
 
             "message" -> when (method) {
@@ -160,7 +159,7 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
                 "delete" -> Unit
                 "update" -> Unit
                 "list" -> Json.decodeFromString(BidiPagingListSerializer(MessageSerializer), body)
-                else -> unsupported("Unsupported action: $resource.$method")
+                else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
             }
 
             "reaction" -> when (method) {
@@ -168,21 +167,21 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
                 "delete" -> Unit
                 "clear" -> Unit
                 "list" -> Json.decodeFromString(PagingListSerializer(UserSerializer), body)
-                else -> unsupported("Unsupported action: $resource.$method")
+                else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
             }
 
             "user" -> when (method) {
                 "get" -> Json.decodeFromString(UserSerializer, body)
-                else -> unsupported("Unsupported action: $resource.$method")
+                else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
             }
 
             "friend" -> when (method) {
                 "list" -> Json.decodeFromString(PagingListSerializer(UserSerializer), body)
                 "approve" -> Unit
-                else -> unsupported("Unsupported action: $resource.$method")
+                else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
             }
 
-            else -> unsupported("Unsupported action: $resource.$method")
+            else -> throw UnsupportedOperationException("Unsupported action: $resource.$method")
         }
     }
 

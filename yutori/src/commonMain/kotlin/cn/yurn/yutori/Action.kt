@@ -18,19 +18,19 @@ abstract class Action(
         service.upload(resource, method, platform!!, self_id!!, content)
 }
 
-class RootActions(platform: String, self_id: String, service: ActionService, satori: Satori) :
+class RootActions(platform: String, self_id: String, service: ActionService, yutori: Yutori) :
     Actions() {
     val channel = ChannelAction(platform, self_id, service)
     val guild = GuildAction(platform, self_id, service)
     val login = LoginAction(platform, self_id, service)
-    val message = MessageAction(satori, platform, self_id, service)
+    val message = MessageAction(yutori, platform, self_id, service)
     val reaction = ReactionAction(platform, self_id, service)
     val user = UserAction(platform, self_id, service)
     val friend = FriendAction(platform, self_id, service)
     val upload = UploadAction(platform, self_id, service)
     val admin = AdminAction(service)
     val containers = mutableMapOf<String, Actions>().apply {
-        for ((key, value) in satori.actions_containers) this[key] =
+        for ((key, value) in yutori.actions_containers) this[key] =
             value(platform, self_id, service)
     }
 
@@ -213,7 +213,7 @@ class RootActions(platform: String, self_id: String, service: ActionService, sat
     }
 
     class MessageAction(
-        private val satori: Satori, platform: String, self_id: String, service: ActionService
+        private val yutori: Yutori, platform: String, self_id: String, service: ActionService
     ) : Action(
         platform, self_id, "message", service
     ) {
@@ -228,7 +228,7 @@ class RootActions(platform: String, self_id: String, service: ActionService, sat
             channel_id: String,
             content: MessageBuilder.() -> Unit,
             vararg contents: Pair<String, Any> = arrayOf()
-        ): List<Message> = create(channel_id, message(satori, content), *contents)
+        ): List<Message> = create(channel_id, message(yutori, content), *contents)
 
         suspend fun get(
             channel_id: String, message_id: String, vararg contents: Pair<String, Any> = arrayOf()
@@ -256,7 +256,7 @@ class RootActions(platform: String, self_id: String, service: ActionService, sat
             message_id: String,
             content: MessageBuilder.() -> Unit,
             vararg contents: Pair<String, Any> = arrayOf()
-        ): Unit = update(channel_id, message_id, message(satori, content), *contents)
+        ): Unit = update(channel_id, message_id, message(yutori, content), *contents)
 
         suspend fun list(
             channel_id: String,

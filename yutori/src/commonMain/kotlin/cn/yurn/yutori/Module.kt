@@ -3,15 +3,15 @@
 package cn.yurn.yutori
 
 abstract class Module {
-    abstract fun install(satori: Satori)
-    abstract fun uninstall(satori: Satori)
+    abstract fun install(yutori: Yutori)
+    abstract fun uninstall(yutori: Yutori)
 
     companion object
 }
 
 abstract class Adapter : Module() {
-    abstract suspend fun start(satori: Satori)
-    abstract fun stop(satori: Satori)
+    abstract suspend fun start(yutori: Yutori)
+    abstract fun stop(yutori: Yutori)
 
     companion object
 }

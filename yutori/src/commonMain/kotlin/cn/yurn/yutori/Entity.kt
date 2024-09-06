@@ -204,7 +204,7 @@ data class SatoriProperties(
 data class Context<T : SigningEvent>(
     val actions: RootActions,
     val event: Event<T>,
-    val satori: Satori
+    val yutori: Yutori
 )
 
 class Event<T : SigningEvent>(val properties: Map<String, Any?> = mapOf()) {

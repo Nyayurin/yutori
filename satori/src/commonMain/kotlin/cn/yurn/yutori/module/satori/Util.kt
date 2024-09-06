@@ -3,7 +3,7 @@ package cn.yurn.yutori.module.satori
 import cn.yurn.yutori.MessageElementParsingException
 import cn.yurn.yutori.MessageElementPropertyParsingException
 import cn.yurn.yutori.NumberParsingException
-import cn.yurn.yutori.Satori
+import cn.yurn.yutori.Yutori
 import cn.yurn.yutori.message.element.MessageElement
 import cn.yurn.yutori.message.element.NodeMessageElement
 import cn.yurn.yutori.message.element.Text
@@ -25,17 +25,17 @@ fun String.decode() = replace("&gt;", ">")
     .replace("&quot;", "\"")
     .replace("&amp;", "&")
 
-fun String.deserialize(satori: Satori): List<MessageElement> {
+fun String.deserialize(yutori: Yutori): List<MessageElement> {
     val nodes = Ksoup.parse(this).body().childNodes().filter {
         it !is Comment && it !is DocumentType
     }
-    return List(nodes.size) { i -> parseElement(satori, nodes[i]) }
+    return List(nodes.size) { i -> parseElement(yutori, nodes[i]) }
 }
 
-private fun parseElement(satori: Satori, node: Node): MessageElement = when (node) {
+private fun parseElement(yutori: Yutori, node: Node): MessageElement = when (node) {
     is TextNode -> Text(node.text())
     is Element -> {
-        val container = satori.elements[node.tagName()]
+        val container = yutori.elements[node.tagName()]
         val attributes = buildMap<String, Any?> {
             for ((key, value) in node.attributes()) {
                 put(key, value)
@@ -71,7 +71,7 @@ private fun parseElement(satori: Satori, node: Node): MessageElement = when (nod
                         else -> throw MessageElementPropertyParsingException(default::class.toString())
                     }
             }
-            for (child in node.childNodes()) this.children += parseElement(satori, child)
+            for (child in node.childNodes()) this.children += parseElement(yutori, child)
         } ?: NodeMessageElement(
             node.tagName()
         )

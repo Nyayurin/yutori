@@ -9,7 +9,7 @@ import cn.yurn.yutori.GuildMemberEvents
 import cn.yurn.yutori.GuildRole
 import cn.yurn.yutori.Message
 import cn.yurn.yutori.MessageEvents
-import cn.yurn.yutori.Satori
+import cn.yurn.yutori.Yutori
 import cn.yurn.yutori.SigningEvent
 import cn.yurn.yutori.User
 import cn.yurn.yutori.message.message
@@ -34,9 +34,9 @@ import kotlinx.serialization.json.Json
 
 class YhChatEventService(
     val properties: YhChatProperties,
-    val satori: Satori
+    val yutori: Yutori
 ) : EventService {
-    private val service = YhChatActionService(properties, satori.name)
+    private val service = YhChatActionService(properties, yutori.name)
     private var job by atomic<Job?>(null)
     private val idMap = mapOf<Int, String>()
     private var last = 0
@@ -114,7 +114,7 @@ class YhChatEventService(
     ) = Event<SigningEvent>(
         id = last++,
         type = MessageEvents.Created,
-        platform = "YhChat",
+        platform = "yhchat",
         self_id = properties.selfId,
         timestamp = timestamp,
         argv = null,
@@ -201,7 +201,7 @@ class YhChatEventService(
     ) = Event<SigningEvent>(
         id = last++,
         type = GuildMemberEvents.Added,
-        platform = "YhChat",
+        platform = "yhchat",
         self_id = properties.selfId,
         timestamp = timestamp,
         argv = null,
@@ -254,7 +254,7 @@ class YhChatEventService(
     ) = Event<SigningEvent>(
         id = last++,
         type = GuildMemberEvents.Removed,
-        platform = "YhChat",
+        platform = "yhchat",
         self_id = properties.selfId,
         timestamp = timestamp,
         argv = null,
@@ -307,7 +307,7 @@ class YhChatEventService(
     ): Event<SigningEvent> = TODO()
 
     private fun parseMessageContent(event: cn.yurn.yutori.module.yhchat.Event) =
-        message(satori) {
+        message(yutori) {
             when (event.message.contentType) {
                 "text" -> text { event.message.content.text!! }
                 "image" -> img {
@@ -321,7 +321,7 @@ class YhChatEventService(
 
                 "markdown" -> TODO()
             }
-            event.message.content.button?.let { button ->
+            event.message.content.buttons?.forEach { button ->
                 button {
                     when (button.actionType) {
                         1 -> {
@@ -345,7 +345,7 @@ class YhChatEventService(
         }
 
     private suspend fun onEvent(event: Event<SigningEvent>) {
-        val name = satori.name
+        val name = yutori.name
         try {
             when (event.type) {
                 MessageEvents.Created -> Logger.i(name) {
@@ -362,7 +362,7 @@ class YhChatEventService(
                 else -> Logger.i(name) { "${event.platform}(${event.self_id}) 接收事件: ${event.type}" }
             }
             Logger.d(name) { "事件详细信息: $event" }
-            satori.client.container(event, satori, service)
+            yutori.adapter.container(event, yutori, service)
         } catch (e: Exception) {
             Logger.w(name, e) { "处理事件时出错: $event" }
         }

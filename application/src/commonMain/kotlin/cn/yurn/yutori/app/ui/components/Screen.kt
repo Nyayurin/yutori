@@ -48,7 +48,7 @@ import cn.yurn.yutori.app.ScreenSize
 import cn.yurn.yutori.app.onMessageCreated
 import cn.yurn.yutori.app.platformSatoriAsync
 import cn.yurn.yutori.module.adapter.satori.Satori
-import cn.yurn.yutori.satori
+import cn.yurn.yutori.yutori
 import kotlinx.coroutines.launch
 
 @Composable
@@ -138,8 +138,8 @@ fun ConnectScreen(navController: NavController, viewModel: MainViewModel) {
                 screenModel.path = path
                 screenModel.token = token
                 screenModel.requestChannels = requestChannels
-                viewModel.satori?.stop()
-                viewModel.satori = satori {
+                viewModel.yutori?.stop()
+                viewModel.yutori = yutori {
                     install(Adapter.Satori) {
                         this.host = screenModel.host
                         this.port = screenModel.port
@@ -155,13 +155,13 @@ fun ConnectScreen(navController: NavController, viewModel: MainViewModel) {
                             )
                         }
                     }
-                    client {
+                    adapter {
                         listening {
                             message.created { onMessageCreated(viewModel) }
                         }
                     }
                 }
-                platformSatoriAsync(viewModel.viewModelScope, viewModel.satori!!)
+                platformSatoriAsync(viewModel.viewModelScope, viewModel.yutori!!)
                 navController.navigate("home")
             },
             modifier = Modifier

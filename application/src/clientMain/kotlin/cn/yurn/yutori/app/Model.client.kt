@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import cn.yurn.yutori.Message
 import cn.yurn.yutori.RootActions
-import cn.yurn.yutori.Satori
+import cn.yurn.yutori.Yutori
 import com.funny.data_saver.core.DataSaverInterface
 import com.funny.data_saver.core.mutableDataSaverStateOf
 import kotlinx.serialization.encodeToString
@@ -29,7 +29,7 @@ actual class ConnectScreenModel {
 actual class MainViewModel actual constructor() : ViewModel() {
     actual var ready: Boolean = false
     actual var darkMode: Boolean by mutableDataSaverStateOf(DataSaverObject.dataSaver, "darkMode", false)
-    actual var satori: Satori? by mutableStateOf(null)
+    actual var yutori: Yutori? by mutableStateOf(null)
     actual var actions: RootActions? by mutableStateOf(null)
     actual var self: Chat? by mutableStateOf(null)
     actual var chatting: Chat? by mutableStateOf(null)

@@ -83,7 +83,7 @@ import cn.yurn.yutori.message.element.Sup
 import cn.yurn.yutori.message.element.Text
 import cn.yurn.yutori.message.element.Underline
 import cn.yurn.yutori.message.element.Video
-import cn.yurn.yutori.satori
+import cn.yurn.yutori.yutori
 import cn.yurn.yutori.toElements
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
@@ -384,7 +384,7 @@ fun ClickableMessage(message: Message, isUserMe: Boolean, viewModel: MainViewMod
         .replace("\r\n", "<br>")
         .replace("\r", "<br>")
         .replace("\n", "<br>")
-        .toElements(viewModel.satori ?: satori { })
+        .toElements(viewModel.yutori ?: yutori { })
     for ((index, element) in elements.withIndex()) when (element) {
         is Text -> messages.last() += element
         is At -> messages.last() += element

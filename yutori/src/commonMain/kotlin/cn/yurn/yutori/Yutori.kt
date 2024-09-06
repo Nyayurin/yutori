@@ -33,11 +33,11 @@ import cn.yurn.yutori.message.element.Video
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
-fun satori(name: String = "Satori", block: Satori.() -> Unit) = Satori(name).apply(block)
+fun yutori(name: String = "Yutori", block: Yutori.() -> Unit) = Yutori(name).apply(block)
 
 @BuilderMarker
-class Satori(val name: String) {
-    val client = Client()
+class Yutori(val name: String) {
+    val adapter = Adapter()
     val server = Server()
     val modules = mutableListOf<Module>()
     val elements = mutableMapOf<String, MessageElementContainer>()
@@ -92,19 +92,19 @@ class Satori(val name: String) {
         modules -= module
     }
 
-    fun client(block: Client.() -> Unit) = client.block()
+    fun adapter(block: Adapter.() -> Unit) = adapter.block()
     fun server(block: Server.() -> Unit) = server.block()
     suspend fun start() = coroutineScope {
-        modules.filterIsInstance<Adapter>().forEach { adapter ->
+        modules.filterIsInstance<cn.yurn.yutori.Adapter>().forEach { adapter ->
             launch {
-                adapter.start(this@Satori)
+                adapter.start(this@Yutori)
             }
         }
     }
 
-    fun stop() = modules.filterIsInstance<Adapter>().forEach { adapter -> adapter.stop(this) }
+    fun stop() = modules.filterIsInstance<cn.yurn.yutori.Adapter>().forEach { adapter -> adapter.stop(this) }
 
-    class Client {
+    class Adapter {
         val container = ListenersContainer()
         fun listening(block: ListenersContainer.() -> Unit) = container.block()
     }

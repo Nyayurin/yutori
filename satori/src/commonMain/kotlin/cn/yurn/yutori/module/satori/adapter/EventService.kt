@@ -25,18 +25,18 @@ import kotlinx.serialization.json.Json
 /**
  * Satori 事件服务的 WebSocket 实现
  * @param properties Satori Server 配置
- * @param satori Satori 配置
+ * @param yutori Satori 配置
  */
 class WebSocketEventService(
     val properties: SatoriProperties,
-    val onConnect: suspend (List<Login>, SatoriActionService, Satori) -> Unit = { _, _, _ -> },
+    val onConnect: suspend (List<Login>, SatoriActionService, Yutori) -> Unit = { _, _, _ -> },
     val onClose: suspend () -> Unit = { },
     val onError: suspend () -> Unit = { },
-    val satori: Satori,
+    val yutori: Yutori,
     var sequence: Number? = null
 ) : EventService {
     private var is_received_pong by atomic(false)
-    private val service = SatoriActionService(properties, satori.name)
+    private val service = SatoriActionService(properties, yutori.name)
     private var job by atomic<Job?>(null)
 
     override suspend fun connect() {
@@ -49,7 +49,7 @@ class WebSocketEventService(
                         })
                     }
                 }
-                val name = satori.name
+                val name = yutori.name
                 var connected by atomic(false)
                 /*
                  这一段超时断连的代码不知为何无法正常运行
@@ -112,7 +112,7 @@ class WebSocketEventService(
                             when (val signal = receiveDeserialized<Signal>()) {
                                 is ReadySignal -> {
                                     ready = true
-                                    onConnect(signal.body.logins, service, satori)
+                                    onConnect(signal.body.logins, service, yutori)
                                     Logger.i(name) { "成功建立事件推送服务: ${signal.body.logins}" }
                                 }
                                 is EventSignal -> launch { onEvent(signal.body) }
@@ -143,7 +143,7 @@ class WebSocketEventService(
     }
 
     private suspend fun onEvent(event: Event<SigningEvent>) {
-        val name = satori.name
+        val name = yutori.name
         try {
             when (event.type) {
                 MessageEvents.Created -> Logger.i(name) { buildString {
@@ -159,7 +159,7 @@ class WebSocketEventService(
             }
             Logger.d(name) { "事件详细信息: $event" }
             sequence = event.id
-            satori.client.container(event, satori, service)
+            yutori.adapter.container(event, yutori, service)
         } catch (e: Exception) {
             Logger.w(name, e) { "处理事件时出错: $event" }
         }
