@@ -15,6 +15,7 @@ import cn.yurn.yutori.User
 import cn.yurn.yutori.message.message
 import cn.yurn.yutori.module.yhchat.YhChatEvent
 import cn.yurn.yutori.module.yhchat.YhChatProperties
+import cn.yurn.yutori.module.yhchat.message.yhchat
 import cn.yurn.yutori.nick
 import co.touchlab.kermit.Logger
 import io.ktor.serialization.kotlinx.json.json
@@ -319,7 +320,9 @@ class YhChatEventService(
                     title = event.message.content.fileName!!
                 }
 
-                "markdown" -> TODO()
+                "markdown" -> yhchat.markdown {
+                    text { event.message.content.text!! }
+                }
             }
             event.message.content.buttons?.forEach { button ->
                 button {

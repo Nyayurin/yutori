@@ -7,7 +7,7 @@ import cn.yurn.yutori.message.MessageBuilder
 import cn.yurn.yutori.message.PropertiedMessageBuilder
 import cn.yurn.yutori.module.yhchat.message.element.Markdown
 
-val MessageBuilder.YhChat: YhChatMessageBuilder
+val MessageBuilder.yhchat: YhChatMessageBuilder
     get() = builders["yhchat"] as YhChatMessageBuilder
 
 @BuilderMarker
