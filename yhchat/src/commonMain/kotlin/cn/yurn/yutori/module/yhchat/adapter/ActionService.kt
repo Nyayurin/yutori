@@ -37,7 +37,6 @@ import cn.yurn.yutori.module.yhchat.message.element.HTML
 import cn.yurn.yutori.module.yhchat.message.element.Markdown
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.forms.formData
 import io.ktor.client.request.forms.submitFormWithBinaryData
@@ -53,13 +52,14 @@ import io.ktor.http.URLBuilder
 import io.ktor.http.URLProtocol
 import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
-import io.ktor.http.headers
+import io.ktor.http.parameters
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.core.use
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 
@@ -344,32 +344,38 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
         val url = URLBuilder().apply {
             protocol = URLProtocol.HTTPS
             host = "chat-go.jwzhd.com"
-            appendPathSegments("open-apis", "v1", "bot", "upload")
-            headers {
-                append(
-                    HttpHeaders.Authorization,
-                    "Bearer ${properties.token}"
-                )
+            appendPathSegments("open-apis", "v1", "image", "upload")
+            parameters {
+                append("token", properties.token)
             }
         }.buildString()
-        val formData = formData {
-            for (data in content) {
-                append(data.name, data.content, Headers.build {
-                    data.filename?.let { filename ->
-                        append(HttpHeaders.ContentDisposition, "filename=\"$filename\"")
+        val map = mutableMapOf<String, String>()
+        for (data in content) {
+            val formData = formData {
+                append(
+                    key = data.name,
+                    value = data.content,
+                    headers = Headers.build {
+                        data.filename?.let { filename ->
+                            append(HttpHeaders.ContentDisposition, "filename=\"$filename\"")
+                        }
+                        append(HttpHeaders.ContentType, data.type)
                     }
-                    append(HttpHeaders.ContentType, data.type)
-                })
+                )
             }
+            Logger.d(name) {
+                """
+                YhChat Action Request: url: $url,
+                    body: $formData
+                """.trimIndent()
+            }
+            val response = client.submitFormWithBinaryData(url, formData)
+            Logger.d(name) { "YhChat Action Response: $response" }
+            map[data.name] = Json.parseToJsonElement(response.bodyAsText())
+                .jsonObject["data"]!!
+                .jsonObject["imageKey"]!!
+                .jsonPrimitive.content
         }
-        Logger.d(name) {
-            """
-            YhChat Action Request: url: $url,
-                body: $formData
-            """.trimIndent()
-        }
-        val response = client.submitFormWithBinaryData(url, formData)
-        Logger.d(name) { "YhChat Action Response: $response" }
-        response.body()
+        map.toMap()
     }
 }
