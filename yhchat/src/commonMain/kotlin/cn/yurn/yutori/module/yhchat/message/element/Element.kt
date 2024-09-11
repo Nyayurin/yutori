@@ -1,20 +1,11 @@
 package cn.yurn.yutori.module.yhchat.message.element
 
-import cn.yurn.yutori.message.element.MessageElementContainer
-import cn.yurn.yutori.message.element.NodeMessageElement
+import cn.yurn.yutori.message.element.MessageElement
 
-class Markdown : NodeMessageElement("yhchat:markdown") {
-    companion object : MessageElementContainer() {
-        override fun invoke(
-            attributes: Map<String, Any?>
-        ) = Markdown()
-    }
+class Markdown(var content: String) : MessageElement() {
+    override fun toString() = content
 }
 
-class HTML : NodeMessageElement("yhchat:html") {
-    companion object : MessageElementContainer() {
-        override fun invoke(
-            attributes: Map<String, Any?>
-        ) = HTML()
-    }
+class HTML(var content: String) : MessageElement() {
+    override fun toString() = content
 }

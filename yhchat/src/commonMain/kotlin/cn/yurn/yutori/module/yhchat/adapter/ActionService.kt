@@ -315,11 +315,7 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
                         add("text" to Content(text = builder.toString()))
                         builder.clear()
                     }
-                    add(
-                        "markdown" to Content(
-                            text = element.children.filterIsInstance<Text>()
-                                .joinToString("") { it.text })
-                    )
+                    add("markdown" to Content(text = element.content))
                 }
 
                 is HTML -> {
@@ -327,11 +323,7 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
                         add("text" to Content(text = builder.toString()))
                         builder.clear()
                     }
-                    add(
-                        "html" to Content(
-                            text = element.children.filterIsInstance<Text>()
-                                .joinToString("") { it.text })
-                    )
+                    add("html" to Content(text = element.content))
                 }
             }
         }

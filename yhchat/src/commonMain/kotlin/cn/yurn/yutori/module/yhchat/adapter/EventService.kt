@@ -320,13 +320,8 @@ class YhChatEventService(
                     title = event.message.content.fileName!!
                 }
 
-                "markdown" -> yhchat.markdown {
-                    text { event.message.content.text!! }
-                }
-
-                "html" -> yhchat.html {
-                    text { event.message.content.text!! }
-                }
+                "markdown" -> yhchat.markdown { event.message.content.text!! }
+                "html" -> yhchat.html { event.message.content.text!! }
             }
             event.message.content.buttons?.forEach { button ->
                 button {
