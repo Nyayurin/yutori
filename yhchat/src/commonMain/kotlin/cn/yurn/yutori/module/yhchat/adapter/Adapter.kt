@@ -7,6 +7,7 @@ import cn.yurn.yutori.Reinstallable
 import cn.yurn.yutori.Yutori
 import cn.yurn.yutori.module.yhchat.YhChatProperties
 import cn.yurn.yutori.module.yhchat.message.YhChatMessageBuilder
+import cn.yurn.yutori.module.yhchat.message.element.HTML
 import cn.yurn.yutori.module.yhchat.message.element.Markdown
 import kotlinx.atomicfu.atomic
 
@@ -27,11 +28,13 @@ class YhChatAdapter : Adapter(), Reinstallable {
         properties = YhChatProperties(host, port, path, token, selfId)
         yutori.message_builders["yhchat"] = { YhChatMessageBuilder(it) }
         yutori.elements["yhchat:markdown"] = Markdown
+        yutori.elements["yhchat:html"] = HTML
         yutori.actions_containers["yhchat"] = { _, _, _ -> YhChatActions(properties) }
     }
     override fun uninstall(yutori: Yutori) {
         yutori.message_builders.remove("yhchat")
         yutori.elements.remove("yhchat:markdown")
+        yutori.elements.remove("yhchat:html")
         yutori.actions_containers.remove("yhchat")
     }
 

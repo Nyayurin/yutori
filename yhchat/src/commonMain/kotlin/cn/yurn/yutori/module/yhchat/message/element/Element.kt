@@ -10,3 +10,11 @@ class Markdown : NodeMessageElement("yhchat:markdown") {
         ) = Markdown()
     }
 }
+
+class HTML : NodeMessageElement("yhchat:html") {
+    companion object : MessageElementContainer() {
+        override fun invoke(
+            attributes: Map<String, Any?>
+        ) = HTML()
+    }
+}

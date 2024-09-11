@@ -323,6 +323,10 @@ class YhChatEventService(
                 "markdown" -> yhchat.markdown {
                     text { event.message.content.text!! }
                 }
+
+                "html" -> yhchat.html {
+                    text { event.message.content.text!! }
+                }
             }
             event.message.content.buttons?.forEach { button ->
                 button {

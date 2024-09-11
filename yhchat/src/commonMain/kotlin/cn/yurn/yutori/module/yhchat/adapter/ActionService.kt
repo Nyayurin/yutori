@@ -33,15 +33,16 @@ import cn.yurn.yutori.message.element.Video
 import cn.yurn.yutori.module.yhchat.Content
 import cn.yurn.yutori.module.yhchat.MessageInfo
 import cn.yurn.yutori.module.yhchat.YhChatProperties
+import cn.yurn.yutori.module.yhchat.message.element.HTML
 import cn.yurn.yutori.module.yhchat.message.element.Markdown
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
 import io.ktor.http.appendPathSegments
@@ -50,6 +51,8 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.core.use
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.decodeFromJsonElement
+import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 
@@ -113,7 +116,9 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
                                 put("fileName", content.fileName!!)
                                 put("fileUrl", content.fileUrl!!)
                             }
+
                             "markdown" -> put("text", content.text!!.replace("\"", "\\\""))
+                            "html" -> put("text", content.text!!.replace("\"", "\\\""))
                         }
                     }
                 })
@@ -126,7 +131,11 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
                 }
             }
         }.map { response ->
-            response.body<MessageInfo>()
+            Json.decodeFromJsonElement<MessageInfo>(
+                Json.parseToJsonElement(response.bodyAsText())
+                    .jsonObject["data"]!!
+                    .jsonObject["messageInfo"]!!
+            )
         }.map { info ->
             cn.yurn.yutori.Message(
                 id = info.msgId,
@@ -167,7 +176,9 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
                                 put("fileName", content.fileName!!)
                                 put("fileUrl", content.fileUrl!!)
                             }
-                            "markdown" -> TODO()
+
+                            "markdown" -> put("text", content.text!!.replace("\"", "\\\""))
+                            "html" -> put("text", content.text!!.replace("\"", "\\\""))
                         }
                     }
                 })
@@ -268,8 +279,14 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
                         add("text" to Content(text = builder.toString()))
                         builder.clear()
                     }
-                    add("file" to Content(fileUrl = element.src, fileName = element.title.toString()))
+                    add(
+                        "file" to Content(
+                            fileUrl = element.src,
+                            fileName = element.title.toString()
+                        )
+                    )
                 }
+
                 is Bold, is Strong -> TODO()
                 is Idiomatic, is Em -> TODO()
                 is Underline, is Ins -> TODO()
@@ -289,7 +306,23 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
                         add("text" to Content(text = builder.toString()))
                         builder.clear()
                     }
-                    add("markdown" to Content(text = element.children.filterIsInstance<Text>().joinToString("") { it.text }))
+                    add(
+                        "markdown" to Content(
+                            text = element.children.filterIsInstance<Text>()
+                                .joinToString("") { it.text })
+                    )
+                }
+
+                is HTML -> {
+                    if (builder.isNotEmpty()) {
+                        add("text" to Content(text = builder.toString()))
+                        builder.clear()
+                    }
+                    add(
+                        "html" to Content(
+                            text = element.children.filterIsInstance<Text>()
+                                .joinToString("") { it.text })
+                    )
                 }
             }
         }
