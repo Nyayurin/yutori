@@ -2,7 +2,6 @@ package cn.yurn.yutori.module.yhchat.adapter
 
 import cn.yurn.yutori.Adapter
 import cn.yurn.yutori.BuilderMarker
-import cn.yurn.yutori.EventService
 import cn.yurn.yutori.Reinstallable
 import cn.yurn.yutori.Yutori
 import cn.yurn.yutori.module.yhchat.YhChatProperties
@@ -19,14 +18,20 @@ class YhChatAdapter : Adapter(), Reinstallable {
     var path: String = ""
     var token: String = ""
     var selfId: String = ""
+    var onStart: suspend YhChatEventService.() -> Unit = { }
     private lateinit var properties: YhChatProperties
-    private var service: EventService? by atomic(null)
+    private var service: YhChatEventService? by atomic(null)
+
+    fun onStart(block: suspend YhChatEventService.() -> Unit) {
+        onStart = block
+    }
 
     override fun install(yutori: Yutori) {
         properties = YhChatProperties(host, port, path, token, selfId)
         yutori.message_builders["yhchat"] = { YhChatMessageBuilder(it) }
         yutori.actions_containers["yhchat"] = { _, _, _ -> YhChatActions(properties) }
     }
+
     override fun uninstall(yutori: Yutori) {
         yutori.message_builders.remove("yhchat")
         yutori.actions_containers.remove("yhchat")
@@ -34,6 +39,7 @@ class YhChatAdapter : Adapter(), Reinstallable {
 
     override suspend fun start(yutori: Yutori) {
         service = YhChatEventService(properties, yutori)
+        service!!.onStart()
         service!!.connect()
     }
 

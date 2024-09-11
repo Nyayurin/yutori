@@ -9,6 +9,7 @@ import cn.yurn.yutori.GuildMemberEvents
 import cn.yurn.yutori.GuildRole
 import cn.yurn.yutori.Message
 import cn.yurn.yutori.MessageEvents
+import cn.yurn.yutori.RootActions
 import cn.yurn.yutori.Yutori
 import cn.yurn.yutori.SigningEvent
 import cn.yurn.yutori.User
@@ -37,7 +38,8 @@ class YhChatEventService(
     val properties: YhChatProperties,
     val yutori: Yutori
 ) : EventService {
-    private val service = YhChatActionService(properties, yutori.name)
+    val service = YhChatActionService(properties, yutori.name)
+    val actions = RootActions("yhchat", properties.selfId, service, yutori)
     private var job by atomic<Job?>(null)
     private val idMap = mapOf<Int, String>()
     private var last = 0
@@ -364,7 +366,7 @@ class YhChatEventService(
                 else -> Logger.i(name) { "${event.platform}(${event.self_id}) 接收事件: ${event.type}" }
             }
             Logger.d(name) { "事件详细信息: $event" }
-            yutori.adapter.container(event, yutori, service)
+            yutori.adapter.container(event, yutori, actions)
         } catch (e: Exception) {
             Logger.w(name, e) { "处理事件时出错: $event" }
         }

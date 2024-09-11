@@ -4,11 +4,10 @@ package cn.yurn.yutori.module.satori.adapter
 
 import cn.yurn.yutori.Adapter
 import cn.yurn.yutori.BuilderMarker
-import cn.yurn.yutori.EventService
 import cn.yurn.yutori.Login
 import cn.yurn.yutori.Reinstallable
-import cn.yurn.yutori.Yutori
 import cn.yurn.yutori.SatoriProperties
+import cn.yurn.yutori.Yutori
 import co.touchlab.kermit.Logger
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.delay
@@ -23,14 +22,18 @@ class SatoriAdapter : Adapter(), Reinstallable {
     var path: String = ""
     var token: String? = null
     var version: String = "v1"
-    var webhook: WebHook? = null
-    var onConnect: suspend (List<Login>, SatoriActionService, Yutori) -> Unit = { _, _, _ -> }
+    var onStart: suspend WebSocketEventService.() -> Unit = { }
+    var onConnect: suspend WebSocketEventService.(List<Login>) -> Unit = { }
     var onClose: suspend () -> Unit = { }
     var onError: suspend () -> Unit = { }
     private var connecting by atomic(false)
-    private var service: EventService? by atomic(null)
+    private var service: WebSocketEventService? by atomic(null)
 
-    fun onConnect(block: suspend (List<Login>, SatoriActionService, Yutori) -> Unit) {
+    fun onStart(block: suspend WebSocketEventService.() -> Unit) {
+        onStart = block
+    }
+
+    fun onConnect(block: suspend WebSocketEventService.(List<Login>) -> Unit) {
         onConnect = block
     }
 
@@ -42,10 +45,6 @@ class SatoriAdapter : Adapter(), Reinstallable {
         onError = block
     }
 
-    fun useWebHook(block: WebHook.() -> Unit) {
-        webhook = WebHook().apply(block)
-    }
-
     override fun install(yutori: Yutori) {}
     override fun uninstall(yutori: Yutori) {}
 
@@ -55,6 +54,7 @@ class SatoriAdapter : Adapter(), Reinstallable {
         var sequence: Number? = null
         do {
             service = WebSocketEventService(properties, onConnect, onClose, onError, yutori, sequence)
+            service!!.onStart()
             service!!.connect()
             if (connecting) {
                 sequence = (service as WebSocketEventService).sequence
@@ -69,12 +69,5 @@ class SatoriAdapter : Adapter(), Reinstallable {
         connecting = false
         service?.disconnect()
         service = null
-    }
-
-    @BuilderMarker
-    class WebHook {
-        var listen: String = "0.0.0.0"
-        var port: Int = 8080
-        var path: String = "/"
     }
 }

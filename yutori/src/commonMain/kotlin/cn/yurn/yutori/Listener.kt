@@ -23,9 +23,9 @@ class ListenersContainer {
 
     fun any(listener: suspend Context<SigningEvent>.() -> Unit) = any.add { it.listener() }
 
-    suspend operator fun invoke(event: Event<SigningEvent>, yutori: Yutori, service: ActionService) {
+    suspend operator fun invoke(event: Event<SigningEvent>, yutori: Yutori, rootActions: RootActions) {
         try {
-            val context = Context(RootActions(event.platform, event.self_id, service, yutori), event, yutori)
+            val context = Context(rootActions, event, yutori)
             for (listener in this.any) listener(context)
             guild(context)
             interaction(context)

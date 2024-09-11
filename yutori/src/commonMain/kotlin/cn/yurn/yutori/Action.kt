@@ -18,8 +18,12 @@ abstract class Action(
         service.upload(resource, method, platform!!, self_id!!, content)
 }
 
-class RootActions(platform: String, self_id: String, service: ActionService, yutori: Yutori) :
-    Actions() {
+class RootActions(
+    val platform: String,
+    val self_id: String,
+    val service: ActionService,
+    val yutori: Yutori
+) : Actions() {
     val channel = ChannelAction(platform, self_id, service)
     val guild = GuildAction(platform, self_id, service)
     val login = LoginAction(platform, self_id, service)

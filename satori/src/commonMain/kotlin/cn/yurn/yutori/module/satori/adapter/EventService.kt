@@ -29,21 +29,22 @@ import kotlinx.serialization.json.Json
  */
 class WebSocketEventService(
     val properties: SatoriProperties,
-    val onConnect: suspend (List<Login>, SatoriActionService, Yutori) -> Unit = { _, _, _ -> },
+    val onConnect: suspend WebSocketEventService.(List<Login>) -> Unit = { },
     val onClose: suspend () -> Unit = { },
     val onError: suspend () -> Unit = { },
     val yutori: Yutori,
     var sequence: Number? = null
 ) : EventService {
+    var actionsList: List<RootActions>? = null
+    val service = SatoriActionService(properties, yutori.name)
     private var is_received_pong by atomic(false)
-    private val service = SatoriActionService(properties, yutori.name)
     private var job by atomic<Job?>(null)
 
     override suspend fun connect() {
         coroutineScope {
             job = launch {
                 val client = HttpClient {
-                    install (WebSockets) {
+                    install(WebSockets) {
                         contentConverter = KotlinxWebsocketSerializationConverter(Json {
                             ignoreUnknownKeys = true
                         })
@@ -82,7 +83,10 @@ class WebSocketEventService(
                     }
                 }*/
                 client.webSocket(
-                    HttpMethod.Get, properties.host, properties.port, "${properties.path}/${properties.version}/events"
+                    HttpMethod.Get,
+                    properties.host,
+                    properties.port,
+                    "${properties.path}/${properties.version}/events"
                 ) {
                     try {
                         var ready by atomic(false)
@@ -112,9 +116,22 @@ class WebSocketEventService(
                             when (val signal = receiveDeserialized<Signal>()) {
                                 is ReadySignal -> {
                                     ready = true
-                                    onConnect(signal.body.logins, service, yutori)
+                                    actionsList = buildList {
+                                        for (login in signal.body.logins) {
+                                            add(
+                                                RootActions(
+                                                    platform = login.platform!!,
+                                                    self_id = login.self_id!!,
+                                                    service = service,
+                                                    yutori = yutori
+                                                )
+                                            )
+                                        }
+                                    }
+                                    onConnect(signal.body.logins)
                                     Logger.i(name) { "成功建立事件推送服务: ${signal.body.logins}" }
                                 }
+
                                 is EventSignal -> launch { onEvent(signal.body) }
                                 is PongSignal -> {
                                     is_received_pong = true
@@ -146,20 +163,24 @@ class WebSocketEventService(
         val name = yutori.name
         try {
             when (event.type) {
-                MessageEvents.Created -> Logger.i(name) { buildString {
-                    append("${event.platform}(${event.self_id}) 接收事件(${event.type}): ")
-                    append("${event.nullable_channel!!.name}(${event.nullable_channel!!.id})")
-                    append("-")
-                    append("${event.nick()}(${event.nullable_user!!.id})")
-                    append(": ")
-                    append(event.nullable_message!!.content)
-                } }
+                MessageEvents.Created -> Logger.i(name) {
+                    buildString {
+                        append("${event.platform}(${event.self_id}) 接收事件(${event.type}): ")
+                        append("${event.nullable_channel!!.name}(${event.nullable_channel!!.id})")
+                        append("-")
+                        append("${event.nick()}(${event.nullable_user!!.id})")
+                        append(": ")
+                        append(event.nullable_message!!.content)
+                    }
+                }
 
                 else -> Logger.i(name) { "${event.platform}(${event.self_id}) 接收事件: ${event.type}" }
             }
             Logger.d(name) { "事件详细信息: $event" }
             sequence = event.id
-            yutori.adapter.container(event, yutori, service)
+            yutori.adapter.container(event, yutori, actionsList!!.find {
+                actions -> actions.platform == event.platform && actions.self_id == event.self_id
+            }!!)
         } catch (e: Exception) {
             Logger.w(name, e) { "处理事件时出错: $event" }
         }
@@ -169,74 +190,3 @@ class WebSocketEventService(
         job?.cancel("Event service disconnect")
     }
 }
-
-/**
- * Satori 事件服务的 WebHook 实现
- * @param properties Satori WebHook 配置
- * @param satori Satori 配置
- */
-/*class WebhookEventService(
-    val listen: String, val port: Int, val path: String, val properties: SatoriProperties, val satori: Satori
-) : EventService {
-    private var client: ApplicationEngine? = null
-    private val service = SatoriActionService(properties, satori.name)
-
-    override suspend fun connect() {
-        client = embeddedServer(io.ktor.server.cio.CIO, port, listen) {
-            routing {
-                post(path) {
-                    val authorization = call.request.headers["Authorization"]
-                    if (authorization != properties.token) {
-                        call.response.status(HttpStatusCode.Unauthorized)
-                        return@post
-                    }
-                    val body = call.receiveText()
-                    try {
-                        val mapper = jacksonObjectMapper().configure(
-                            DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false
-                        )
-                        val event = mapper.readValue<Event<SigningEvent>>(body)
-                        launch {
-                            when (event.type) {
-                                in MessageEvents.Types -> logger.info(satori.name, buildString {
-                                    append("${event.platform}(${event.self_id}) 接收事件(${event.type}): ")
-                                    append("\u001B[38;5;4m").append(
-                                        "${event.nullable_channel!!.name}(${
-                                            event.nullable_channel!!.id
-                                        })"
-                                    )
-                                    append("\u001B[38;5;6m")
-                                    append(event.nick())
-                                    append("(${event.nullable_user!!.id})")
-                                    append("\u001B[0m").append(": ").append(event.nullable_message!!.content)
-                                })
-
-                                else -> logger.info(
-                                    satori.name, "${event.platform}(${event.self_id}) 接收事件: ${event.type}"
-                                )
-                            }
-                            logger.debug(satori.name, "事件详细信息: $body")
-                            satori.client.container(event, satori, service)
-                        }
-                        call.response.status(HttpStatusCode.OK)
-                    } catch (e: Exception) {
-                        logger.warn(satori.name, "处理事件时出错(${body}): ${e.localizedMessage}")
-                        e.printStackTrace()
-                        call.response.status(HttpStatusCode.InternalServerError)
-                    }
-                }
-            }
-        }.start()
-        logger.info(satori.name, "成功启动 HTTP 服务器")
-        RootActions.AdminAction(service).webhook.create(
-            "http://${properties.host}:${properties.port}${properties.path}", properties.token
-        )
-    }
-
-    override fun disconnect() {
-        RootActions.AdminAction(service).webhook.delete(
-            "http://${properties.host}:${properties.port}${properties.path}"
-        )
-        client?.stop()
-    }
-}*/
