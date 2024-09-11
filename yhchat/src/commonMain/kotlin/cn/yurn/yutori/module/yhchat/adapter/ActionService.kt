@@ -37,16 +37,23 @@ import cn.yurn.yutori.module.yhchat.message.element.HTML
 import cn.yurn.yutori.module.yhchat.message.element.Markdown
 import co.touchlab.kermit.Logger
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import io.ktor.http.URLBuilder
 import io.ktor.http.URLProtocol
 import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
+import io.ktor.http.headers
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.utils.io.core.use
 import kotlinx.serialization.json.Json
@@ -91,7 +98,7 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
         val msg = content["content"] as List<MessageElement>
         val contents = msg.transToActions()
         return contents.map { (type, content) ->
-            client.post {
+            val response = client.post {
                 url {
                     protocol = URLProtocol.HTTPS
                     host = "chat-go.jwzhd.com"
@@ -124,19 +131,18 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
                 })
                 Logger.d(name) {
                     """
-                YhChat Action: url: ${this.url},
-                    headers: ${this.headers.build()},
-                    body: ${this.body}
-                """.trimIndent()
+                    YhChat Action Request: url: ${this.url},
+                        headers: ${this.headers.build()},
+                        body: ${this.body}
+                    """.trimIndent()
                 }
             }
-        }.map { response ->
-            Json.decodeFromJsonElement<MessageInfo>(
+            Logger.d(name) { "YhChat Action Response: $response" }
+            val info = Json.decodeFromJsonElement<MessageInfo>(
                 Json.parseToJsonElement(response.bodyAsText())
                     .jsonObject["data"]!!
                     .jsonObject["messageInfo"]!!
             )
-        }.map { info ->
             cn.yurn.yutori.Message(
                 id = info.msgId,
                 content = emptyList()
@@ -150,7 +156,7 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
         val msg = content["content"] as List<MessageElement>
         val contents = msg.transToActions()
         contents.map { (type, content) ->
-            client.post {
+            val response = client.post {
                 url {
                     protocol = URLProtocol.HTTPS
                     host = "chat-go.jwzhd.com"
@@ -184,17 +190,18 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
                 })
                 Logger.d(name) {
                     """
-                YhChat Action: url: ${this.url},
-                    headers: ${this.headers.build()},
-                    body: ${this.body}
-                """.trimIndent()
+                    YhChat Action Request: url: ${this.url},
+                        headers: ${this.headers.build()},
+                        body: ${this.body}
+                    """.trimIndent()
                 }
             }
+            Logger.d(name) { "YhChat Action Response: $response" }
         }
     }
 
     private suspend fun sendMessageDelete(client: HttpClient, content: Map<String, Any?>) {
-        client.post {
+        val response = client.post {
             url {
                 protocol = URLProtocol.HTTPS
                 host = "chat-go.jwzhd.com"
@@ -215,19 +222,20 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
             })
             Logger.d(name) {
                 """
-                YhChat Action: url: ${this.url},
+                YhChat Action Request: url: ${this.url},
                     headers: ${this.headers.build()},
                     body: ${this.body}
                 """.trimIndent()
             }
         }
+        Logger.d(name) { "YhChat Action Response: $response" }
     }
 
     private suspend fun sendMessageList(
         client: HttpClient,
         content: Map<String, Any?>
     ): BidiPagingList<cn.yurn.yutori.Message> {
-        client.get {
+        val response = client.get {
             url {
                 protocol = URLProtocol.HTTPS
                 host = "chat-go.jwzhd.com"
@@ -247,12 +255,13 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
             })
             Logger.d(name) {
                 """
-                YhChat Action: url: ${this.url},
+                YhChat Action Request: url: ${this.url},
                     headers: ${this.headers.build()},
                     body: ${this.body}
                 """.trimIndent()
             }
         }
+        Logger.d(name) { "YhChat Action Response: $response" }
         return BidiPagingList(emptyList())
     }
 
@@ -333,5 +342,42 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
 
     override suspend fun upload(
         resource: String, method: String, platform: String, self_id: String, content: List<FormData>
-    ): Map<String, String> = TODO("Unsupported File Upload")
+    ): Map<String, String> = HttpClient {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+            })
+        }
+    }.use { client ->
+        val url = URLBuilder().apply {
+            protocol = URLProtocol.HTTPS
+            host = "chat-go.jwzhd.com"
+            appendPathSegments("open-apis", "v1", "bot", "upload")
+            headers {
+                append(
+                    HttpHeaders.Authorization,
+                    "Bearer ${properties.token}"
+                )
+            }
+        }.buildString()
+        val formData = formData {
+            for (data in content) {
+                append(data.name, data.content, Headers.build {
+                    data.filename?.let { filename ->
+                        append(HttpHeaders.ContentDisposition, "filename=\"$filename\"")
+                    }
+                    append(HttpHeaders.ContentType, data.type)
+                })
+            }
+        }
+        Logger.d(name) {
+            """
+            YhChat Action Request: url: $url,
+                body: $formData
+            """.trimIndent()
+        }
+        val response = client.submitFormWithBinaryData(url, formData)
+        Logger.d(name) { "YhChat Action Response: $response" }
+        response.body()
+    }
 }

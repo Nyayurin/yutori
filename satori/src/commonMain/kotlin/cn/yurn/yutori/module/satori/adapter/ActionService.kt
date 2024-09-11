@@ -94,7 +94,7 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
                 })
             Logger.d(name) {
                 """
-                Satori Action: url: ${this.url},
+                Satori Action Request: url: ${this.url},
                     headers: ${this.headers.build()},
                     body: ${this.body}
                 """.trimIndent()
@@ -226,7 +226,7 @@ class SatoriActionService(val properties: SatoriProperties, val name: String) : 
             }
             Logger.d(name) {
                 """
-                Satori Action: url: $url,
+                Satori Action Request: url: $url,
                     body: $formData
                 """.trimIndent()
             }
