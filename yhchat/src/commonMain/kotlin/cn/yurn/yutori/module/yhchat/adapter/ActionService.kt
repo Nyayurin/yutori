@@ -352,16 +352,7 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
         val map = mutableMapOf<String, String>()
         for (data in content) {
             val formData = formData {
-                append(
-                    key = data.name,
-                    value = data.content,
-                    headers = Headers.build {
-                        data.filename?.let { filename ->
-                            append(HttpHeaders.ContentDisposition, "filename=\"$filename\"")
-                        }
-                        append(HttpHeaders.ContentType, data.type)
-                    }
-                )
+                append("image", data.content)
             }
             Logger.d(name) {
                 """
