@@ -1,6 +1,5 @@
 rootProject.name = "Yutori"
 include(":yutori")
-includeBuild("convention-plugins")
 
 pluginManagement {
     repositories {
@@ -16,7 +15,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-include(":example")
 include(":satori")
 include(":yhchat")
-include(":application")
+//include(":example")
+//include(":application")

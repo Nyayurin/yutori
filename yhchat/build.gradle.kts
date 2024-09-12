@@ -3,11 +3,10 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.atomicfu)
     alias(libs.plugins.android.library)
-    id("convention.publication")
 }
 
-group = "cn.yurn.yutorix.yhchat"
-version = "1.0"
+group = "cn.yurn.yutorix"
+version = "1.0.0"
 
 kotlin {
     jvmToolchain(17)
@@ -15,7 +14,7 @@ kotlin {
     jvm()
 
     androidTarget {
-        publishLibraryVariants("release")
+        publishLibraryVariants("release", "debug")
     }
 
     // Apple(IOS & MacOS)
@@ -83,5 +82,26 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+publishing {
+    publications.withType<MavenPublication> {
+        pom {
+            name = "yutorix.yhchat"
+            description = "Kotlin Multiplatform library"
+            url = "https://github.com/Nyayurn/Yutori"
+
+            developers {
+                developer {
+                    id = "Nyayurn"
+                    name = "Yurn"
+                    email = "Nyayurn@outlook.com"
+                }
+            }
+            scm {
+                url = "https://github.com/Nyayurn/Yutori"
+            }
+        }
     }
 }

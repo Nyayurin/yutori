@@ -5,5 +5,20 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.compose) apply false
     alias(libs.plugins.serialization) apply false
-    id("convention.publication") apply false
+}
+
+subprojects {
+    apply(plugin = "maven-publish")
+    configure<PublishingExtension> {
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/Nyayurn/Yutori")
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
+            }
+        }
+    }
 }
