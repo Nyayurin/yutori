@@ -10,6 +10,8 @@
 | yutorix.module.satori | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
 | yutorix.module.yhchat | JVM(17), Android(17), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64)                                                       |
 
+</div>
+
 ## 如何使用
 
 ### 从 Kotlin Multiplatform 项目开始
@@ -119,5 +121,3 @@ fun app() {
 ### 从 Kotlin/JVM 项目开始
 
 Coming soon...
-
-</div>
