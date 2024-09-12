@@ -20,7 +20,7 @@ kotlin {
     js {
         browser {
             webpackTask {
-                mainOutputFileName = "yutorix-satori.js"
+                mainOutputFileName = "yutorix-module-satori.js"
             }
         }
         nodejs()
@@ -31,7 +31,7 @@ kotlin {
     wasmJs {
         browser {
             webpackTask {
-                mainOutputFileName = "yutorix-satori.js"
+                mainOutputFileName = "yutorix-module-satori.js"
             }
         }
         nodejs()
@@ -47,7 +47,7 @@ kotlin {
         macosArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "yutorix-satori"
+            baseName = "yutorix-module-satori"
             isStatic = true
         }
     }
@@ -55,7 +55,7 @@ kotlin {
     // Linux
     linuxX64 {
         binaries.staticLib {
-            baseName = "yutorix-satori"
+            baseName = "yutorix-module-satori"
         }
     }
 
@@ -108,7 +108,7 @@ kotlin {
 }
 
 android {
-    namespace = "cn.yurn.yutorix.satori"
+    namespace = "cn.yurn.yutorix.module.satori"
     compileSdk = 34
 
     defaultConfig {

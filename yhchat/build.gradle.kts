@@ -26,7 +26,7 @@ kotlin {
         macosArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "yutorix-yhchat"
+            baseName = "yutorix-module-yhchat"
             isStatic = true
         }
     }
@@ -34,7 +34,7 @@ kotlin {
     // Linux
     linuxX64 {
         binaries.staticLib {
-            baseName = "yutorix-yhchat"
+            baseName = "yutorix-module-yhchat"
         }
     }
 
@@ -73,7 +73,7 @@ kotlin {
 }
 
 android {
-    namespace = "cn.yurn.yutorix.yhchat"
+    namespace = "cn.yurn.yutorix.module.yhchat"
     compileSdk = 34
 
     defaultConfig {
