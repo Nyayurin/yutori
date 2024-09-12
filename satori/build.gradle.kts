@@ -123,7 +123,8 @@ android {
 publishing {
     publications.withType<MavenPublication> {
         pom {
-            name = "yutorix.satori"
+            name = "Yutorix-Module-Satori"
+            artifactId = "yutorix.module.satori"
             version = System.getenv("VERSION")
             description = "Kotlin Multiplatform library"
             url = "https://github.com/Nyayurn/Yutori"

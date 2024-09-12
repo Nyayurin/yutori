@@ -2,6 +2,8 @@ name: Publish package to GitHub Packages
 on:
   release:
     types: [ created ]
+  push:
+    branches: [ master ]
 jobs:
   publish-kotlin-multiplatform:
     runs-on: ubuntu-latest

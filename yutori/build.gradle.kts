@@ -92,7 +92,8 @@ android {
 publishing {
     publications.withType<MavenPublication> {
         pom {
-            name = "yutori"
+            name = "Yutori"
+            artifactId = "yutori"
             version = System.getenv("VERSION")
             description = "Kotlin Multiplatform library"
             url = "https://github.com/Nyayurn/Yutori"
