@@ -67,6 +67,11 @@ yutorix-module-satori = { module = "cn.yurn.yutorix:yutorix.module.satori", vers
 yutorix-module-yhchat = { module = "cn.yurn.yutorix:yutorix.module.yhchat", version.ref = "yutori" }
 ```
 
+请从 https://github.com/Nyayurn?tab=packages&repo_name=Yutori 获取版本<br>
+对于稳定版, 它的版本号应该和 Release 中的 tag 一致<br>
+对于开发板, 它的版本号应该和 Commit 的完整 SHA 值一致<br>
+要获取一个 Commit 的完整 SHA 值, 请在 Commits 页面对应 Commit 处点击 Commit ID 右侧的复制按钮(Copy full SHA for *******)
+
 编写代码
 
 ```kotlin
