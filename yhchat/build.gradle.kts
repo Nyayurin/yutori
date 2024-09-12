@@ -89,7 +89,6 @@ publishing {
     publications.withType<MavenPublication> {
         pom {
             name = "Yutorix-Module-YhChat"
-            artifactId = "yutorix.module.yhchat"
             version = System.getenv("VERSION")
             description = "Kotlin Multiplatform library"
             url = "https://github.com/Nyayurn/Yutori"
