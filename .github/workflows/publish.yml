@@ -20,7 +20,7 @@ jobs:
         run: ./gradlew publishKotlinMultiplatformPublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
   publish-jvm:
     runs-on: ubuntu-latest
     permissions:
@@ -38,7 +38,7 @@ jobs:
         run: ./gradlew publishJvmPublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
   publish-android:
     runs-on: ubuntu-latest
     permissions:
@@ -56,12 +56,12 @@ jobs:
         run: ./gradlew publishAndroidDebugPublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
       - name: Publish AndroidRelease package
         run: ./gradlew publishAndroidReleasePublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
   publish-js:
     runs-on: ubuntu-latest
     permissions:
@@ -79,7 +79,7 @@ jobs:
         run: ./gradlew publishJsPublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
   publish-wasm-js:
     runs-on: ubuntu-latest
     permissions:
@@ -97,7 +97,7 @@ jobs:
         run: ./gradlew publishWasmJsPublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
   publish-apple:
     runs-on: macos-latest
     permissions:
@@ -115,27 +115,27 @@ jobs:
         run: ./gradlew publishIosX64PublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
       - name: Publish IosArm64 package
         run: ./gradlew publishIosArm64PublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
       - name: Publish IosSimulatorArm64 package
         run: ./gradlew publishIosSimulatorArm64PublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
       - name: Publish MacosX64 package
         run: ./gradlew publishMacosX64PublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
       - name: Publish MacosArm64 package
         run: ./gradlew publishMacosArm64PublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
   publish-linux:
     runs-on: ubuntu-latest
     permissions:
@@ -153,7 +153,7 @@ jobs:
         run: ./gradlew publishLinuxX64PublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
   publish-windows:
     runs-on: windows-latest
     permissions:
@@ -171,4 +171,4 @@ jobs:
         run: ./gradlew publishMingwX64PublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ github.ref }}
+          VERSION: ${{ github.ref_name }}
