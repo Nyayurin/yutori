@@ -7,7 +7,6 @@ plugins {
 }
 
 group = "cn.yurn.yutori"
-version = "1.0.0"
 
 kotlin {
     jvmToolchain(17)
@@ -94,6 +93,7 @@ publishing {
     publications.withType<MavenPublication> {
         pom {
             name = "yutori"
+            version = System.getenv("VERSION")
             description = "Kotlin Multiplatform library"
             url = "https://github.com/Nyayurn/Yutori"
 
