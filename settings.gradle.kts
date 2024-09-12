@@ -17,8 +17,6 @@ dependencyResolutionManagement {
 }
 include(":satori")
 include(":yhchat")
-//include(":example")
-//include(":application")
 
 project(":satori").name = "yutorix-module-satori"
 project(":yhchat").name = "yutorix-module-yhchat"

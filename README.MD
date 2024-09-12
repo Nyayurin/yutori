@@ -7,8 +7,8 @@
 | Module                | Platforms                                                                                                                                  |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 | yutori                | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
-| yutorix.module.satori | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
-| yutorix.module.yhchat | JVM(17), Android(17), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64)                                                       |
+| yutorix-module-satori | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
+| yutorix-module-yhchat | JVM(17), Android(17), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64)                                                       |
 
 </div>
 
@@ -63,8 +63,8 @@ yutori = "version"
 
 [libraries]
 yutori = { module = "cn.yurn.yutori:yutori", version.ref = "yutori" }
-yutorix-module-satori = { module = "cn.yurn.yutorix:yutorix.module.satori", version.ref = "yutori" }
-yutorix-module-yhchat = { module = "cn.yurn.yutorix:yutorix.module.yhchat", version.ref = "yutori" }
+yutorix-module-satori = { module = "cn.yurn.yutorix:yutorix-module-satori", version.ref = "yutori" }
+yutorix-module-yhchat = { module = "cn.yurn.yutorix:yutorix-module-yhchat", version.ref = "yutori" }
 ```
 
 请从 https://github.com/Nyayurn?tab=packages&repo_name=Yutori 获取版本<br>
