@@ -15,6 +15,7 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
       - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x ./gradlew
       - name: Publish KotlinMultiplatform package
         run: ./gradlew publishKotlinMultiplatformPublicationToGitHubPackagesRepository
         env:
@@ -31,6 +32,7 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
       - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x ./gradlew
       - name: Publish Jvm package
         run: ./gradlew publishJvmPublicationToGitHubPackagesRepository
         env:
@@ -47,6 +49,7 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
       - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x ./gradlew
       - name: Publish AndroidDebug package
         run: ./gradlew publishAndroidDebugPublicationToGitHubPackagesRepository
         env:
@@ -67,7 +70,8 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
       - uses: gradle/actions/setup-gradle@v4
-      - name: Publish Js
+      - run: chmod +x ./gradlew
+      - name: Publish Js package
         run: ./gradlew publishJsPublicationToGitHubPackagesRepository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -83,6 +87,7 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
       - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x ./gradlew
       - name: Publish WasmJs package
         run: ./gradlew publishWasmJsPublicationToGitHubPackagesRepository
         env:
@@ -99,6 +104,7 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
       - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x ./gradlew
       - name: Publish IosX64 package
         run: ./gradlew publishIosX64PublicationToGitHubPackagesRepository
         env:
@@ -131,6 +137,7 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
       - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x ./gradlew
       - name: Publish LinuxX64 package
         run: ./gradlew publishLinuxX64PublicationToGitHubPackagesRepository
         env:
@@ -147,6 +154,7 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
       - uses: gradle/actions/setup-gradle@v4
+      - run: chmod +x ./gradlew
       - name: Publish MingwX64 package
         run: ./gradlew publishMingwX64PublicationToGitHubPackagesRepository
         env:
