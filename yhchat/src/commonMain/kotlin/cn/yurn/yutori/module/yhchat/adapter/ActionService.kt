@@ -270,8 +270,8 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
         for (element in this@transToActions) {
             when (element) {
                 is Text -> builder.append(element.text)
-                is At -> TODO()
-                is Sharp -> TODO()
+                is At -> { }
+                is Sharp -> { }
                 is Href -> builder.append(element.href)
                 is Image -> {
                     if (builder.isNotEmpty()) {
@@ -281,8 +281,8 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
                     add("image" to Content(imageUrl = element.src))
                 }
 
-                is Audio -> TODO()
-                is Video -> TODO()
+                is Audio -> { }
+                is Video -> { }
                 is File -> {
                     if (builder.isNotEmpty()) {
                         add("text" to Content(text = builder.toString()))
@@ -296,20 +296,20 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
                     )
                 }
 
-                is Bold, is Strong -> TODO()
-                is Idiomatic, is Em -> TODO()
-                is Underline, is Ins -> TODO()
-                is Strikethrough, is Delete -> TODO()
-                is Spl -> TODO()
-                is Code -> TODO()
-                is Sup -> TODO()
-                is Sub -> TODO()
+                is Bold, is Strong -> { }
+                is Idiomatic, is Em -> { }
+                is Underline, is Ins -> { }
+                is Strikethrough, is Delete -> { }
+                is Spl -> { }
+                is Code -> { }
+                is Sup -> { }
+                is Sub -> { }
                 is Br -> builder.append("\n")
-                is Paragraph -> TODO()
-                is Message -> TODO()
-                is Quote -> TODO()
-                is Author -> TODO()
-                is Button -> TODO()
+                is Paragraph -> { }
+                is Message -> { }
+                is Quote -> { }
+                is Author -> { }
+                is Button -> { }
                 is Markdown -> {
                     if (builder.isNotEmpty()) {
                         add("text" to Content(text = builder.toString()))
