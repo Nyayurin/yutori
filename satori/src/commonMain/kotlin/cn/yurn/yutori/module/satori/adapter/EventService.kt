@@ -17,7 +17,6 @@ import io.ktor.http.*
 import io.ktor.serialization.*
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.websocket.*
-import korlibs.io.lang.unsupported
 import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
@@ -51,7 +50,7 @@ class WebSocketEventService(
                     }
                 }
                 val name = yutori.name
-                var connected by atomic(false)
+                var connected = false
                 /*
                  这一段超时断连的代码不知为何无法正常运行
                  具体表现为当 WebSocket Server 关闭时, a 能正常打印, 而 b 无法打印
@@ -89,7 +88,7 @@ class WebSocketEventService(
                     "${properties.path}/${properties.version}/events"
                 ) {
                     try {
-                        var ready by atomic(false)
+                        var ready = false
                         connected = true
                         sendSerialized(IdentifySignal(Identify(properties.token, sequence)))
                         Logger.i(name) { "成功建立 WebSocket 连接, 尝试建立事件推送服务" }
@@ -138,7 +137,7 @@ class WebSocketEventService(
                                     Logger.d(name) { "收到 PONG" }
                                 }
 
-                                else -> unsupported("Unsupported signal: $signal")
+                                else -> throw UnsupportedOperationException("Unsupported signal: $signal")
                             }
                         } catch (e: JsonConvertException) {
                             Logger.w(name, e) { "事件解析错误" }

@@ -13,7 +13,6 @@ import com.fleeksoft.ksoup.nodes.DocumentType
 import com.fleeksoft.ksoup.nodes.Element
 import com.fleeksoft.ksoup.nodes.Node
 import com.fleeksoft.ksoup.nodes.TextNode
-import korlibs.io.lang.unsupported
 
 fun String.encode() = replace("&", "&amp;")
         .replace("\"", "&quot;")
@@ -85,7 +84,7 @@ fun List<MessageElement>.serialize() = joinToString("") { it.serialize() }
 fun MessageElement.serialize() = when (this) {
     is Text -> serialize()
     is NodeMessageElement -> serialize()
-    else -> unsupported("Unknown element type: $this")
+    else -> throw UnsupportedOperationException("Unknown element type: $this")
 }
 
 private fun Text.serialize() = text.encode()

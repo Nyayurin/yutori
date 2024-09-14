@@ -14,7 +14,6 @@ import cn.yurn.yutori.PagingList
 import cn.yurn.yutori.SigningEvent
 import cn.yurn.yutori.User
 import cn.yurn.yutori.yutori
-import korlibs.io.lang.unsupported
 import kotlinx.serialization.ContextualSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
@@ -154,7 +153,7 @@ object EventSerializer : KSerializer<Event<SigningEvent>> {
                 is Message -> encodeSerializableElement(descriptor, index, MessageSerializer, value)
                 is User -> encodeSerializableElement(descriptor, index, UserSerializer, value)
                 is GuildRole -> encodeSerializableElement(descriptor, index, GuildRoleSerializer, value)
-                else -> unsupported("Unsupported event property: $key = $value")
+                else -> throw UnsupportedOperationException("Unsupported event property: $key = $value")
             }
         }
     }
