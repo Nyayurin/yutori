@@ -123,16 +123,16 @@ object EventSerializer : KSerializer<Event<SigningEvent>> {
         element<String>("platform")
         element<String>("self_id")
         element<String>("timestamp")
-        element("argv", InteractionArgvSerializer.descriptor)
-        element("button", InteractionButtonSerializer.descriptor)
-        element("channel", ChannelSerializer.descriptor)
-        element("guild", GuildSerializer.descriptor)
-        element("login", LoginSerializer.descriptor)
-        element("member", GuildMemberSerializer.descriptor)
-        element("message", MessageSerializer.descriptor)
-        element("operator", UserSerializer.descriptor)
-        element("role", GuildRoleSerializer.descriptor)
-        element("user", UserSerializer.descriptor)
+        element("argv", InteractionArgvSerializer.descriptor, isOptional = true)
+        element("button", InteractionButtonSerializer.descriptor, isOptional = true)
+        element("channel", ChannelSerializer.descriptor, isOptional = true)
+        element("guild", GuildSerializer.descriptor, isOptional = true)
+        element("login", LoginSerializer.descriptor, isOptional = true)
+        element("member", GuildMemberSerializer.descriptor, isOptional = true)
+        element("message", MessageSerializer.descriptor, isOptional = true)
+        element("operator", UserSerializer.descriptor, isOptional = true)
+        element("role", GuildRoleSerializer.descriptor, isOptional = true)
+        element("user", UserSerializer.descriptor, isOptional = true)
         element("properties", mapSerialDescriptor(String.serializer().descriptor,
             DynamicLookupSerializer.descriptor
         ))
@@ -237,8 +237,8 @@ object ChannelSerializer : KSerializer<Channel> {
     override val descriptor = buildClassSerialDescriptor("Channel") {
         element<String>("id")
         element("type", NumberSerializer.descriptor)
-        element<String?>("name")
-        element<String?>("parent_id")
+        element<String?>("name", isOptional = true)
+        element<String?>("parent_id", isOptional = true)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -266,8 +266,8 @@ object ChannelSerializer : KSerializer<Channel> {
 object GuildSerializer : KSerializer<Guild> {
     override val descriptor = buildClassSerialDescriptor("Guild") {
         element<String>("id")
-        element<String?>("name")
-        element<String?>("avatar")
+        element<String?>("name", isOptional = true)
+        element<String?>("avatar", isOptional = true)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -292,12 +292,12 @@ object GuildSerializer : KSerializer<Guild> {
 
 object LoginSerializer : KSerializer<Login> {
     override val descriptor = buildClassSerialDescriptor("Login") {
-        element("user", UserSerializer.descriptor)
-        element<String?>("self_id")
-        element<String?>("platform")
+        element("user", UserSerializer.descriptor, isOptional = true)
+        element<String?>("self_id", isOptional = true)
+        element<String?>("platform", isOptional = true)
         element("status", NumberSerializer.descriptor)
-        element<List<String>>("features")
-        element<List<String>>("proxy_urls")
+        element<List<String>>("features", isOptional = true)
+        element<List<String>>("proxy_urls", isOptional = true)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -328,10 +328,10 @@ object LoginSerializer : KSerializer<Login> {
 
 object GuildMemberSerializer : KSerializer<GuildMember> {
     override val descriptor = buildClassSerialDescriptor("GuildMember") {
-        element("user", UserSerializer.descriptor)
-        element<String?>("nick")
-        element<String?>("avatar")
-        element("joined_at", NumberNullableSerializer.descriptor)
+        element("user", UserSerializer.descriptor, isOptional = true)
+        element<String?>("nick", isOptional = true)
+        element<String?>("avatar", isOptional = true)
+        element("joined_at", NumberNullableSerializer.descriptor, isOptional = true)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -360,12 +360,12 @@ object MessageSerializer : KSerializer<Message> {
     override val descriptor = buildClassSerialDescriptor("Message") {
         element<String>("id")
         element("content", String.serializer().descriptor)
-        element("channel", ChannelSerializer.descriptor)
-        element("guild", GuildSerializer.descriptor)
-        element("member", GuildMemberSerializer.descriptor)
-        element("user", UserSerializer.descriptor)
-        element("created_at", NumberNullableSerializer.descriptor)
-        element("updated_at", NumberNullableSerializer.descriptor)
+        element("channel", ChannelSerializer.descriptor, isOptional = true)
+        element("guild", GuildSerializer.descriptor, isOptional = true)
+        element("member", GuildMemberSerializer.descriptor, isOptional = true)
+        element("user", UserSerializer.descriptor, isOptional = true)
+        element("created_at", NumberNullableSerializer.descriptor, isOptional = true)
+        element("updated_at", NumberNullableSerializer.descriptor, isOptional = true)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -403,10 +403,10 @@ object MessageSerializer : KSerializer<Message> {
 object UserSerializer : KSerializer<User> {
     override val descriptor = buildClassSerialDescriptor("User") {
         element<String>("id")
-        element<String?>("name")
-        element<String?>("nick")
-        element<String?>("avatar")
-        element<Boolean?>("is_bot")
+        element<String?>("name", isOptional = true)
+        element<String?>("nick", isOptional = true)
+        element<String?>("avatar", isOptional = true)
+        element<Boolean?>("is_bot", isOptional = true)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -436,7 +436,7 @@ object UserSerializer : KSerializer<User> {
 object GuildRoleSerializer : KSerializer<GuildRole> {
     override val descriptor = buildClassSerialDescriptor("GuildRole") {
         element<String>("id")
-        element<String?>("name")
+        element<String?>("name", isOptional = true)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -461,7 +461,7 @@ class PagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : KSer
     @OptIn(ExperimentalSerializationApi::class)
     override val descriptor = buildClassSerialDescriptor("PagingList") {
         element("data", listSerialDescriptor(dataSerializer.descriptor))
-        element<String?>("next")
+        element<String?>("next", isOptional = true)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -486,8 +486,8 @@ class BidiPagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : 
     @OptIn(ExperimentalSerializationApi::class)
     override val descriptor = buildClassSerialDescriptor("BidiPagingList") {
         element("data", listSerialDescriptor(dataSerializer.descriptor))
-        element<String?>("prev")
-        element<String?>("next")
+        element<String?>("prev", isOptional = true)
+        element<String?>("next", isOptional = true)
     }
 
     @OptIn(ExperimentalSerializationApi::class)
