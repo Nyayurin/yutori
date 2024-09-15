@@ -226,8 +226,9 @@ object ChannelSerializer : KSerializer<Channel> {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
             encodeSerializableElement(descriptor, 1, NumberSerializer, value.type)
-            value.name?.let { encodeStringElement(descriptor, 2, it) }
-            value.parent_id?.let { encodeStringElement(descriptor, 3, it) }
+            var index = 2
+            value.name?.let { encodeStringElement(descriptor, index++, it) }
+            value.parent_id?.let { encodeStringElement(descriptor, index++, it) }
         }
     }
 
@@ -253,8 +254,9 @@ object GuildSerializer : KSerializer<Guild> {
     override fun serialize(encoder: Encoder, value: Guild) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
-            value.name?.let { encodeStringElement(ChannelSerializer.descriptor, 1, it) }
-            value.avatar?.let { encodeStringElement(ChannelSerializer.descriptor, 2, it) }
+            var index = 1
+            value.name?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
+            value.avatar?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
         }
     }
 
@@ -281,9 +283,10 @@ object LoginSerializer : KSerializer<Login> {
 
     override fun serialize(encoder: Encoder, value: Login) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
-            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, 0, UserSerializer, it) }
-            value.self_id?.let { encodeStringElement(ChannelSerializer.descriptor, 1, it) }
-            value.platform?.let { encodeStringElement(ChannelSerializer.descriptor, 2, it) }
+            var index = 0
+            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, UserSerializer, it) }
+            value.self_id?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
+            value.platform?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
             encodeSerializableElement(descriptor, 3, NumberSerializer, value.status)
             encodeSerializableElement(descriptor, 4, ListSerializer(String.serializer()), value.features)
             encodeSerializableElement(descriptor, 5, ListSerializer(String.serializer()), value.proxy_urls)
@@ -314,10 +317,11 @@ object GuildMemberSerializer : KSerializer<GuildMember> {
 
     override fun serialize(encoder: Encoder, value: GuildMember) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
-            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, 0, UserSerializer, it) }
-            value.nick?.let { encodeStringElement(ChannelSerializer.descriptor, 1, it) }
-            value.avatar?.let { encodeStringElement(ChannelSerializer.descriptor, 2, it) }
-            value.joined_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, 3, NumberSerializer, it) }
+            var index = 0
+            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, UserSerializer, it) }
+            value.nick?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
+            value.avatar?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
+            value.joined_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, NumberSerializer, it) }
         }
     }
 
@@ -349,12 +353,13 @@ object MessageSerializer : KSerializer<Message> {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
             encodeSerializableElement(descriptor, 1, String.serializer(), value.content.joinToString("") { it.serialize() })
-            value.channel?.let { encodeSerializableElement(ChannelSerializer.descriptor, 2, ChannelSerializer, it) }
-            value.guild?.let { encodeSerializableElement(ChannelSerializer.descriptor, 3, GuildSerializer, it) }
-            value.member?.let { encodeSerializableElement(ChannelSerializer.descriptor, 4, GuildMemberSerializer, it) }
-            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, 5, UserSerializer, it) }
-            value.created_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, 6, NumberSerializer, it) }
-            value.updated_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, 7, NumberSerializer, it) }
+            var index = 2
+            value.channel?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, ChannelSerializer, it) }
+            value.guild?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, GuildSerializer, it) }
+            value.member?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, GuildMemberSerializer, it) }
+            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, UserSerializer, it) }
+            value.created_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, NumberSerializer, it) }
+            value.updated_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, NumberSerializer, it) }
         }
     }
 
@@ -388,10 +393,11 @@ object UserSerializer : KSerializer<User> {
     override fun serialize(encoder: Encoder, value: User) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
-            value.name?.let { encodeStringElement(descriptor, 1, it) }
-            value.nick?.let { encodeStringElement(descriptor, 2, it) }
-            value.avatar?.let { encodeStringElement(descriptor, 3, it) }
-            value.is_bot?.let { encodeBooleanElement(descriptor, 4, it) }
+            var index = 1
+            value.name?.let { encodeStringElement(descriptor, index++, it) }
+            value.nick?.let { encodeStringElement(descriptor, index++, it) }
+            value.avatar?.let { encodeStringElement(descriptor, index++, it) }
+            value.is_bot?.let { encodeBooleanElement(descriptor, index++, it) }
         }
     }
 
@@ -417,7 +423,8 @@ object GuildRoleSerializer : KSerializer<GuildRole> {
     override fun serialize(encoder: Encoder, value: GuildRole) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
-            value.name?.let { encodeStringElement(descriptor, 1, it) }
+            var index = 1
+            value.name?.let { encodeStringElement(descriptor, index++, it) }
         }
     }
 
@@ -441,7 +448,8 @@ class PagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : KSer
     override fun serialize(encoder: Encoder, value: PagingList<T>) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeSerializableElement(descriptor, 0, ListSerializer(dataSerializer), value.data)
-            value.next?.let { encodeStringElement(descriptor, 1, it) }
+            var index = 1
+            value.next?.let { encodeStringElement(descriptor, index++, it) }
         }
     }
 
@@ -466,8 +474,9 @@ class BidiPagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : 
     override fun serialize(encoder: Encoder, value: BidiPagingList<T>) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeSerializableElement(descriptor, 0, ListSerializer(dataSerializer), value.data)
-            value.prev?.let { encodeStringElement(descriptor, 1, it) }
-            value.next?.let { encodeStringElement(descriptor, 2, it) }
+            var index = 1
+            value.prev?.let { encodeStringElement(descriptor, index++, it) }
+            value.next?.let { encodeStringElement(descriptor, index++, it) }
         }
     }
 
