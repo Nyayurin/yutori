@@ -33,6 +33,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonArray
@@ -218,17 +219,17 @@ object ChannelSerializer : KSerializer<Channel> {
     override val descriptor = buildClassSerialDescriptor("Channel") {
         element<String>("id")
         element("type", NumberSerializer.descriptor)
-        element<String?>("name", isOptional = true)
-        element<String?>("parent_id", isOptional = true)
+        element<String?>("name")
+        element<String?>("parent_id")
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Channel) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
             encodeSerializableElement(descriptor, 1, NumberSerializer, value.type)
-            var index = 2
-            value.name?.let { encodeStringElement(descriptor, index++, it) }
-            value.parent_id?.let { encodeStringElement(descriptor, index++, it) }
+            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.name)
+            encodeNullableSerializableElement(descriptor, 3, String.serializer(), value.parent_id)
         }
     }
 
@@ -238,8 +239,12 @@ object ChannelSerializer : KSerializer<Channel> {
         return Channel(
             id = json["id"]!!.jsonPrimitive.content,
             type = json["type"]!!.jsonPrimitive.int,
-            name = json["name"]?.jsonPrimitive?.content,
-            parent_id = json["parent_id"]?.jsonPrimitive?.content
+            name = json["name"]?.run {
+                if (this !is JsonNull) jsonPrimitive.content else null
+            },
+            parent_id = json["parent_id"]?.run{
+                if (this !is JsonNull) jsonPrimitive.content else null
+            }
         )
     }
 }
@@ -247,16 +252,16 @@ object ChannelSerializer : KSerializer<Channel> {
 object GuildSerializer : KSerializer<Guild> {
     override val descriptor = buildClassSerialDescriptor("Guild") {
         element<String>("id")
-        element<String?>("name", isOptional = true)
-        element<String?>("avatar", isOptional = true)
+        element<String?>("name")
+        element<String?>("avatar")
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Guild) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
-            var index = 1
-            value.name?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
-            value.avatar?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
+            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.name)
+            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.avatar)
         }
     }
 
@@ -265,28 +270,32 @@ object GuildSerializer : KSerializer<Guild> {
         val json = decoder.decodeJsonElement().jsonObject.toMutableMap()
         return Guild(
             id = json["id"]!!.jsonPrimitive.content,
-            name = json["name"]?.jsonPrimitive?.content,
-            avatar = json["avatar"]?.jsonPrimitive?.content
+            name = json["name"]?.run {
+                if (this !is JsonNull) jsonPrimitive.content else null
+            },
+            avatar = json["avatar"]?.run {
+                if (this !is JsonNull) jsonPrimitive.content else null
+            }
         )
     }
 }
 
 object LoginSerializer : KSerializer<Login> {
     override val descriptor = buildClassSerialDescriptor("Login") {
-        element("user", UserSerializer.descriptor, isOptional = true)
-        element<String?>("self_id", isOptional = true)
-        element<String?>("platform", isOptional = true)
+        element("user", UserSerializer.descriptor)
+        element<String?>("self_id")
+        element<String?>("platform")
         element("status", NumberSerializer.descriptor)
-        element<List<String>>("features", isOptional = true)
-        element<List<String>>("proxy_urls", isOptional = true)
+        element<List<String>>("features")
+        element<List<String>>("proxy_urls")
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Login) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
-            var index = 0
-            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, UserSerializer, it) }
-            value.self_id?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
-            value.platform?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
+            encodeNullableSerializableElement(descriptor, 0, UserSerializer, value.user)
+            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.self_id)
+            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.platform)
             encodeSerializableElement(descriptor, 3, NumberSerializer, value.status)
             encodeSerializableElement(descriptor, 4, ListSerializer(String.serializer()), value.features)
             encodeSerializableElement(descriptor, 5, ListSerializer(String.serializer()), value.proxy_urls)
@@ -297,9 +306,16 @@ object LoginSerializer : KSerializer<Login> {
         decoder as JsonDecoder
         val json = decoder.decodeJsonElement().jsonObject.toMutableMap()
         return Login(
-            user = json["user"]?.let { Json.decodeFromJsonElement(UserSerializer, it) },
-            self_id = json["self_id"]?.jsonPrimitive?.content,
-            platform = json["platform"]?.jsonPrimitive?.content,
+            user = json["user"]?.run {
+                if (this !is JsonNull) Json.decodeFromJsonElement(UserSerializer, this)
+                else null
+            },
+            self_id = json["self_id"]?.run {
+                if (this !is JsonNull) jsonPrimitive.content else null
+            },
+            platform = json["platform"]?.run {
+                if (this !is JsonNull) jsonPrimitive.content else null
+            },
             status = json["status"]!!.jsonPrimitive.int,
             features = json["features"]!!.jsonArray.map { it.jsonPrimitive.content },
             proxy_urls = json["proxy_urls"]!!.jsonArray.map { it.jsonPrimitive.content }
@@ -309,19 +325,19 @@ object LoginSerializer : KSerializer<Login> {
 
 object GuildMemberSerializer : KSerializer<GuildMember> {
     override val descriptor = buildClassSerialDescriptor("GuildMember") {
-        element("user", UserSerializer.descriptor, isOptional = true)
-        element<String?>("nick", isOptional = true)
-        element<String?>("avatar", isOptional = true)
-        element("joined_at", NumberNullableSerializer.descriptor, isOptional = true)
+        element("user", UserSerializer.descriptor)
+        element<String?>("nick")
+        element<String?>("avatar")
+        element("joined_at", NumberNullableSerializer.descriptor)
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: GuildMember) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
-            var index = 0
-            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, UserSerializer, it) }
-            value.nick?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
-            value.avatar?.let { encodeStringElement(ChannelSerializer.descriptor, index++, it) }
-            value.joined_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, NumberSerializer, it) }
+            encodeNullableSerializableElement(descriptor, 0, UserSerializer, value.user)
+            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.nick)
+            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.avatar)
+            encodeNullableSerializableElement(descriptor, 3, NumberSerializer, value.joined_at)
         }
     }
 
@@ -329,10 +345,19 @@ object GuildMemberSerializer : KSerializer<GuildMember> {
         decoder as JsonDecoder
         val json = decoder.decodeJsonElement().jsonObject.toMutableMap()
         return GuildMember(
-            user = json["user"]?.let { Json.decodeFromJsonElement(UserSerializer, it) },
-            nick = json["nick"]?.jsonPrimitive?.content,
-            avatar = json["avatar"]?.jsonPrimitive?.content,
-            joined_at = json["joined_at"]?.jsonPrimitive?.long,
+            user = json["user"]?.run {
+                if (this !is JsonNull) Json.decodeFromJsonElement(UserSerializer, this)
+                else null
+            },
+            nick = json["nick"]?.run {
+                if (this !is JsonNull) jsonPrimitive.content else null
+            },
+            avatar = json["avatar"]?.run {
+                if (this !is JsonNull) jsonPrimitive.content else null
+            },
+            joined_at = json["joined_at"]?.run {
+                if (this !is JsonNull) jsonPrimitive.long else null
+            },
         )
     }
 }
@@ -340,26 +365,26 @@ object GuildMemberSerializer : KSerializer<GuildMember> {
 object MessageSerializer : KSerializer<Message> {
     override val descriptor = buildClassSerialDescriptor("Message") {
         element<String>("id")
-        element("content", String.serializer().descriptor)
-        element("channel", ChannelSerializer.descriptor, isOptional = true)
-        element("guild", GuildSerializer.descriptor, isOptional = true)
-        element("member", GuildMemberSerializer.descriptor, isOptional = true)
-        element("user", UserSerializer.descriptor, isOptional = true)
-        element("created_at", NumberNullableSerializer.descriptor, isOptional = true)
-        element("updated_at", NumberNullableSerializer.descriptor, isOptional = true)
+        element<String>("content")
+        element("channel", ChannelSerializer.descriptor)
+        element("guild", GuildSerializer.descriptor)
+        element("member", GuildMemberSerializer.descriptor)
+        element("user", UserSerializer.descriptor)
+        element("created_at", NumberNullableSerializer.descriptor)
+        element("updated_at", NumberNullableSerializer.descriptor)
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Message) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
             encodeSerializableElement(descriptor, 1, String.serializer(), value.content.joinToString("") { it.serialize() })
-            var index = 2
-            value.channel?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, ChannelSerializer, it) }
-            value.guild?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, GuildSerializer, it) }
-            value.member?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, GuildMemberSerializer, it) }
-            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, UserSerializer, it) }
-            value.created_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, NumberSerializer, it) }
-            value.updated_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, index++, NumberSerializer, it) }
+            encodeNullableSerializableElement(descriptor, 2, ChannelSerializer, value.channel)
+            encodeNullableSerializableElement(descriptor, 3, GuildSerializer, value.guild)
+            encodeNullableSerializableElement(descriptor, 4, GuildMemberSerializer, value.member)
+            encodeNullableSerializableElement(descriptor, 5, UserSerializer, value.user)
+            encodeNullableSerializableElement(descriptor, 6, NumberSerializer, value.created_at)
+            encodeNullableSerializableElement(descriptor, 7, NumberSerializer, value.updated_at)
         }
     }
 
@@ -371,12 +396,28 @@ object MessageSerializer : KSerializer<Message> {
         return Message(
             id = json["id"]!!.jsonPrimitive.content,
             content = content,
-            channel = json["channel"]?.let { Json.decodeFromJsonElement(ChannelSerializer, it) },
-            guild = json["guild"]?.let { Json.decodeFromJsonElement(GuildSerializer, it) },
-            member = json["member"]?.let { Json.decodeFromJsonElement(GuildMemberSerializer, it) },
-            user = json["user"]?.let { Json.decodeFromJsonElement(UserSerializer, it) },
-            created_at = json["created_at"]?.jsonPrimitive?.long,
-            updated_at = json["updated_at"]?.jsonPrimitive?.long
+            channel = json["channel"]?.run {
+                if (this !is JsonNull) Json.decodeFromJsonElement(ChannelSerializer, this)
+                else null
+            },
+            guild = json["guild"]?.run {
+                if (this !is JsonNull) Json.decodeFromJsonElement(GuildSerializer, this)
+                else null
+            },
+            member = json["member"]?.run {
+                if (this !is JsonNull) Json.decodeFromJsonElement(GuildMemberSerializer, this)
+                else null
+            },
+            user = json["user"]?.run {
+                if (this !is JsonNull) Json.decodeFromJsonElement(UserSerializer, this)
+                else null
+            },
+            created_at = json["created_at"]?.run {
+                if (this !is JsonNull) jsonPrimitive.long else null
+            },
+            updated_at = json["updated_at"]?.run {
+                if (this !is JsonNull) jsonPrimitive.long else null
+            }
         )
     }
 }
@@ -384,20 +425,20 @@ object MessageSerializer : KSerializer<Message> {
 object UserSerializer : KSerializer<User> {
     override val descriptor = buildClassSerialDescriptor("User") {
         element<String>("id")
-        element<String?>("name", isOptional = true)
-        element<String?>("nick", isOptional = true)
-        element<String?>("avatar", isOptional = true)
-        element<Boolean?>("is_bot", isOptional = true)
+        element<String?>("name")
+        element<String?>("nick")
+        element<String?>("avatar")
+        element<Boolean?>("is_bot")
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: User) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
-            var index = 1
-            value.name?.let { encodeStringElement(descriptor, index++, it) }
-            value.nick?.let { encodeStringElement(descriptor, index++, it) }
-            value.avatar?.let { encodeStringElement(descriptor, index++, it) }
-            value.is_bot?.let { encodeBooleanElement(descriptor, index++, it) }
+            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.name)
+            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.nick)
+            encodeNullableSerializableElement(descriptor, 3, String.serializer(), value.avatar)
+            encodeNullableSerializableElement(descriptor, 4, Boolean.serializer(), value.is_bot)
         }
     }
 
@@ -406,10 +447,18 @@ object UserSerializer : KSerializer<User> {
         val json = decoder.decodeJsonElement().jsonObject.toMutableMap()
         return User(
             id = json["id"]!!.jsonPrimitive.content,
-            name = json["name"]?.jsonPrimitive?.content,
-            nick = json["nick"]?.jsonPrimitive?.content,
-            avatar = json["avatar"]?.jsonPrimitive?.content,
-            is_bot = json["is_bot"]?.jsonPrimitive?.boolean,
+            name = json["name"]?.run {
+                 if (this !is JsonNull) jsonPrimitive.content else null
+            },
+            nick = json["nick"]?.run {
+                 if (this !is JsonNull) jsonPrimitive.content else null
+            },
+            avatar = json["avatar"]?.run {
+                 if (this !is JsonNull) jsonPrimitive.content else null
+            },
+            is_bot = json["is_bot"]?.run {
+                 if (this !is JsonNull) jsonPrimitive.boolean else null
+            },
         )
     }
 }
@@ -417,14 +466,14 @@ object UserSerializer : KSerializer<User> {
 object GuildRoleSerializer : KSerializer<GuildRole> {
     override val descriptor = buildClassSerialDescriptor("GuildRole") {
         element<String>("id")
-        element<String?>("name", isOptional = true)
+        element<String?>("name")
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: GuildRole) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
-            var index = 1
-            value.name?.let { encodeStringElement(descriptor, index++, it) }
+            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.name)
         }
     }
 
@@ -433,23 +482,26 @@ object GuildRoleSerializer : KSerializer<GuildRole> {
         val json = decoder.decodeJsonElement().jsonObject.toMutableMap()
         return GuildRole(
             id = json["id"]!!.jsonPrimitive.content,
-            name = json["name"]?.jsonPrimitive?.content,
+            name = json["name"]?.run {
+                if (this !is JsonNull) jsonPrimitive.content else null
+            },
         )
     }
 }
 
-class PagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : KSerializer<PagingList<T>> {
+class PagingListSerializer<T>(private val dataSerializer: KSerializer<T>) :
+    KSerializer<PagingList<T>> {
     @OptIn(ExperimentalSerializationApi::class)
     override val descriptor = buildClassSerialDescriptor("PagingList") {
         element("data", listSerialDescriptor(dataSerializer.descriptor))
-        element<String?>("next", isOptional = true)
+        element<String?>("next")
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: PagingList<T>) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeSerializableElement(descriptor, 0, ListSerializer(dataSerializer), value.data)
-            var index = 1
-            value.next?.let { encodeStringElement(descriptor, index++, it) }
+            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.next)
         }
     }
 
@@ -458,25 +510,28 @@ class PagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : KSer
         val json = decoder.decodeJsonElement().jsonObject.toMutableMap()
         return PagingList(
             data = Json.decodeFromJsonElement(ListSerializer(dataSerializer), json["data"]!!),
-            next = json["next"]?.jsonPrimitive?.content,
+            next = json["next"]?.run {
+                if (this !is JsonNull) jsonPrimitive.content else null
+            },
         )
     }
 }
 
-class BidiPagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : KSerializer<BidiPagingList<T>> {
+class BidiPagingListSerializer<T>(private val dataSerializer: KSerializer<T>) :
+    KSerializer<BidiPagingList<T>> {
     @OptIn(ExperimentalSerializationApi::class)
     override val descriptor = buildClassSerialDescriptor("BidiPagingList") {
         element("data", listSerialDescriptor(dataSerializer.descriptor))
-        element<String?>("prev", isOptional = true)
-        element<String?>("next", isOptional = true)
+        element<String?>("prev")
+        element<String?>("next")
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: BidiPagingList<T>) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeSerializableElement(descriptor, 0, ListSerializer(dataSerializer), value.data)
-            var index = 1
-            value.prev?.let { encodeStringElement(descriptor, index++, it) }
-            value.next?.let { encodeStringElement(descriptor, index++, it) }
+            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.prev)
+            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.next)
         }
     }
 
@@ -485,19 +540,24 @@ class BidiPagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : 
         val json = decoder.decodeJsonElement().jsonObject.toMutableMap()
         return BidiPagingList(
             data = Json.decodeFromJsonElement(ListSerializer(dataSerializer), json["data"]!!),
-            prev = json["prev"]?.jsonPrimitive?.content,
-            next = json["next"]?.jsonPrimitive?.content,
+            prev = json["prev"]?.run {
+                 if (this !is JsonNull) jsonPrimitive.content else null
+            },
+            next = json["next"]?.run {
+                 if (this !is JsonNull) jsonPrimitive.content else null
+            },
         )
     }
 }
 
 @ExperimentalSerializationApi
-object DynamicLookupSerializer: KSerializer<Any> {
+object DynamicLookupSerializer : KSerializer<Any> {
     override val descriptor = ContextualSerializer(Any::class, null, emptyArray()).descriptor
 
     @OptIn(InternalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Any) {
-        val actualSerializer = encoder.serializersModule.getContextual(value::class) ?: value::class.serializer()
+        val actualSerializer =
+            encoder.serializersModule.getContextual(value::class) ?: value::class.serializer()
         encoder.encodeSerializableValue(actualSerializer as KSerializer<Any>, value)
     }
 
