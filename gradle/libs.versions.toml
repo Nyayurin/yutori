@@ -1,6 +1,5 @@
 [versions]
 kotlin = "2.0.20"
-compose = "1.7.0-beta02"
 agp = "8.5.2"
 coroutines = "1.9.0"
 datetime = "0.6.1"
@@ -9,16 +8,9 @@ atomicfu = "0.25.0"
 ktor = "3.0.0-rc-1"
 ksoup = "0.1.7"
 kermit = "2.0.4"
-activity = "1.9.1"
-coil = "3.0.0-alpha10"
-lifecycle = "2.8.0"
-data-saver = "1.2.0"
-navigation = "2.8.0-alpha09"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
@@ -34,18 +26,9 @@ ktor-client-winhttp = { module = "io.ktor:ktor-client-winhttp", version.ref = "k
 ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 ksoup = { module = "com.fleeksoft.ksoup:ksoup", version.ref = "ksoup" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
-data-saver-core = { module = "io.github.FunnySaltyFish:data-saver-core", version.ref = "data-saver" }
-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
-coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
-coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
-lifecycle-viewModel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
-navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation" }
 
 [plugins]
 multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 atomicfu = { id = "org.jetbrains.kotlinx.atomicfu", version.ref = "atomicfu" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-android-application = { id = "com.android.application", version.ref = "agp" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-compose = { id = "org.jetbrains.compose", version.ref = "compose" }
