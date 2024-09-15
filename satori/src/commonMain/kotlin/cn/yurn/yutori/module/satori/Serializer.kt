@@ -357,10 +357,9 @@ object GuildMemberSerializer : KSerializer<GuildMember> {
 }
 
 object MessageSerializer : KSerializer<Message> {
-    @OptIn(ExperimentalSerializationApi::class)
     override val descriptor = buildClassSerialDescriptor("Message") {
         element<String>("id")
-        element("content", listSerialDescriptor(String.serializer().descriptor))
+        element("content", String.serializer().descriptor)
         element("channel", ChannelSerializer.descriptor)
         element("guild", GuildSerializer.descriptor)
         element("member", GuildMemberSerializer.descriptor)
@@ -373,7 +372,7 @@ object MessageSerializer : KSerializer<Message> {
     override fun serialize(encoder: Encoder, value: Message) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
-            encodeSerializableElement(descriptor, 1, ListSerializer(String.serializer()), value.content.map { it.serialize() })
+            encodeSerializableElement(descriptor, 1, String.serializer(), value.content.joinToString("") { it.serialize() })
             encodeNullableSerializableElement(descriptor, 2, ChannelSerializer, value.channel)
             encodeNullableSerializableElement(descriptor, 3, GuildSerializer, value.guild)
             encodeNullableSerializableElement(descriptor, 4, GuildMemberSerializer, value.member)
