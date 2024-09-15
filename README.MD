@@ -74,8 +74,10 @@ yutorix-module-yhchat = { module = "cn.yurn.yutorix:yutorix-module-yhchat", vers
 
 编写代码
 
+commonMain
+
 ```kotlin
-fun app() {
+suspend fun app() = coroutineScope {
     // 通过 builder 使用 DSL 构造一个 Yutori 对象
     val yutori = yutori {
         // 安装你需要的适配器
@@ -111,11 +113,19 @@ fun app() {
             }
         }
     }
-    // 使用协程启动 Yutori, 并 join 到主线程避免主线程结束导致程序终止
+    // 启动 Yutori
+    yutori.start()
+}
+```
+
+jvmMain
+
+```kotlin
+fun main() {
     runBlocking {
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {
-            yutori.start()
+            bot()
         }.join()
     }
 }
