@@ -117,26 +117,7 @@ object SignalSerializer : JsonContentPolymorphicSerializer<Signal>(Signal::class
 
 object EventSerializer : KSerializer<Event<SigningEvent>> {
     @OptIn(ExperimentalSerializationApi::class)
-    override val descriptor = buildClassSerialDescriptor("Event") {
-        element("id", NumberSerializer.descriptor)
-        element<String>("type")
-        element<String>("platform")
-        element<String>("self_id")
-        element<String>("timestamp")
-        element("argv", InteractionArgvSerializer.descriptor, isOptional = true)
-        element("button", InteractionButtonSerializer.descriptor, isOptional = true)
-        element("channel", ChannelSerializer.descriptor, isOptional = true)
-        element("guild", GuildSerializer.descriptor, isOptional = true)
-        element("login", LoginSerializer.descriptor, isOptional = true)
-        element("member", GuildMemberSerializer.descriptor, isOptional = true)
-        element("message", MessageSerializer.descriptor, isOptional = true)
-        element("operator", UserSerializer.descriptor, isOptional = true)
-        element("role", GuildRoleSerializer.descriptor, isOptional = true)
-        element("user", UserSerializer.descriptor, isOptional = true)
-        element("properties", mapSerialDescriptor(String.serializer().descriptor,
-            DynamicLookupSerializer.descriptor
-        ))
-    }
+    override val descriptor = mapSerialDescriptor(String.serializer().descriptor, DynamicLookupSerializer.descriptor)
 
     override fun serialize(encoder: Encoder, value: Event<SigningEvent>) {
         encoder.encodeCollection(descriptor, value.properties.entries) { index, (key, value) ->
@@ -241,13 +222,12 @@ object ChannelSerializer : KSerializer<Channel> {
         element<String?>("parent_id", isOptional = true)
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Channel) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
             encodeSerializableElement(descriptor, 1, NumberSerializer, value.type)
-            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.name)
-            encodeNullableSerializableElement(descriptor, 3, String.serializer(), value.parent_id)
+            value.name?.let { encodeStringElement(descriptor, 2, it) }
+            value.parent_id?.let { encodeStringElement(descriptor, 3, it) }
         }
     }
 
@@ -270,12 +250,11 @@ object GuildSerializer : KSerializer<Guild> {
         element<String?>("avatar", isOptional = true)
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Guild) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
-            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.name)
-            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.avatar)
+            value.name?.let { encodeStringElement(ChannelSerializer.descriptor, 1, it) }
+            value.avatar?.let { encodeStringElement(ChannelSerializer.descriptor, 2, it) }
         }
     }
 
@@ -300,12 +279,11 @@ object LoginSerializer : KSerializer<Login> {
         element<List<String>>("proxy_urls", isOptional = true)
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Login) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
-            encodeNullableSerializableElement(descriptor, 0, UserSerializer, value.user)
-            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.self_id)
-            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.platform)
+            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, 0, UserSerializer, it) }
+            value.self_id?.let { encodeStringElement(ChannelSerializer.descriptor, 1, it) }
+            value.platform?.let { encodeStringElement(ChannelSerializer.descriptor, 2, it) }
             encodeSerializableElement(descriptor, 3, NumberSerializer, value.status)
             encodeSerializableElement(descriptor, 4, ListSerializer(String.serializer()), value.features)
             encodeSerializableElement(descriptor, 5, ListSerializer(String.serializer()), value.proxy_urls)
@@ -334,13 +312,12 @@ object GuildMemberSerializer : KSerializer<GuildMember> {
         element("joined_at", NumberNullableSerializer.descriptor, isOptional = true)
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: GuildMember) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
-            encodeNullableSerializableElement(descriptor, 0, UserSerializer, value.user)
-            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.nick)
-            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.avatar)
-            encodeNullableSerializableElement(descriptor, 3, NumberSerializer, value.joined_at)
+            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, 0, UserSerializer, it) }
+            value.nick?.let { encodeStringElement(ChannelSerializer.descriptor, 1, it) }
+            value.avatar?.let { encodeStringElement(ChannelSerializer.descriptor, 2, it) }
+            value.joined_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, 3, NumberSerializer, it) }
         }
     }
 
@@ -368,17 +345,16 @@ object MessageSerializer : KSerializer<Message> {
         element("updated_at", NumberNullableSerializer.descriptor, isOptional = true)
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Message) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
             encodeSerializableElement(descriptor, 1, String.serializer(), value.content.joinToString("") { it.serialize() })
-            encodeNullableSerializableElement(descriptor, 2, ChannelSerializer, value.channel)
-            encodeNullableSerializableElement(descriptor, 3, GuildSerializer, value.guild)
-            encodeNullableSerializableElement(descriptor, 4, GuildMemberSerializer, value.member)
-            encodeNullableSerializableElement(descriptor, 5, UserSerializer, value.user)
-            encodeNullableSerializableElement(descriptor, 6, NumberSerializer, value.created_at)
-            encodeNullableSerializableElement(descriptor, 7, NumberSerializer, value.updated_at)
+            value.channel?.let { encodeSerializableElement(ChannelSerializer.descriptor, 2, ChannelSerializer, it) }
+            value.guild?.let { encodeSerializableElement(ChannelSerializer.descriptor, 3, GuildSerializer, it) }
+            value.member?.let { encodeSerializableElement(ChannelSerializer.descriptor, 4, GuildMemberSerializer, it) }
+            value.user?.let { encodeSerializableElement(ChannelSerializer.descriptor, 5, UserSerializer, it) }
+            value.created_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, 6, NumberSerializer, it) }
+            value.updated_at?.let { encodeSerializableElement(ChannelSerializer.descriptor, 7, NumberSerializer, it) }
         }
     }
 
@@ -409,14 +385,13 @@ object UserSerializer : KSerializer<User> {
         element<Boolean?>("is_bot", isOptional = true)
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: User) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
-            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.name)
-            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.nick)
-            encodeNullableSerializableElement(descriptor, 3, String.serializer(), value.avatar)
-            encodeNullableSerializableElement(descriptor, 4, Boolean.serializer(), value.is_bot)
+            value.name?.let { encodeStringElement(descriptor, 1, it) }
+            value.nick?.let { encodeStringElement(descriptor, 2, it) }
+            value.avatar?.let { encodeStringElement(descriptor, 3, it) }
+            value.is_bot?.let { encodeBooleanElement(descriptor, 4, it) }
         }
     }
 
@@ -439,11 +414,10 @@ object GuildRoleSerializer : KSerializer<GuildRole> {
         element<String?>("name", isOptional = true)
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: GuildRole) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeStringElement(descriptor, 0, value.id)
-            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.name)
+            value.name?.let { encodeStringElement(descriptor, 1, it) }
         }
     }
 
@@ -464,11 +438,10 @@ class PagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : KSer
         element<String?>("next", isOptional = true)
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: PagingList<T>) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeSerializableElement(descriptor, 0, ListSerializer(dataSerializer), value.data)
-            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.next)
+            value.next?.let { encodeStringElement(descriptor, 1, it) }
         }
     }
 
@@ -490,12 +463,11 @@ class BidiPagingListSerializer<T>(private val dataSerializer: KSerializer<T>) : 
         element<String?>("next", isOptional = true)
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: BidiPagingList<T>) {
         encoder.encodeStructure(InteractionArgvSerializer.descriptor) {
             encodeSerializableElement(descriptor, 0, ListSerializer(dataSerializer), value.data)
-            encodeNullableSerializableElement(descriptor, 1, String.serializer(), value.prev)
-            encodeNullableSerializableElement(descriptor, 2, String.serializer(), value.next)
+            value.prev?.let { encodeStringElement(descriptor, 1, it) }
+            value.next?.let { encodeStringElement(descriptor, 2, it) }
         }
     }
 
