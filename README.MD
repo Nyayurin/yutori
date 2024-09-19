@@ -23,12 +23,26 @@
 
 添加仓库
 
+build.gradle.kts
+
 ```kotlin
 maven {
     url = uri("https://maven.pkg.github.com/Nyayurn/yutori")
     credentials { 
-        username = project.findProperty("gpr.username") as String? ?: System.getenv("USERNAME")
-        password = project.findProperty("gpr.token") as String? ?: System.getenv("TOKEN")
+        username = project.findProperty("gpr.username") as String? ?: System.getenv("GITHUB_USERNAME")
+        password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
+    }
+}
+```
+
+settings.gradle.kts
+
+```kotlin
+maven {
+    url = uri("https://maven.pkg.github.com/Nyayurn/yutori")
+    credentials {
+        username = providers.gradleProperty("gpr.username").orNull ?: System.getenv("GITHUB_USERNAME")
+        password = providers.gradleProperty("gpr.token").orNull ?: System.getenv("GITHUB_TOKEN")
     }
 }
 ```
