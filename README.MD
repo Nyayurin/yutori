@@ -7,16 +7,13 @@
 | Module                 | Platforms                                                                                                                                  |
 |------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 | yutori                 | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
-| yutorix-satori-core    | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
-| yutorix-satori-adapter | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
-| yutorix-satori-server  | JVM(17), Android(17), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64)                                                       |
 | yutorix-module-yhchat  | JVM(17), Android(17), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64)                                                       |
 
 </div>
 
 ## 如何使用
 
-### 从 Kotlin Multiplatform 项目开始
+### 从 Kotlin 项目开始
 
 通过 [点击这里](https://github.com/settings/tokens/new) 创建一个属于你的 Github 个人访问 token<br>
 根据需求选择适合自己的生效期(Expiration)<br>
@@ -27,13 +24,11 @@
 添加仓库
 
 ```kotlin
-repositories {
-    maven {
-        url = uri("https://maven.pkg.github.com/Nyayurn/yutori")
-        credentials {
-            username = project.findProperty("gpr.username") as String? ?: System.getenv("USERNAME")
-            password = project.findProperty("gpr.token") as String? ?: System.getenv("TOKEN")
-        }
+maven {
+    url = uri("https://maven.pkg.github.com/Nyayurn/yutori")
+    credentials { 
+        username = project.findProperty("gpr.username") as String? ?: System.getenv("USERNAME")
+        password = project.findProperty("gpr.token") as String? ?: System.getenv("TOKEN")
     }
 }
 ```
@@ -48,36 +43,27 @@ gpr.token = token
 引入依赖
 
 ```kotlin
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(libs.yutori)
-            implementation(libs.yutorix.satori.core) // 可选
-            implementation(libs.yutorix.satori.adapter) // 可选
-            implementation(libs.yutorix.satori.server) // 可选
-            implementation(libs.yutorix.module.yhchat) // 可选
-        }
-    }
-}
+implementation(libs.yutori)
+implementation(libs.yutorix.module.yhchat) // 可选
 ```
 
 ```toml
 [versions]
 yutori = "version"
-yutorix-satori = "version"
 
 [libraries]
 yutori = { module = "cn.yurn.yutori:yutori", version.ref = "yutori" }
-yutorix-satori-core = { module = "cn.yurn.yutorix:yutorix-satori-core", version.ref = "yutorix-satori" }
-yutorix-satori-adapter = { module = "cn.yurn.yutorix:yutorix-satori-adapter", version.ref = "yutorix-satori" }
-yutorix-satori-server = { module = "cn.yurn.yutorix:yutorix-satori-server", version.ref = "yutorix-satori" }
 yutorix-module-yhchat = { module = "cn.yurn.yutorix:yutorix-module-yhchat", version.ref = "yutori" }
 ```
 
-请从 [Github Packages](https://github.com/Nyayurn?tab=packages&repo_name=Yutori) 获取版本<br>
+请从 [Github Packages](https://github.com/Nyayurn?tab=packages&repo_name=yutori) 获取版本<br>
 对于稳定版, 它的版本号应该和 Release 中的 tag 一致<br>
 对于开发板, 它的版本号应该和 Commit 的完整 SHA 值一致<br>
 要获取一个 Commit 的完整 SHA 值, 请在 Commits 页面对应 Commit 处点击 Commit ID 右侧的复制按钮(Copy full SHA for *******)
+
+引入扩展模块
+
+请参考 [Yutorix-Satori](https://github.com/Nyayurn/yutorix-satori)
 
 编写代码
 
@@ -88,15 +74,9 @@ suspend fun app() = coroutineScope {
     // 通过 builder 使用 DSL 构造一个 Yutori 对象
     val yutori = yutori {
         // 安装你需要的适配器
-        install(Adapter.Satori) {
+        install(Adapter.Xxx) {
             // 在代码块内配置适配器
-            host = "127.0.0.1"
-            port = 5500
-            token = "token"
-        }
-        install(Adapter.YhChat) {
-            token = "token"
-            selfId = "self_id"
+            key = value
         }
         // 通用适配器设置
         adapter {
@@ -139,7 +119,3 @@ fun main() {
 ```
 
 至此, 你已经学会了 Yutori 的基本使用, 接下来请慢慢探索 Yutori 的无限可能吧!
-
-### 从 Kotlin/JVM 项目开始
-
-Coming soon...
