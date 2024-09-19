@@ -10,7 +10,7 @@ subprojects {
         repositories {
             maven {
                 name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/Nyayurn/Yutori")
+                url = uri("https://maven.pkg.github.com/Nyayurn/yutori")
                 credentials {
                     username = System.getenv("GITHUB_ACTOR")
                     password = System.getenv("GITHUB_TOKEN")

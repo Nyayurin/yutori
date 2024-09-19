@@ -4,11 +4,13 @@
 
 一个支持多聊天平台的 Kotlin Multiplatform 通讯软件开发框架
 
-| Module                | Platforms                                                                                                                                  |
-|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| yutori                | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
-| yutorix-module-satori | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
-| yutorix-module-yhchat | JVM(17), Android(17), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64)                                                       |
+| Module                 | Platforms                                                                                                                                  |
+|------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| yutori                 | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
+| yutorix-satori-core    | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
+| yutorix-satori-adapter | JVM(17), Android(17), JS(Browser, Node), WasmJS(Browser, Node), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64), Mingw(x64) |
+| yutorix-satori-server  | JVM(17), Android(17), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64)                                                       |
+| yutorix-module-yhchat  | JVM(17), Android(17), IOS(x64, Arm64, SimulatorArm64), MacOS(x64, Arm64), Linux(x64)                                                       |
 
 </div>
 
@@ -16,7 +18,7 @@
 
 ### 从 Kotlin Multiplatform 项目开始
 
-通过 https://github.com/settings/tokens/new 创建一个属于你的 Github 个人访问 token<br>
+通过 [点击这里](https://github.com/settings/tokens/new) 创建一个属于你的 Github 个人访问 token<br>
 根据需求选择适合自己的生效期(Expiration)<br>
 请确保至少包含一个 `read:packages` 权限<br>
 请勿将此 token 公开给其他人<br>
@@ -27,7 +29,7 @@
 ```kotlin
 repositories {
     maven {
-        url = uri("https://maven.pkg.github.com/Nyayurn/Yutori")
+        url = uri("https://maven.pkg.github.com/Nyayurn/yutori")
         credentials {
             username = project.findProperty("gpr.username") as String? ?: System.getenv("USERNAME")
             password = project.findProperty("gpr.token") as String? ?: System.getenv("TOKEN")
@@ -50,7 +52,9 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.yutori)
-            implementation(libs.yutorix.module.satori) // 可选
+            implementation(libs.yutorix.satori.core) // 可选
+            implementation(libs.yutorix.satori.adapter) // 可选
+            implementation(libs.yutorix.satori.server) // 可选
             implementation(libs.yutorix.module.yhchat) // 可选
         }
     }
@@ -60,14 +64,17 @@ kotlin {
 ```toml
 [versions]
 yutori = "version"
+yutorix-satori = "version"
 
 [libraries]
 yutori = { module = "cn.yurn.yutori:yutori", version.ref = "yutori" }
-yutorix-module-satori = { module = "cn.yurn.yutorix:yutorix-module-satori", version.ref = "yutori" }
+yutorix-satori-core = { module = "cn.yurn.yutorix:yutorix-satori-core", version.ref = "yutorix-satori" }
+yutorix-satori-adapter = { module = "cn.yurn.yutorix:yutorix-satori-adapter", version.ref = "yutorix-satori" }
+yutorix-satori-server = { module = "cn.yurn.yutorix:yutorix-satori-server", version.ref = "yutorix-satori" }
 yutorix-module-yhchat = { module = "cn.yurn.yutorix:yutorix-module-yhchat", version.ref = "yutori" }
 ```
 
-请从 https://github.com/Nyayurn?tab=packages&repo_name=Yutori 获取版本<br>
+请从 [Github Packages](https://github.com/Nyayurn?tab=packages&repo_name=Yutori) 获取版本<br>
 对于稳定版, 它的版本号应该和 Release 中的 tag 一致<br>
 对于开发板, 它的版本号应该和 Commit 的完整 SHA 值一致<br>
 要获取一个 Commit 的完整 SHA 值, 请在 Commits 页面对应 Commit 处点击 Commit ID 右侧的复制按钮(Copy full SHA for *******)

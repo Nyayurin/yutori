@@ -13,4 +13,3 @@ local.properties
 xcuserdata/
 Pods/
 *yarn.lock
-/application/local_storage
