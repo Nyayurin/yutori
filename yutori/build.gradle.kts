@@ -95,7 +95,7 @@ publishing {
             name = "Yutori"
             version = System.getenv("VERSION")
             description = "Kotlin Multiplatform library"
-            url = "https://github.com/Nyayurn/Yutori"
+            url = "https://github.com/Nyayurn/yutori"
 
             developers {
                 developer {
@@ -105,7 +105,7 @@ publishing {
                 }
             }
             scm {
-                url = "https://github.com/Nyayurn/Yutori"
+                url = "https://github.com/Nyayurn/yutori"
             }
         }
     }

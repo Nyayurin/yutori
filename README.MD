@@ -29,7 +29,7 @@ build.gradle.kts
 maven {
     url = uri("https://maven.pkg.github.com/Nyayurn/yutori")
     credentials { 
-        username = project.findProperty("gpr.username") as String? ?: System.getenv("GITHUB_USERNAME")
+        username = project.findProperty("gpr.actor") as String? ?: System.getenv("GITHUB_ACTOR")
         password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
     }
 }
@@ -41,7 +41,7 @@ settings.gradle.kts
 maven {
     url = uri("https://maven.pkg.github.com/Nyayurn/yutori")
     credentials {
-        username = providers.gradleProperty("gpr.username").orNull ?: System.getenv("GITHUB_USERNAME")
+        username = providers.gradleProperty("gpr.actor").orNull ?: System.getenv("GITHUB_ACTOR")
         password = providers.gradleProperty("gpr.token").orNull ?: System.getenv("GITHUB_TOKEN")
     }
 }
@@ -50,14 +50,14 @@ maven {
 修改 gradle.properties, 将你 Github 账号的 username 及刚刚创建的 token 填进去
 
 ```properties
-gpr.username = username
+gpr.actor = actor
 gpr.token = token
 ```
 
 或是通过环境变量提供
 
 ```properties
-GITHUB_USERNAME = username
+GITHUB_ACTOR = actor
 GITHUB_TOKEN = token
 ```
 
