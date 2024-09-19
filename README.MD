@@ -54,6 +54,13 @@ gpr.username = username
 gpr.token = token
 ```
 
+或是通过环境变量提供
+
+```properties
+GITHUB_USERNAME = username
+GITHUB_TOKEN = token
+```
+
 引入依赖
 
 ```kotlin
