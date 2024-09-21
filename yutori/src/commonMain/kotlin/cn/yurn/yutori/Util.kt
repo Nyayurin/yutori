@@ -33,6 +33,9 @@ suspend fun Context<MessageEvent>.reply(quote: Boolean = true, content: MessageB
 
 fun Event<*>.nick() = nullable_member?.nick ?: nullable_user?.nick ?: nullable_user?.name
 
+fun List<MessageElement>.textContent(): String =
+    filterIsInstance<Text>().joinToString("") { it.text }
+
 fun <T> MutableMap<String, Any?>.delegate(key: String) = Delegate<T>(this, key)
 fun <T> MutableMap<String, Any?>.delegateNullable(key: String) = DelegateNullable<T>(this, key)
 

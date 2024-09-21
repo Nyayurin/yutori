@@ -105,8 +105,8 @@ suspend fun app() = coroutineScope {
             listening {
                 // 监听消息发送
                 message.created {
-                    // event.message.content 是一个 List<MessageElement> 对象, 通过过滤获得所有纯文本并拼接成字符串
-                    if (event.message.content.filterIsInstance<Text>().joinToString("") { it.text } == "test") {
+                    // event.message.content 是一个 List<MessageElement> 对象, 通过调用 textContent 函数获取所有纯文本拼接成的字符串
+                    if (event.message.content.textContent() == "test") {
                         // 调用 actions.message.create 来发送一条消息
                         actions.message.create(
                             channel_id = event.channel.id,
