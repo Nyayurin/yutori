@@ -28,8 +28,8 @@ class ListenersContainer {
     suspend operator fun invoke(event: Event<SigningEvent>, yutori: Yutori, rootActions: RootActions) {
         try {
             val context = Context(rootActions, event, yutori)
-            for (listener in this.any) {
-                coroutineScope {
+            coroutineScope {
+                for (listener in any) {
                     launch {
                         listener(context)
                     }
@@ -69,29 +69,29 @@ class ListenersContainer {
             }
             context as Context<GuildEvent>
             when (context.event.type) {
-                GuildEvents.Added -> added.forEach {
-                    coroutineScope {
+                GuildEvents.Added -> coroutineScope {
+                    added.forEach {
                         launch {
                             it(context)
                         }
                     }
                 }
-                GuildEvents.Updated -> updated.forEach {
-                    coroutineScope {
+                GuildEvents.Updated -> coroutineScope {
+                    updated.forEach {
                         launch {
                             it(context)
                         }
                     }
                 }
-                GuildEvents.Removed -> removed.forEach {
-                    coroutineScope {
+                GuildEvents.Removed -> coroutineScope {
+                    removed.forEach {
                         launch {
                             it(context)
                         }
                     }
                 }
-                GuildEvents.Request -> request.forEach {
-                    coroutineScope {
+                GuildEvents.Request -> coroutineScope {
+                    request.forEach {
                         launch {
                             it(context)
                         }
@@ -116,29 +116,29 @@ class ListenersContainer {
                 if (context.event.type !in GuildMemberEvents.Types) return
                 context as Context<GuildMemberEvent>
                 when (context.event.type) {
-                    GuildMemberEvents.Added -> added.forEach {
-                        coroutineScope {
+                    GuildMemberEvents.Added -> coroutineScope {
+                        added.forEach {
                             launch {
                                 it(context)
                             }
                         }
                     }
-                    GuildMemberEvents.Updated -> updated.forEach {
-                        coroutineScope {
+                    GuildMemberEvents.Updated -> coroutineScope {
+                        updated.forEach {
                             launch {
                                 it(context)
                             }
                         }
                     }
-                    GuildMemberEvents.Removed -> removed.forEach {
-                        coroutineScope {
+                    GuildMemberEvents.Removed -> coroutineScope {
+                        removed.forEach {
                             launch {
                                 it(context)
                             }
                         }
                     }
-                    GuildMemberEvents.Request -> request.forEach {
-                        coroutineScope {
+                    GuildMemberEvents.Request -> coroutineScope {
+                        request.forEach {
                             launch {
                                 it(context)
                             }
@@ -162,22 +162,22 @@ class ListenersContainer {
                 if (context.event.type !in GuildRoleEvents.Types) return
                 context as Context<GuildRoleEvent>
                 when (context.event.type) {
-                    GuildRoleEvents.Created -> created.forEach {
-                        coroutineScope {
+                    GuildRoleEvents.Created -> coroutineScope {
+                        created.forEach {
                             launch {
                                 it(context)
                             }
                         }
                     }
-                    GuildRoleEvents.Updated -> updated.forEach {
-                        coroutineScope {
+                    GuildRoleEvents.Updated -> coroutineScope {
+                        updated.forEach {
                             launch {
                                 it(context)
                             }
                         }
                     }
-                    GuildRoleEvents.Deleted -> deleted.forEach {
-                        coroutineScope {
+                    GuildRoleEvents.Deleted -> coroutineScope {
+                        deleted.forEach {
                             launch {
                                 it(context)
                             }
@@ -198,16 +198,16 @@ class ListenersContainer {
 
         suspend operator fun invoke(context: Context<SigningEvent>) {
             when (context.event.type) {
-                InteractionEvents.Button -> button.forEach {
-                    coroutineScope {
+                InteractionEvents.Button -> coroutineScope {
+                    button.forEach {
                         launch {
                             it(context as Context<InteractionButtonEvent>)
                         }
                     }
                 }
 
-                InteractionEvents.Command -> command.forEach {
-                    coroutineScope {
+                InteractionEvents.Command -> coroutineScope {
+                    command.forEach {
                         launch {
                             it(context as Context<InteractionCommandEvent>)
                         }
@@ -231,22 +231,22 @@ class ListenersContainer {
             if (context.event.type !in LoginEvents.Types) return
             context as Context<LoginEvent>
             when (context.event.type) {
-                LoginEvents.Added -> added.forEach {
-                    coroutineScope {
+                LoginEvents.Added -> coroutineScope {
+                    added.forEach {
                         launch {
                             it(context)
                         }
                     }
                 }
-                LoginEvents.Removed -> removed.forEach {
-                    coroutineScope {
+                LoginEvents.Removed -> coroutineScope {
+                    removed.forEach {
                         launch {
                             it(context)
                         }
                     }
                 }
-                LoginEvents.Updated -> updated.forEach {
-                    coroutineScope {
+                LoginEvents.Updated -> coroutineScope {
+                    updated.forEach {
                         launch {
                             it(context)
                         }
@@ -270,22 +270,22 @@ class ListenersContainer {
             if (context.event.type !in MessageEvents.Types) return
             context as Context<MessageEvent>
             when (context.event.type) {
-                MessageEvents.Created -> created.forEach {
-                    coroutineScope {
+                MessageEvents.Created -> coroutineScope {
+                    created.forEach {
                         launch {
                             it(context)
                         }
                     }
                 }
-                MessageEvents.Updated -> updated.forEach {
-                    coroutineScope {
+                MessageEvents.Updated -> coroutineScope {
+                    updated.forEach {
                         launch {
                             it(context)
                         }
                     }
                 }
-                MessageEvents.Deleted -> deleted.forEach {
-                    coroutineScope {
+                MessageEvents.Deleted -> coroutineScope {
+                    deleted.forEach {
                         launch {
                             it(context)
                         }
@@ -307,15 +307,15 @@ class ListenersContainer {
             if (context.event.type !in ReactionEvents.Types) return
             context as Context<ReactionEvent>
             when (context.event.type) {
-                ReactionEvents.Added -> added.forEach {
-                    coroutineScope {
+                ReactionEvents.Added -> coroutineScope {
+                    added.forEach {
                         launch {
                             it(context)
                         }
                     }
                 }
-                ReactionEvents.Removed -> removed.forEach {
-                    coroutineScope {
+                ReactionEvents.Removed -> coroutineScope {
+                    removed.forEach {
                         launch {
                             it(context)
                         }
@@ -333,8 +333,8 @@ class ListenersContainer {
 
         suspend operator fun invoke(context: Context<SigningEvent>) {
             when (context.event.type) {
-                UserEvents.Friend_Request -> request.forEach {
-                    coroutineScope {
+                UserEvents.Friend_Request -> coroutineScope {
+                    request.forEach {
                         launch {
                             it(context as Context<UserEvent>)
                         }
