@@ -2,7 +2,7 @@
 
 package cn.yurn.yutori
 
-import co.touchlab.kermit.Logger
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -13,48 +13,44 @@ abstract class ExtendedListenersContainer {
 }
 
 @BuilderMarker
-class ListenersContainer {
+class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
     val any = mutableListOf<Listener<SigningEvent>>()
-    val guild = Guild()
-    val interaction = Interaction()
-    val login = Login()
-    val message = Message()
-    val reaction = Reaction()
-    val friend = Friend()
+    val guild = Guild(exceptionHandler)
+    val interaction = Interaction(exceptionHandler)
+    val login = Login(exceptionHandler)
+    val message = Message(exceptionHandler)
+    val reaction = Reaction(exceptionHandler)
+    val friend = Friend(exceptionHandler)
     val containers = mutableMapOf<String, ExtendedListenersContainer>()
 
     fun any(listener: suspend Context<SigningEvent>.() -> Unit) = any.add { it.listener() }
 
     suspend operator fun invoke(event: Event<SigningEvent>, yutori: Yutori, rootActions: RootActions) {
-        try {
-            val context = Context(rootActions, event, yutori)
-            coroutineScope {
-                for (listener in any) {
-                    launch {
-                        listener(context)
-                    }
+        val context = Context(rootActions, event, yutori)
+        coroutineScope {
+            for (listener in any) {
+                launch(exceptionHandler) {
+                    listener(context)
                 }
             }
-            guild(context)
-            interaction(context)
-            login(context)
-            message(context)
-            reaction(context)
-            friend(context)
-            for (container in containers.values) container(context)
-        } catch (e: EventParsingException) {
-            Logger.e(yutori.name, e) { "event: $event" }
         }
+        guild(context)
+        interaction(context)
+        login(context)
+        message(context)
+        reaction(context)
+        friend(context)
+        for (container in containers.values) container(context)
     }
 
     @BuilderMarker
-    class Guild {
+    class Guild(private val exceptionHandler: CoroutineExceptionHandler) {
         val added = mutableListOf<Listener<GuildEvent>>()
         val updated = mutableListOf<Listener<GuildEvent>>()
         val removed = mutableListOf<Listener<GuildEvent>>()
         val request = mutableListOf<Listener<GuildEvent>>()
-        val member = Member()
-        val role = Role()
+        val member = Member(exceptionHandler)
+        val role = Role(exceptionHandler)
 
         fun added(listener: suspend Context<GuildEvent>.() -> Unit) = added.add { it.listener() }
         fun updated(listener: suspend Context<GuildEvent>.() -> Unit) = updated.add { it.listener() }
@@ -71,28 +67,28 @@ class ListenersContainer {
             when (context.event.type) {
                 GuildEvents.Added -> coroutineScope {
                     added.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 GuildEvents.Updated -> coroutineScope {
                     updated.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 GuildEvents.Removed -> coroutineScope {
                     removed.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 GuildEvents.Request -> coroutineScope {
                     request.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
@@ -101,7 +97,7 @@ class ListenersContainer {
         }
 
         @BuilderMarker
-        class Member {
+        class Member(private val exceptionHandler: CoroutineExceptionHandler) {
             val added = mutableListOf<Listener<GuildMemberEvent>>()
             val updated = mutableListOf<Listener<GuildMemberEvent>>()
             val removed = mutableListOf<Listener<GuildMemberEvent>>()
@@ -118,28 +114,28 @@ class ListenersContainer {
                 when (context.event.type) {
                     GuildMemberEvents.Added -> coroutineScope {
                         added.forEach {
-                            launch {
+                            launch(exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
                     GuildMemberEvents.Updated -> coroutineScope {
                         updated.forEach {
-                            launch {
+                            launch(exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
                     GuildMemberEvents.Removed -> coroutineScope {
                         removed.forEach {
-                            launch {
+                            launch(exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
                     GuildMemberEvents.Request -> coroutineScope {
                         request.forEach {
-                            launch {
+                            launch(exceptionHandler) {
                                 it(context)
                             }
                         }
@@ -149,7 +145,7 @@ class ListenersContainer {
         }
 
         @BuilderMarker
-        class Role {
+        class Role(private val exceptionHandler: CoroutineExceptionHandler) {
             val created = mutableListOf<Listener<GuildRoleEvent>>()
             val updated = mutableListOf<Listener<GuildRoleEvent>>()
             val deleted = mutableListOf<Listener<GuildRoleEvent>>()
@@ -164,21 +160,21 @@ class ListenersContainer {
                 when (context.event.type) {
                     GuildRoleEvents.Created -> coroutineScope {
                         created.forEach {
-                            launch {
+                            launch(exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
                     GuildRoleEvents.Updated -> coroutineScope {
                         updated.forEach {
-                            launch {
+                            launch(exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
                     GuildRoleEvents.Deleted -> coroutineScope {
                         deleted.forEach {
-                            launch {
+                            launch(exceptionHandler) {
                                 it(context)
                             }
                         }
@@ -189,7 +185,7 @@ class ListenersContainer {
     }
 
     @BuilderMarker
-    class Interaction {
+    class Interaction(private val exceptionHandler: CoroutineExceptionHandler) {
         val button = mutableListOf<Listener<InteractionButtonEvent>>()
         val command = mutableListOf<Listener<InteractionCommandEvent>>()
 
@@ -200,7 +196,7 @@ class ListenersContainer {
             when (context.event.type) {
                 InteractionEvents.Button -> coroutineScope {
                     button.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context as Context<InteractionButtonEvent>)
                         }
                     }
@@ -208,7 +204,7 @@ class ListenersContainer {
 
                 InteractionEvents.Command -> coroutineScope {
                     command.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context as Context<InteractionCommandEvent>)
                         }
                     }
@@ -218,7 +214,7 @@ class ListenersContainer {
     }
 
     @BuilderMarker
-    class Login {
+    class Login(private val exceptionHandler: CoroutineExceptionHandler) {
         val added = mutableListOf<Listener<LoginEvent>>()
         val removed = mutableListOf<Listener<LoginEvent>>()
         val updated = mutableListOf<Listener<LoginEvent>>()
@@ -233,21 +229,21 @@ class ListenersContainer {
             when (context.event.type) {
                 LoginEvents.Added -> coroutineScope {
                     added.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 LoginEvents.Removed -> coroutineScope {
                     removed.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 LoginEvents.Updated -> coroutineScope {
                     updated.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
@@ -257,7 +253,7 @@ class ListenersContainer {
     }
 
     @BuilderMarker
-    class Message {
+    class Message(private val exceptionHandler: CoroutineExceptionHandler) {
         val created = mutableListOf<Listener<MessageEvent>>()
         val updated = mutableListOf<Listener<MessageEvent>>()
         val deleted = mutableListOf<Listener<MessageEvent>>()
@@ -272,21 +268,21 @@ class ListenersContainer {
             when (context.event.type) {
                 MessageEvents.Created -> coroutineScope {
                     created.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 MessageEvents.Updated -> coroutineScope {
                     updated.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 MessageEvents.Deleted -> coroutineScope {
                     deleted.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
@@ -296,7 +292,7 @@ class ListenersContainer {
     }
 
     @BuilderMarker
-    class Reaction {
+    class Reaction(private val exceptionHandler: CoroutineExceptionHandler) {
         val added = mutableListOf<Listener<ReactionEvent>>()
         val removed = mutableListOf<Listener<ReactionEvent>>()
 
@@ -309,14 +305,14 @@ class ListenersContainer {
             when (context.event.type) {
                 ReactionEvents.Added -> coroutineScope {
                     added.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 ReactionEvents.Removed -> coroutineScope {
                     removed.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context)
                         }
                     }
@@ -326,7 +322,7 @@ class ListenersContainer {
     }
 
     @BuilderMarker
-    class Friend {
+    class Friend(private val exceptionHandler: CoroutineExceptionHandler) {
         val request = mutableListOf<Listener<UserEvent>>()
 
         fun request(listener: suspend Context<UserEvent>.() -> Unit) = request.add { it.listener() }
@@ -335,7 +331,7 @@ class ListenersContainer {
             when (context.event.type) {
                 UserEvents.Friend_Request -> coroutineScope {
                     request.forEach {
-                        launch {
+                        launch(exceptionHandler) {
                             it(context as Context<UserEvent>)
                         }
                     }

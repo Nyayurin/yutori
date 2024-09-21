@@ -30,6 +30,8 @@ import cn.yurn.yutori.message.element.Sub
 import cn.yurn.yutori.message.element.Sup
 import cn.yurn.yutori.message.element.Underline
 import cn.yurn.yutori.message.element.Video
+import co.touchlab.kermit.Logger
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -104,12 +106,15 @@ class Yutori(val name: String) {
 
     fun stop() = modules.filterIsInstance<cn.yurn.yutori.Adapter>().forEach { adapter -> adapter.stop(this) }
 
-    class Adapter {
-        val container = ListenersContainer()
+    inner class Adapter {
+        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            Logger.w(name, throwable) { "监听器发生异常" }
+        }
+        val container = ListenersContainer(exceptionHandler)
         fun listening(block: ListenersContainer.() -> Unit) = container.block()
     }
 
-    class Server {
+    inner class Server {
         fun routing(block: () -> Unit) {
 
         }
