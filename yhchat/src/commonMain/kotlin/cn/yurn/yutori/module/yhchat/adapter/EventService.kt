@@ -1,6 +1,7 @@
 package cn.yurn.yutori.module.yhchat.adapter
 
 import cn.yurn.yutori.Channel
+import cn.yurn.yutori.Context
 import cn.yurn.yutori.Event
 import cn.yurn.yutori.EventService
 import cn.yurn.yutori.Guild
@@ -47,66 +48,70 @@ class YhChatEventService(
     override suspend fun connect() {
         coroutineScope {
             job = launch {
-                embeddedServer(
-                    factory = CIO,
-                    host = properties.host,
-                    port = properties.port
-                ) {
-                    install(ContentNegotiation) {
-                        json(Json {
-                            ignoreUnknownKeys = true
-                        })
-                    }
-                    routing {
-                        post("${properties.path}/") {
-                            try {
-                                val event = call.receive<YhChatEvent>()
-                                onEvent(
-                                    when (event.header.eventType) {
-                                        "message.receive.normal" -> parseMessageCreatedEvent(
-                                            event.header.eventTime,
-                                            event.event
-                                        )
+                try {
+                    embeddedServer(
+                        factory = CIO,
+                        host = properties.host,
+                        port = properties.port
+                    ) {
+                        install(ContentNegotiation) {
+                            json(Json {
+                                ignoreUnknownKeys = true
+                            })
+                        }
+                        routing {
+                            post("${properties.path}/") {
+                                try {
+                                    val event = call.receive<YhChatEvent>()
+                                    onEvent(
+                                        when (event.header.eventType) {
+                                            "message.receive.normal" -> parseMessageCreatedEvent(
+                                                event.header.eventTime,
+                                                event.event
+                                            )
 
-                                        "message.receive.instruction" -> parseInteractionCommandEvent(
-                                            event.header.eventTime,
-                                            event.event
-                                        )
+                                            "message.receive.instruction" -> parseInteractionCommandEvent(
+                                                event.header.eventTime,
+                                                event.event
+                                            )
 
-                                        "bot.followed" -> parseBotFollowedEvent(
-                                            event.header.eventTime,
-                                            event.event
-                                        )
+                                            "bot.followed" -> parseBotFollowedEvent(
+                                                event.header.eventTime,
+                                                event.event
+                                            )
 
-                                        "bot.unfollowed" -> parseBotUnfollowedEvent(
-                                            event.header.eventTime,
-                                            event.event
-                                        )
+                                            "bot.unfollowed" -> parseBotUnfollowedEvent(
+                                                event.header.eventTime,
+                                                event.event
+                                            )
 
-                                        "group.join" -> parseGuildMemberAddedEvent(
-                                            event.header.eventTime,
-                                            event.event
-                                        )
+                                            "group.join" -> parseGuildMemberAddedEvent(
+                                                event.header.eventTime,
+                                                event.event
+                                            )
 
-                                        "group.leave" -> parseGuildMemberRemovedEvent(
-                                            event.header.eventTime,
-                                            event.event
-                                        )
+                                            "group.leave" -> parseGuildMemberRemovedEvent(
+                                                event.header.eventTime,
+                                                event.event
+                                            )
 
-                                        "button.report.inline" -> parseInteractionButtonEvent(
-                                            event.header.eventTime,
-                                            event.event
-                                        )
+                                            "button.report.inline" -> parseInteractionButtonEvent(
+                                                event.header.eventTime,
+                                                event.event
+                                            )
 
-                                        else -> throw RuntimeException("Unsupported event: ${event.header.eventType}")
-                                    }
-                                )
-                            } catch (e: Throwable) {
-                                Logger.e("YhChat", e)
+                                            else -> throw RuntimeException("Unsupported event: ${event.header.eventType}")
+                                        }
+                                    )
+                                } catch (e: Throwable) {
+                                    Logger.e("YhChat", e)
+                                }
                             }
                         }
-                    }
-                }.start(wait = true)
+                    }.start(wait = true)
+                } catch (e: Exception) {
+                    Logger.w(yutori.name, e) { "WebHook server exception" }
+                }
             }
         }
     }
@@ -366,7 +371,7 @@ class YhChatEventService(
                 else -> Logger.i(name) { "${event.platform}(${event.self_id}) 接收事件: ${event.type}" }
             }
             Logger.d(name) { "事件详细信息: $event" }
-            yutori.adapter.container(event, yutori, actions)
+            yutori.adapter.container(Context(actions, event, yutori))
         } catch (e: Exception) {
             Logger.w(name, e) { "处理事件时出错: $event" }
         }

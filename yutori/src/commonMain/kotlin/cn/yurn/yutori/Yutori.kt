@@ -107,10 +107,10 @@ class Yutori(val name: String) {
     fun stop() = modules.filterIsInstance<cn.yurn.yutori.Adapter>().forEach { adapter -> adapter.stop(this) }
 
     inner class Adapter {
-        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        var exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             Logger.w(name, throwable) { "监听器发生异常" }
         }
-        val container = ListenersContainer(exceptionHandler)
+        val container = ListenersContainer()
         fun listening(block: ListenersContainer.() -> Unit) = container.block()
     }
 

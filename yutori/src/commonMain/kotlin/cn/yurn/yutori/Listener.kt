@@ -2,7 +2,6 @@
 
 package cn.yurn.yutori
 
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -13,23 +12,22 @@ abstract class ExtendedListenersContainer {
 }
 
 @BuilderMarker
-class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
+class ListenersContainer {
     val any = mutableListOf<Listener<SigningEvent>>()
-    val guild = Guild(exceptionHandler)
-    val interaction = Interaction(exceptionHandler)
-    val login = Login(exceptionHandler)
-    val message = Message(exceptionHandler)
-    val reaction = Reaction(exceptionHandler)
-    val friend = Friend(exceptionHandler)
+    val guild = Guild()
+    val interaction = Interaction()
+    val login = Login()
+    val message = Message()
+    val reaction = Reaction()
+    val friend = Friend()
     val containers = mutableMapOf<String, ExtendedListenersContainer>()
 
     fun any(listener: suspend Context<SigningEvent>.() -> Unit) = any.add { it.listener() }
 
-    suspend operator fun invoke(event: Event<SigningEvent>, yutori: Yutori, rootActions: RootActions) {
-        val context = Context(rootActions, event, yutori)
+    suspend operator fun invoke(context: Context<SigningEvent>) {
         coroutineScope {
             for (listener in any) {
-                launch(exceptionHandler) {
+                launch(context.yutori.adapter.exceptionHandler) {
                     listener(context)
                 }
             }
@@ -44,13 +42,13 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
     }
 
     @BuilderMarker
-    class Guild(private val exceptionHandler: CoroutineExceptionHandler) {
+    class Guild {
         val added = mutableListOf<Listener<GuildEvent>>()
         val updated = mutableListOf<Listener<GuildEvent>>()
         val removed = mutableListOf<Listener<GuildEvent>>()
         val request = mutableListOf<Listener<GuildEvent>>()
-        val member = Member(exceptionHandler)
-        val role = Role(exceptionHandler)
+        val member = Member()
+        val role = Role()
 
         fun added(listener: suspend Context<GuildEvent>.() -> Unit) = added.add { it.listener() }
         fun updated(listener: suspend Context<GuildEvent>.() -> Unit) = updated.add { it.listener() }
@@ -67,28 +65,28 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
             when (context.event.type) {
                 GuildEvents.Added -> coroutineScope {
                     added.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 GuildEvents.Updated -> coroutineScope {
                     updated.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 GuildEvents.Removed -> coroutineScope {
                     removed.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 GuildEvents.Request -> coroutineScope {
                     request.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
@@ -97,7 +95,7 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
         }
 
         @BuilderMarker
-        class Member(private val exceptionHandler: CoroutineExceptionHandler) {
+        class Member {
             val added = mutableListOf<Listener<GuildMemberEvent>>()
             val updated = mutableListOf<Listener<GuildMemberEvent>>()
             val removed = mutableListOf<Listener<GuildMemberEvent>>()
@@ -114,28 +112,28 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
                 when (context.event.type) {
                     GuildMemberEvents.Added -> coroutineScope {
                         added.forEach {
-                            launch(exceptionHandler) {
+                            launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
                     GuildMemberEvents.Updated -> coroutineScope {
                         updated.forEach {
-                            launch(exceptionHandler) {
+                            launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
                     GuildMemberEvents.Removed -> coroutineScope {
                         removed.forEach {
-                            launch(exceptionHandler) {
+                            launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
                     GuildMemberEvents.Request -> coroutineScope {
                         request.forEach {
-                            launch(exceptionHandler) {
+                            launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
@@ -145,7 +143,7 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
         }
 
         @BuilderMarker
-        class Role(private val exceptionHandler: CoroutineExceptionHandler) {
+        class Role {
             val created = mutableListOf<Listener<GuildRoleEvent>>()
             val updated = mutableListOf<Listener<GuildRoleEvent>>()
             val deleted = mutableListOf<Listener<GuildRoleEvent>>()
@@ -160,21 +158,21 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
                 when (context.event.type) {
                     GuildRoleEvents.Created -> coroutineScope {
                         created.forEach {
-                            launch(exceptionHandler) {
+                            launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
                     GuildRoleEvents.Updated -> coroutineScope {
                         updated.forEach {
-                            launch(exceptionHandler) {
+                            launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
                     GuildRoleEvents.Deleted -> coroutineScope {
                         deleted.forEach {
-                            launch(exceptionHandler) {
+                            launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
@@ -185,7 +183,7 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
     }
 
     @BuilderMarker
-    class Interaction(private val exceptionHandler: CoroutineExceptionHandler) {
+    class Interaction {
         val button = mutableListOf<Listener<InteractionButtonEvent>>()
         val command = mutableListOf<Listener<InteractionCommandEvent>>()
 
@@ -196,7 +194,7 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
             when (context.event.type) {
                 InteractionEvents.Button -> coroutineScope {
                     button.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context as Context<InteractionButtonEvent>)
                         }
                     }
@@ -204,7 +202,7 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
 
                 InteractionEvents.Command -> coroutineScope {
                     command.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context as Context<InteractionCommandEvent>)
                         }
                     }
@@ -214,7 +212,7 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
     }
 
     @BuilderMarker
-    class Login(private val exceptionHandler: CoroutineExceptionHandler) {
+    class Login {
         val added = mutableListOf<Listener<LoginEvent>>()
         val removed = mutableListOf<Listener<LoginEvent>>()
         val updated = mutableListOf<Listener<LoginEvent>>()
@@ -229,21 +227,21 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
             when (context.event.type) {
                 LoginEvents.Added -> coroutineScope {
                     added.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 LoginEvents.Removed -> coroutineScope {
                     removed.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 LoginEvents.Updated -> coroutineScope {
                     updated.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
@@ -253,7 +251,7 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
     }
 
     @BuilderMarker
-    class Message(private val exceptionHandler: CoroutineExceptionHandler) {
+    class Message {
         val created = mutableListOf<Listener<MessageEvent>>()
         val updated = mutableListOf<Listener<MessageEvent>>()
         val deleted = mutableListOf<Listener<MessageEvent>>()
@@ -268,21 +266,21 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
             when (context.event.type) {
                 MessageEvents.Created -> coroutineScope {
                     created.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 MessageEvents.Updated -> coroutineScope {
                     updated.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 MessageEvents.Deleted -> coroutineScope {
                     deleted.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
@@ -292,7 +290,7 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
     }
 
     @BuilderMarker
-    class Reaction(private val exceptionHandler: CoroutineExceptionHandler) {
+    class Reaction {
         val added = mutableListOf<Listener<ReactionEvent>>()
         val removed = mutableListOf<Listener<ReactionEvent>>()
 
@@ -305,14 +303,14 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
             when (context.event.type) {
                 ReactionEvents.Added -> coroutineScope {
                     added.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
                 ReactionEvents.Removed -> coroutineScope {
                     removed.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
@@ -322,7 +320,7 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
     }
 
     @BuilderMarker
-    class Friend(private val exceptionHandler: CoroutineExceptionHandler) {
+    class Friend {
         val request = mutableListOf<Listener<UserEvent>>()
 
         fun request(listener: suspend Context<UserEvent>.() -> Unit) = request.add { it.listener() }
@@ -331,7 +329,7 @@ class ListenersContainer(val exceptionHandler: CoroutineExceptionHandler) {
             when (context.event.type) {
                 UserEvents.Friend_Request -> coroutineScope {
                     request.forEach {
-                        launch(exceptionHandler) {
+                        launch(context.yutori.adapter.exceptionHandler) {
                             it(context as Context<UserEvent>)
                         }
                     }
