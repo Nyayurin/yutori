@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package cn.yurn.yutori.module.yhchat.adapter
 
 import cn.yurn.yutori.Channel
@@ -121,9 +123,9 @@ class YhChatEventService(
         event: cn.yurn.yutori.module.yhchat.Event
     ) = Event<SigningEvent>(
         id = last++,
-        type = MessageEvents.Created,
+        type = MessageEvents.CREATED,
         platform = "yhchat",
-        self_id = properties.selfId,
+        selfId = properties.selfId,
         timestamp = timestamp,
         argv = null,
         button = null,
@@ -142,7 +144,7 @@ class YhChatEventService(
                 "bot" -> event.sender.senderNickname
                 else -> null
             },
-            parent_id = null
+            parentId = null
         ),
         guild = when (event.chat.chatType) {
             "group" -> Guild(
@@ -159,7 +161,7 @@ class YhChatEventService(
                 user = null,
                 nick = event.sender.senderNickname,
                 avatar = null,
-                joined_at = null
+                joinedAt = null
             )
 
             else -> null
@@ -171,8 +173,8 @@ class YhChatEventService(
             guild = null,
             member = null,
             user = null,
-            created_at = event.message.sendTime,
-            updated_at = event.message.sendTime
+            createdAt = event.message.sendTime,
+            updatedAt = event.message.sendTime
         ),
         operator = null,
         role = GuildRole(
@@ -184,7 +186,7 @@ class YhChatEventService(
             name = event.sender.senderNickname,
             nick = event.sender.senderNickname,
             avatar = null,
-            is_bot = false
+            isBot = false
         )
     )
 
@@ -208,9 +210,9 @@ class YhChatEventService(
         event: cn.yurn.yutori.module.yhchat.Event
     ) = Event<SigningEvent>(
         id = last++,
-        type = GuildMemberEvents.Added,
+        type = GuildMemberEvents.ADDED,
         platform = "yhchat",
-        self_id = properties.selfId,
+        selfId = properties.selfId,
         timestamp = timestamp,
         argv = null,
         button = null,
@@ -218,7 +220,7 @@ class YhChatEventService(
             id = event.chat.chatId,
             type = Channel.Type.TEXT,
             name = null,
-            parent_id = null
+            parentId = null
         ),
         guild = Guild(
             id = event.chat.chatId,
@@ -230,7 +232,7 @@ class YhChatEventService(
             user = null,
             nick = event.sender.senderNickname,
             avatar = null,
-            joined_at = event.message.sendTime
+            joinedAt = event.message.sendTime
         ),
         message = Message(
             id = event.message.msgId,
@@ -239,8 +241,8 @@ class YhChatEventService(
             guild = null,
             member = null,
             user = null,
-            created_at = event.message.sendTime,
-            updated_at = event.message.sendTime
+            createdAt = event.message.sendTime,
+            updatedAt = event.message.sendTime
         ),
         operator = null,
         role = GuildRole(
@@ -252,7 +254,7 @@ class YhChatEventService(
             name = event.sender.senderNickname,
             nick = event.sender.senderNickname,
             avatar = null,
-            is_bot = false
+            isBot = false
         )
     )
 
@@ -261,9 +263,9 @@ class YhChatEventService(
         event: cn.yurn.yutori.module.yhchat.Event
     ) = Event<SigningEvent>(
         id = last++,
-        type = GuildMemberEvents.Removed,
+        type = GuildMemberEvents.REMOVED,
         platform = "yhchat",
-        self_id = properties.selfId,
+        selfId = properties.selfId,
         timestamp = timestamp,
         argv = null,
         button = null,
@@ -271,7 +273,7 @@ class YhChatEventService(
             id = event.chat.chatId,
             type = Channel.Type.TEXT,
             name = null,
-            parent_id = null
+            parentId = null
         ),
         guild = Guild(
             id = event.chat.chatId,
@@ -283,7 +285,7 @@ class YhChatEventService(
             user = null,
             nick = event.sender.senderNickname,
             avatar = null,
-            joined_at = event.message.sendTime
+            joinedAt = event.message.sendTime
         ),
         message = Message(
             id = event.message.msgId,
@@ -292,8 +294,8 @@ class YhChatEventService(
             guild = null,
             member = null,
             user = null,
-            created_at = event.message.sendTime,
-            updated_at = event.message.sendTime
+            createdAt = event.message.sendTime,
+            updatedAt = event.message.sendTime
         ),
         operator = null,
         role = GuildRole(
@@ -305,7 +307,7 @@ class YhChatEventService(
             name = event.sender.senderNickname,
             nick = event.sender.senderNickname,
             avatar = null,
-            is_bot = false
+            isBot = false
         )
     )
 
@@ -357,18 +359,18 @@ class YhChatEventService(
         val name = yutori.name
         try {
             when (event.type) {
-                MessageEvents.Created -> Logger.i(name) {
+                MessageEvents.CREATED -> Logger.i(name) {
                     buildString {
-                        append("${event.platform}(${event.self_id}) 接收事件(${event.type}): ")
-                        append("${event.nullable_channel!!.name}(${event.nullable_channel!!.id})")
+                        append("${event.platform}(${event.selfId}) 接收事件(${event.type}): ")
+                        append("${event.nullableChannel!!.name}(${event.nullableChannel!!.id})")
                         append("-")
-                        append("${event.nick()}(${event.nullable_user!!.id})")
+                        append("${event.nick()}(${event.nullableUser!!.id})")
                         append(": ")
-                        append(event.nullable_message!!.content)
+                        append(event.nullableMessage!!.content)
                     }
                 }
 
-                else -> Logger.i(name) { "${event.platform}(${event.self_id}) 接收事件: ${event.type}" }
+                else -> Logger.i(name) { "${event.platform}(${event.selfId}) 接收事件: ${event.type}" }
             }
             Logger.d(name) { "事件详细信息: $event" }
             yutori.adapter.container(Context(actions, event, yutori))

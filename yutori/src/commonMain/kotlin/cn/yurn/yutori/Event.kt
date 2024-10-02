@@ -39,74 +39,74 @@ interface RoleNotNullEvent
 interface UserNotNullEvent
 
 val <T> Event<T>.argv: Interaction.Argv? where T : SigningEvent, T : ArgvNullableEvent
-    @JvmName("nullable_argv") get() = nullable_argv
+    @JvmName("nullable_argv") get() = nullableArgv
 
 val <T> Event<T>.button: Interaction.Button? where T : SigningEvent, T : ButtonNullableEvent
-    @JvmName("nullable_button") get() = nullable_button
+    @JvmName("nullable_button") get() = nullableButton
 
 val <T> Event<T>.channel: Channel? where T : SigningEvent, T : ChannelNullableEvent
-    @JvmName("nullable_channel") get() = nullable_channel
+    @JvmName("nullable_channel") get() = nullableChannel
 
 val <T> Event<T>.guild: Guild? where T : SigningEvent, T : GuildNullableEvent
-    @JvmName("nullable_guild") get() = nullable_guild
+    @JvmName("nullable_guild") get() = nullableGuild
 
 val <T> Event<T>.login: Login? where T : SigningEvent, T : LoginNullableEvent
-    @JvmName("nullable_login") get() = nullable_login
+    @JvmName("nullable_login") get() = nullableLogin
 
 val <T> Event<T>.member: GuildMember? where T : SigningEvent, T : MemberNullableEvent
-    @JvmName("nullable_member") get() = nullable_member
+    @JvmName("nullable_member") get() = nullableMember
 
 val <T> Event<T>.message: Message? where T : SigningEvent, T : MessageNullableEvent
-    @JvmName("nullable_message") get() = nullable_message
+    @JvmName("nullable_message") get() = nullableMessage
 
 val <T> Event<T>.operator: User? where T : SigningEvent, T : OperatorNullableEvent
-    @JvmName("nullable_operator") get() = nullable_operator
+    @JvmName("nullable_operator") get() = nullableOperator
 
 val <T> Event<T>.role: GuildRole? where T : SigningEvent, T : RoleNullableEvent
-    @JvmName("nullable_role") get() = nullable_role
+    @JvmName("nullable_role") get() = nullableRole
 
 val <T> Event<T>.user: User? where T : SigningEvent, T : UserNullableEvent
-    @JvmName("nullable_user") get() = nullable_user
+    @JvmName("nullable_user") get() = nullableUser
 
 val <T> Event<T>.argv: Interaction.Argv where T : SigningEvent, T : ArgvNotNullEvent
-    get() = nullable_argv!!
+    get() = nullableArgv!!
 
 val <T> Event<T>.button: Interaction.Button where T : SigningEvent, T : ButtonNotNullEvent
-    get() = nullable_button!!
+    get() = nullableButton!!
 
 val <T> Event<T>.channel: Channel where T : SigningEvent, T : ChannelNotNullEvent
-    get() = nullable_channel!!
+    get() = nullableChannel!!
 
 val <T> Event<T>.guild: Guild where T : SigningEvent, T : GuildNotNullEvent
-    get() = nullable_guild!!
+    get() = nullableGuild!!
 
 val <T> Event<T>.login: Login where T : SigningEvent, T : LoginNotNullEvent
-    get() = nullable_login!!
+    get() = nullableLogin!!
 
 val <T> Event<T>.member: GuildMember where T : SigningEvent, T : MemberNotNullEvent
-    get() = nullable_member!!
+    get() = nullableMember!!
 
 val <T> Event<T>.message: Message where T : SigningEvent, T : MessageNotNullEvent
-    get() = nullable_message!!
+    get() = nullableMessage!!
 
 val <T> Event<T>.operator: User where T : SigningEvent, T : OperatorNotNullEvent
-    get() = nullable_operator!!
+    get() = nullableOperator!!
 
 val <T> Event<T>.role: GuildRole where T : SigningEvent, T : RoleNotNullEvent
-    get() = nullable_role!!
+    get() = nullableRole!!
 
 val <T> Event<T>.user: User where T : SigningEvent, T : UserNotNullEvent
-    get() = nullable_user!!
+    get() = nullableUser!!
 
 /**
  * 群组事件列表
  */
 object GuildEvents {
-    const val Added = "guild-added"
-    const val Updated = "guild-updated"
-    const val Removed = "guild-removed"
-    const val Request = "guild-request"
-    val Types = setOf(Added, Updated, Removed, Request)
+    const val ADDED = "guild-added"
+    const val UPDATED = "guild-updated"
+    const val REMOVED = "guild-removed"
+    const val REQUEST = "guild-request"
+    val Types = setOf(ADDED, UPDATED, REMOVED, REQUEST)
 }
 
 /**
@@ -118,11 +118,11 @@ class GuildEvent : SigningEvent(), GuildNotNullEvent
  * 群组成员事件列表
  */
 object GuildMemberEvents {
-    const val Added = "guild-member-added"
-    const val Updated = "guild-member-updated"
-    const val Removed = "guild-member-removed"
-    const val Request = "guild-member-request"
-    val Types = setOf(Added, Updated, Removed, Request)
+    const val ADDED = "guild-member-added"
+    const val UPDATED = "guild-member-updated"
+    const val REMOVED = "guild-member-removed"
+    const val REQUEST = "guild-member-request"
+    val Types = setOf(ADDED, UPDATED, REMOVED, REQUEST)
 }
 
 /**
@@ -134,10 +134,10 @@ class GuildMemberEvent : SigningEvent(), GuildNotNullEvent, MemberNotNullEvent, 
  * 群组角色事件列表
  */
 object GuildRoleEvents {
-    const val Created = "guild-role-created"
-    const val Updated = "guild-role-updated"
-    const val Deleted = "guild-role-deleted"
-    val Types = setOf(Created, Updated, Deleted)
+    const val CREATED = "guild-role-created"
+    const val UPDATED = "guild-role-updated"
+    const val DELETED = "guild-role-deleted"
+    val Types = setOf(CREATED, UPDATED, DELETED)
 }
 
 /**
@@ -149,9 +149,9 @@ class GuildRoleEvent : SigningEvent(), GuildNotNullEvent, RoleNotNullEvent
  * 交互事件列表
  */
 object InteractionEvents {
-    const val Button = "interaction/button"
-    const val Command = "interaction/command"
-    val Types = setOf(Button, Command)
+    const val BUTTON = "interaction/button"
+    const val COMMAND = "interaction/command"
+    val Types = setOf(BUTTON, COMMAND)
 }
 
 /**
@@ -168,10 +168,10 @@ class InteractionCommandEvent : SigningEvent()
  * 登录事件列表
  */
 object LoginEvents {
-    const val Added = "login-added"
-    const val Removed = "login-removed"
-    const val Updated = "login-updated"
-    val Types = setOf(Added, Removed, Updated)
+    const val ADDED = "login-added"
+    const val REMOVED = "login-removed"
+    const val UPDATED = "login-updated"
+    val Types = setOf(ADDED, REMOVED, UPDATED)
 }
 
 /**
@@ -183,10 +183,10 @@ class LoginEvent : SigningEvent(), LoginNotNullEvent
  * 消息事件列表
  */
 object MessageEvents {
-    const val Created = "message-created"
-    const val Updated = "message-updated"
-    const val Deleted = "message-deleted"
-    val Types = setOf(Created, Updated, Deleted)
+    const val CREATED = "message-created"
+    const val UPDATED = "message-updated"
+    const val DELETED = "message-deleted"
+    val Types = setOf(CREATED, UPDATED, DELETED)
 }
 
 /**
@@ -198,9 +198,9 @@ class MessageEvent : SigningEvent(), ChannelNotNullEvent, MessageNotNullEvent, U
  * 表态事件列表
  */
 object ReactionEvents {
-    const val Added = "reaction-added"
-    const val Removed = "reaction-removed"
-    val Types = setOf(Added, Removed)
+    const val ADDED = "reaction-added"
+    const val REMOVED = "reaction-removed"
+    val Types = setOf(ADDED, REMOVED)
 }
 
 /**
@@ -212,8 +212,8 @@ class ReactionEvent : SigningEvent()
  * 用户事件列表
  */
 object UserEvents {
-    const val Friend_Request = "friend-request"
-    val Types = setOf(Friend_Request)
+    const val FRIEND_REQUEST = "friend-request"
+    val Types = setOf(FRIEND_REQUEST)
 }
 
 /**

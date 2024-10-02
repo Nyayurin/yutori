@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate", "UNCHECKED_CAST")
+
 package cn.yurn.yutori.module.yhchat.adapter
 
 import cn.yurn.yutori.ActionService
@@ -46,8 +48,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
-import io.ktor.http.Headers
-import io.ktor.http.HttpHeaders
 import io.ktor.http.URLBuilder
 import io.ktor.http.URLProtocol
 import io.ktor.http.appendPathSegments
@@ -68,7 +68,7 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
         resource: String,
         method: String,
         platform: String?,
-        self_id: String?,
+        selfId: String?,
         content: Map<String, Any?>
     ): Any = HttpClient {
         install(ContentNegotiation) {
@@ -333,7 +333,7 @@ class YhChatActionService(val properties: YhChatProperties, val name: String) : 
     }
 
     override suspend fun upload(
-        resource: String, method: String, platform: String, self_id: String, content: List<FormData>
+        resource: String, method: String, platform: String, selfId: String, content: List<FormData>
     ): Map<String, String> = HttpClient {
         install(ContentNegotiation) {
             json(Json {

@@ -7,7 +7,7 @@ interface ActionService {
         resource: String,
         method: String,
         platform: String?,
-        self_id: String?,
+        selfId: String?,
         content: Map<String, Any?>
     ): Any
 
@@ -15,7 +15,7 @@ interface ActionService {
         resource: String,
         method: String,
         platform: String,
-        self_id: String,
+        selfId: String,
         content: List<FormData>
     ): Map<String, String>
 }

@@ -56,7 +56,7 @@ class YhChatActions(private val properties: YhChatProperties) : Actions() {
         }.body()
     }
 
-    suspend fun batch_send(
+    suspend fun batchSend(
         recvIds: List<String>,
         recvType: String,
         contentType: String,
@@ -142,9 +142,9 @@ class YhChatActions(private val properties: YhChatProperties) : Actions() {
     }
 
     suspend fun messages(
-        chat_id: String,
-        chat_type: String,
-        message_id: String? = null,
+        chatId: String,
+        chatType: String,
+        messageId: String? = null,
         before: Int? = null,
         after: Int? = null
     ): Messages = HttpClient {
@@ -163,9 +163,9 @@ class YhChatActions(private val properties: YhChatProperties) : Actions() {
             }
             contentType(ContentType.Application.Json)
             setBody(buildJsonObject {
-                put("chat-id", chat_id)
-                put("chat-type", chat_type)
-                put("message-id", message_id)
+                put("chat-id", chatId)
+                put("chat-type", chatType)
+                put("message-id", messageId)
                 put("before", before)
                 put("after", after)
             })

@@ -43,8 +43,8 @@ class Yutori(val name: String) {
     val server = Server()
     val modules = mutableListOf<Module>()
     val elements = mutableMapOf<String, MessageElementContainer>()
-    val actions_containers = mutableMapOf<String, (String, String, ActionService) -> Actions>()
-    val message_builders = mutableMapOf<String, (MessageBuilder) -> ExtendedMessageBuilder>()
+    val actionsContainers = mutableMapOf<String, (String, String, ActionService) -> Actions>()
+    val messageBuilders = mutableMapOf<String, (MessageBuilder) -> ExtendedMessageBuilder>()
 
     init {
         elements["at"] = At

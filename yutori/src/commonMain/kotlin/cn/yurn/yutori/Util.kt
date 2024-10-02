@@ -23,7 +23,7 @@ object MessageUtil {
 
 suspend fun Context<MessageEvent>.reply(quote: Boolean = true, content: MessageBuilder.() -> Unit) {
     actions.message.create(
-        channel_id = event.channel.id,
+        channelId = event.channel.id,
         content = {
             if (quote) quote { id = event.message.id }
             content()
@@ -31,7 +31,7 @@ suspend fun Context<MessageEvent>.reply(quote: Boolean = true, content: MessageB
     )
 }
 
-fun Event<*>.nick() = nullable_member?.nick ?: nullable_user?.nick ?: nullable_user?.name
+fun Event<*>.nick() = nullableMember?.nick ?: nullableUser?.nick ?: nullableUser?.name
 
 fun List<MessageElement>.textContent(): String =
     filterIsInstance<Text>().joinToString("") { it.text }

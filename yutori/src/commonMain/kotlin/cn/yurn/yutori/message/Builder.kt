@@ -65,7 +65,7 @@ abstract class ExtendedMessageBuilder(builder: MessageBuilder) {
 open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
     override val elements = mutableListOf<MessageElement>()
     val builders = mutableMapOf<String, ExtendedMessageBuilder>().apply {
-        for ((key, value) in yutori.message_builders) this[key] = value(this@MessageBuilder)
+        for ((key, value) in yutori.messageBuilders) this[key] = value(this@MessageBuilder)
     }
 
     fun element(element: MessageElement) = elements.add(element)

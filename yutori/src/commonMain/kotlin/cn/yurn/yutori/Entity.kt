@@ -9,13 +9,13 @@ import cn.yurn.yutori.message.element.MessageElement
  * @property id 频道 ID
  * @property type 频道类型
  * @property name 频道名称
- * @property parent_id 父频道 ID
+ * @property parentId 父频道 ID
  */
 data class Channel(
     val id: String,
     val type: Number,
     val name: String? = null,
-    val parent_id: String? = null
+    val parentId: String? = null
 ) {
     object Type {
         const val TEXT = 0
@@ -42,13 +42,13 @@ data class Guild(
  * @property user 用户对象
  * @property nick 用户在群组中的名称
  * @property avatar 用户在群组中的头像
- * @property joined_at 加入时间
+ * @property joinedAt 加入时间
  */
 data class GuildMember(
     val user: User? = null,
     val nick: String? = null,
     val avatar: String? = null,
-    val joined_at: Number? = null
+    val joinedAt: Number? = null
 )
 
 /**
@@ -87,17 +87,17 @@ sealed class Interaction {
 /**
  * 登录信息
  * @property user 用户对象
- * @property self_id 平台账号
+ * @property selfId 平台账号
  * @property platform 平台名称
  * @property status 登录状态
  */
 data class Login(
     val user: User? = null,
-    val self_id: String? = null,
+    val selfId: String? = null,
     val platform: String? = null,
     val status: Number,
     val features: List<String> = listOf(),
-    val proxy_urls: List<String> = listOf(),
+    val proxyUrls: List<String> = listOf(),
 ) {
     object Status {
         const val OFFLINE = 0
@@ -116,8 +116,8 @@ data class Login(
  * @property guild 群组对象
  * @property member 成员对象
  * @property user 用户对象
- * @property created_at 消息发送的时间戳
- * @property updated_at 消息修改的时间戳
+ * @property createdAt 消息发送的时间戳
+ * @property updatedAt 消息修改的时间戳
  */
 data class Message(
     val id: String,
@@ -126,8 +126,8 @@ data class Message(
     val guild: Guild? = null,
     val member: GuildMember? = null,
     val user: User? = null,
-    val created_at: Number? = null,
-    val updated_at: Number? = null
+    val createdAt: Number? = null,
+    val updatedAt: Number? = null
 )
 
 /**
@@ -136,14 +136,14 @@ data class Message(
  * @property name 用户名称
  * @property nick 用户昵称
  * @property avatar 用户头像
- * @property is_bot 是否为机器人
+ * @property isBot 是否为机器人
  */
 data class User(
     val id: String,
     val name: String? = null,
     val nick: String? = null,
     val avatar: String? = null,
-    val is_bot: Boolean? = null
+    val isBot: Boolean? = null
 )
 
 /**
@@ -211,34 +211,34 @@ class Event<T : SigningEvent>(val properties: Map<String, Any?> = mapOf()) {
     val id: Number by properties
     val type: String by properties
     val platform: String by properties
-    val self_id: String by properties
+    val selfId: String by properties
     val timestamp: Number by properties
-    val nullable_argv: Interaction.Argv?
+    val nullableArgv: Interaction.Argv?
         get() = properties["argv"] as Interaction.Argv?
-    val nullable_button: Interaction.Button?
+    val nullableButton: Interaction.Button?
         get() = properties["button"] as Interaction.Button?
-    val nullable_channel: Channel?
+    val nullableChannel: Channel?
         get() = properties["channel"] as Channel?
-    val nullable_guild: Guild?
+    val nullableGuild: Guild?
         get() = properties["guild"] as Guild?
-    val nullable_login: Login?
+    val nullableLogin: Login?
         get() = properties["login"] as Login?
-    val nullable_member: GuildMember?
+    val nullableMember: GuildMember?
         get() = properties["member"] as GuildMember?
-    val nullable_message: Message?
+    val nullableMessage: Message?
         get() = properties["message"] as Message?
-    val nullable_operator: User?
+    val nullableOperator: User?
         get() = properties["operator"] as User?
-    val nullable_role: GuildRole?
+    val nullableRole: GuildRole?
         get() = properties["role"] as GuildRole?
-    val nullable_user: User?
+    val nullableUser: User?
         get() = properties["user"] as User?
 
     constructor(
         id: Number,
         type: String,
         platform: String,
-        self_id: String,
+        selfId: String,
         timestamp: Number,
         argv: Interaction.Argv? = null,
         button: Interaction.Button? = null,
@@ -256,7 +256,7 @@ class Event<T : SigningEvent>(val properties: Map<String, Any?> = mapOf()) {
             "id" to id,
             "type" to type,
             "platform" to platform,
-            "self_id" to self_id,
+            "self_id" to selfId,
             "timestamp" to timestamp,
             "argv" to argv,
             "button" to button,

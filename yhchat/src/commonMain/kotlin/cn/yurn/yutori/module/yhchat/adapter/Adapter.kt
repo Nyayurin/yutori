@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate", "unused")
+
 package cn.yurn.yutori.module.yhchat.adapter
 
 import cn.yurn.yutori.Adapter
@@ -28,13 +30,13 @@ class YhChatAdapter : Adapter(), Reinstallable {
 
     override fun install(yutori: Yutori) {
         properties = YhChatProperties(host, port, path, token, selfId)
-        yutori.message_builders["yhchat"] = { YhChatMessageBuilder(it) }
-        yutori.actions_containers["yhchat"] = { _, _, _ -> YhChatActions(properties) }
+        yutori.messageBuilders["yhchat"] = { YhChatMessageBuilder(it) }
+        yutori.actionsContainers["yhchat"] = { _, _, _ -> YhChatActions(properties) }
     }
 
     override fun uninstall(yutori: Yutori) {
-        yutori.message_builders.remove("yhchat")
-        yutori.actions_containers.remove("yhchat")
+        yutori.messageBuilders.remove("yhchat")
+        yutori.actionsContainers.remove("yhchat")
     }
 
     override suspend fun start(yutori: Yutori) {

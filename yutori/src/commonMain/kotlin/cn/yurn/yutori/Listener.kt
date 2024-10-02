@@ -63,28 +63,28 @@ class ListenersContainer {
             }
             context as Context<GuildEvent>
             when (context.event.type) {
-                GuildEvents.Added -> coroutineScope {
+                GuildEvents.ADDED -> coroutineScope {
                     added.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
-                GuildEvents.Updated -> coroutineScope {
+                GuildEvents.UPDATED -> coroutineScope {
                     updated.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
-                GuildEvents.Removed -> coroutineScope {
+                GuildEvents.REMOVED -> coroutineScope {
                     removed.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
-                GuildEvents.Request -> coroutineScope {
+                GuildEvents.REQUEST -> coroutineScope {
                     request.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
@@ -110,28 +110,28 @@ class ListenersContainer {
                 if (context.event.type !in GuildMemberEvents.Types) return
                 context as Context<GuildMemberEvent>
                 when (context.event.type) {
-                    GuildMemberEvents.Added -> coroutineScope {
+                    GuildMemberEvents.ADDED -> coroutineScope {
                         added.forEach {
                             launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
-                    GuildMemberEvents.Updated -> coroutineScope {
+                    GuildMemberEvents.UPDATED -> coroutineScope {
                         updated.forEach {
                             launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
-                    GuildMemberEvents.Removed -> coroutineScope {
+                    GuildMemberEvents.REMOVED -> coroutineScope {
                         removed.forEach {
                             launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
-                    GuildMemberEvents.Request -> coroutineScope {
+                    GuildMemberEvents.REQUEST -> coroutineScope {
                         request.forEach {
                             launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
@@ -156,21 +156,21 @@ class ListenersContainer {
                 if (context.event.type !in GuildRoleEvents.Types) return
                 context as Context<GuildRoleEvent>
                 when (context.event.type) {
-                    GuildRoleEvents.Created -> coroutineScope {
+                    GuildRoleEvents.CREATED -> coroutineScope {
                         created.forEach {
                             launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
-                    GuildRoleEvents.Updated -> coroutineScope {
+                    GuildRoleEvents.UPDATED -> coroutineScope {
                         updated.forEach {
                             launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
                             }
                         }
                     }
-                    GuildRoleEvents.Deleted -> coroutineScope {
+                    GuildRoleEvents.DELETED -> coroutineScope {
                         deleted.forEach {
                             launch(context.yutori.adapter.exceptionHandler) {
                                 it(context)
@@ -192,7 +192,7 @@ class ListenersContainer {
 
         suspend operator fun invoke(context: Context<SigningEvent>) {
             when (context.event.type) {
-                InteractionEvents.Button -> coroutineScope {
+                InteractionEvents.BUTTON -> coroutineScope {
                     button.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context as Context<InteractionButtonEvent>)
@@ -200,7 +200,7 @@ class ListenersContainer {
                     }
                 }
 
-                InteractionEvents.Command -> coroutineScope {
+                InteractionEvents.COMMAND -> coroutineScope {
                     command.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context as Context<InteractionCommandEvent>)
@@ -225,21 +225,21 @@ class ListenersContainer {
             if (context.event.type !in LoginEvents.Types) return
             context as Context<LoginEvent>
             when (context.event.type) {
-                LoginEvents.Added -> coroutineScope {
+                LoginEvents.ADDED -> coroutineScope {
                     added.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
-                LoginEvents.Removed -> coroutineScope {
+                LoginEvents.REMOVED -> coroutineScope {
                     removed.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
-                LoginEvents.Updated -> coroutineScope {
+                LoginEvents.UPDATED -> coroutineScope {
                     updated.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
@@ -264,21 +264,21 @@ class ListenersContainer {
             if (context.event.type !in MessageEvents.Types) return
             context as Context<MessageEvent>
             when (context.event.type) {
-                MessageEvents.Created -> coroutineScope {
+                MessageEvents.CREATED -> coroutineScope {
                     created.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
-                MessageEvents.Updated -> coroutineScope {
+                MessageEvents.UPDATED -> coroutineScope {
                     updated.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
-                MessageEvents.Deleted -> coroutineScope {
+                MessageEvents.DELETED -> coroutineScope {
                     deleted.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
@@ -301,14 +301,14 @@ class ListenersContainer {
             if (context.event.type !in ReactionEvents.Types) return
             context as Context<ReactionEvent>
             when (context.event.type) {
-                ReactionEvents.Added -> coroutineScope {
+                ReactionEvents.ADDED -> coroutineScope {
                     added.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
                         }
                     }
                 }
-                ReactionEvents.Removed -> coroutineScope {
+                ReactionEvents.REMOVED -> coroutineScope {
                     removed.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context)
@@ -327,7 +327,7 @@ class ListenersContainer {
 
         suspend operator fun invoke(context: Context<SigningEvent>) {
             when (context.event.type) {
-                UserEvents.Friend_Request -> coroutineScope {
+                UserEvents.FRIEND_REQUEST -> coroutineScope {
                     request.forEach {
                         launch(context.yutori.adapter.exceptionHandler) {
                             it(context as Context<UserEvent>)
