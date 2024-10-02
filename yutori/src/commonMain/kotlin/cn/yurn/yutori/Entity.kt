@@ -1,4 +1,4 @@
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+@file:Suppress("MemberVisibilityCanBePrivate")
 
 package cn.yurn.yutori
 
@@ -183,22 +183,6 @@ class FormData(
     val filename: String? = null,
     val type: String,
     val content: ByteArray
-)
-
-/**
- * Satori Server 配置
- * @property host Satori Server 主机
- * @property port Satori Server 端口
- * @property path Satori Server 路径
- * @property token Satori Server 鉴权令牌
- * @property version Satori Server 协议版本
- */
-data class SatoriProperties(
-    val host: String = "127.0.0.1",
-    val port: Int = 5500,
-    val path: String = "",
-    val token: String? = null,
-    val version: String = "v1"
 )
 
 data class Context<T : SigningEvent>(

@@ -5,22 +5,22 @@ package cn.yurn.yutori
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
-typealias Listener<T> = suspend (context: Context<T>) -> Unit
+typealias AdapterListener<T> = suspend (context: Context<T>) -> Unit
 
-abstract class ExtendedListenersContainer {
+abstract class ExtendedAdapterListenersContainer {
     abstract operator fun invoke(context: Context<SigningEvent>)
 }
 
 @BuilderMarker
-class ListenersContainer {
-    val any = mutableListOf<Listener<SigningEvent>>()
+class AdapterListenersContainer {
+    val any = mutableListOf<AdapterListener<SigningEvent>>()
     val guild = Guild()
     val interaction = Interaction()
     val login = Login()
     val message = Message()
     val reaction = Reaction()
     val friend = Friend()
-    val containers = mutableMapOf<String, ExtendedListenersContainer>()
+    val containers = mutableMapOf<String, ExtendedServerListenersContainer>()
 
     fun any(listener: suspend Context<SigningEvent>.() -> Unit) = any.add { it.listener() }
 
@@ -43,10 +43,10 @@ class ListenersContainer {
 
     @BuilderMarker
     class Guild {
-        val added = mutableListOf<Listener<GuildEvent>>()
-        val updated = mutableListOf<Listener<GuildEvent>>()
-        val removed = mutableListOf<Listener<GuildEvent>>()
-        val request = mutableListOf<Listener<GuildEvent>>()
+        val added = mutableListOf<AdapterListener<GuildEvent>>()
+        val updated = mutableListOf<AdapterListener<GuildEvent>>()
+        val removed = mutableListOf<AdapterListener<GuildEvent>>()
+        val request = mutableListOf<AdapterListener<GuildEvent>>()
         val member = Member()
         val role = Role()
 
@@ -96,10 +96,10 @@ class ListenersContainer {
 
         @BuilderMarker
         class Member {
-            val added = mutableListOf<Listener<GuildMemberEvent>>()
-            val updated = mutableListOf<Listener<GuildMemberEvent>>()
-            val removed = mutableListOf<Listener<GuildMemberEvent>>()
-            val request = mutableListOf<Listener<GuildMemberEvent>>()
+            val added = mutableListOf<AdapterListener<GuildMemberEvent>>()
+            val updated = mutableListOf<AdapterListener<GuildMemberEvent>>()
+            val removed = mutableListOf<AdapterListener<GuildMemberEvent>>()
+            val request = mutableListOf<AdapterListener<GuildMemberEvent>>()
 
             fun added(listener: suspend Context<GuildMemberEvent>.() -> Unit) = added.add { it.listener() }
             fun updated(listener: suspend Context<GuildMemberEvent>.() -> Unit) = updated.add { it.listener() }
@@ -144,9 +144,9 @@ class ListenersContainer {
 
         @BuilderMarker
         class Role {
-            val created = mutableListOf<Listener<GuildRoleEvent>>()
-            val updated = mutableListOf<Listener<GuildRoleEvent>>()
-            val deleted = mutableListOf<Listener<GuildRoleEvent>>()
+            val created = mutableListOf<AdapterListener<GuildRoleEvent>>()
+            val updated = mutableListOf<AdapterListener<GuildRoleEvent>>()
+            val deleted = mutableListOf<AdapterListener<GuildRoleEvent>>()
 
             fun created(listener: suspend Context<GuildRoleEvent>.() -> Unit) = created.add { it.listener() }
             fun updated(listener: suspend Context<GuildRoleEvent>.() -> Unit) = updated.add { it.listener() }
@@ -184,8 +184,8 @@ class ListenersContainer {
 
     @BuilderMarker
     class Interaction {
-        val button = mutableListOf<Listener<InteractionButtonEvent>>()
-        val command = mutableListOf<Listener<InteractionCommandEvent>>()
+        val button = mutableListOf<AdapterListener<InteractionButtonEvent>>()
+        val command = mutableListOf<AdapterListener<InteractionCommandEvent>>()
 
         fun button(listener: suspend Context<InteractionButtonEvent>.() -> Unit) = button.add { it.listener() }
         fun command(listener: suspend Context<InteractionCommandEvent>.() -> Unit) = command.add { it.listener() }
@@ -213,9 +213,9 @@ class ListenersContainer {
 
     @BuilderMarker
     class Login {
-        val added = mutableListOf<Listener<LoginEvent>>()
-        val removed = mutableListOf<Listener<LoginEvent>>()
-        val updated = mutableListOf<Listener<LoginEvent>>()
+        val added = mutableListOf<AdapterListener<LoginEvent>>()
+        val removed = mutableListOf<AdapterListener<LoginEvent>>()
+        val updated = mutableListOf<AdapterListener<LoginEvent>>()
 
         fun added(listener: suspend Context<LoginEvent>.() -> Unit) = added.add { it.listener() }
         fun removed(listener: suspend Context<LoginEvent>.() -> Unit) = removed.add { it.listener() }
@@ -252,9 +252,9 @@ class ListenersContainer {
 
     @BuilderMarker
     class Message {
-        val created = mutableListOf<Listener<MessageEvent>>()
-        val updated = mutableListOf<Listener<MessageEvent>>()
-        val deleted = mutableListOf<Listener<MessageEvent>>()
+        val created = mutableListOf<AdapterListener<MessageEvent>>()
+        val updated = mutableListOf<AdapterListener<MessageEvent>>()
+        val deleted = mutableListOf<AdapterListener<MessageEvent>>()
 
         fun created(listener: suspend Context<MessageEvent>.() -> Unit) = created.add { it.listener() }
         fun updated(listener: suspend Context<MessageEvent>.() -> Unit) = updated.add { it.listener() }
@@ -291,8 +291,8 @@ class ListenersContainer {
 
     @BuilderMarker
     class Reaction {
-        val added = mutableListOf<Listener<ReactionEvent>>()
-        val removed = mutableListOf<Listener<ReactionEvent>>()
+        val added = mutableListOf<AdapterListener<ReactionEvent>>()
+        val removed = mutableListOf<AdapterListener<ReactionEvent>>()
 
         fun added(listener: suspend Context<ReactionEvent>.() -> Unit) = added.add { it.listener() }
         fun removed(listener: suspend Context<ReactionEvent>.() -> Unit) = removed.add { it.listener() }
@@ -321,7 +321,7 @@ class ListenersContainer {
 
     @BuilderMarker
     class Friend {
-        val request = mutableListOf<Listener<UserEvent>>()
+        val request = mutableListOf<AdapterListener<UserEvent>>()
 
         fun request(listener: suspend Context<UserEvent>.() -> Unit) = request.add { it.listener() }
 

@@ -5,7 +5,7 @@ package cn.yurn.yutori.module.yhchat.adapter
 import cn.yurn.yutori.Channel
 import cn.yurn.yutori.Context
 import cn.yurn.yutori.Event
-import cn.yurn.yutori.EventService
+import cn.yurn.yutori.AdapterEventService
 import cn.yurn.yutori.Guild
 import cn.yurn.yutori.GuildMember
 import cn.yurn.yutori.GuildMemberEvents
@@ -37,11 +37,11 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
-class YhChatEventService(
+class YhChatAdapterEventService(
     val properties: YhChatProperties,
     val yutori: Yutori
-) : EventService {
-    val service = YhChatActionService(properties, yutori.name)
+) : AdapterEventService {
+    val service = YhChatAdapterActionService(properties, yutori.name)
     val actions = RootActions("yhchat", properties.selfId, service, yutori)
     private var job by atomic<Job?>(null)
     private val idMap = mapOf<Int, String>()

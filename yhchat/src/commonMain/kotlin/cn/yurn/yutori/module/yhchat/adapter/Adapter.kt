@@ -20,11 +20,11 @@ class YhChatAdapter : Adapter(), Reinstallable {
     var path: String = ""
     var token: String = ""
     var selfId: String = ""
-    var onStart: suspend YhChatEventService.() -> Unit = { }
+    var onStart: suspend YhChatAdapterEventService.() -> Unit = { }
     private lateinit var properties: YhChatProperties
-    private var service: YhChatEventService? by atomic(null)
+    private var service: YhChatAdapterEventService? by atomic(null)
 
-    fun onStart(block: suspend YhChatEventService.() -> Unit) {
+    fun onStart(block: suspend YhChatAdapterEventService.() -> Unit) {
         onStart = block
     }
 
@@ -40,7 +40,7 @@ class YhChatAdapter : Adapter(), Reinstallable {
     }
 
     override suspend fun start(yutori: Yutori) {
-        service = YhChatEventService(properties, yutori)
+        service = YhChatAdapterEventService(properties, yutori)
         service!!.onStart()
         service!!.connect()
     }

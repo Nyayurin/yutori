@@ -9,10 +9,17 @@ abstract class Module {
     companion object
 }
 
-abstract class Adapter : Module() {
-    abstract suspend fun start(yutori: Yutori)
-    abstract fun stop(yutori: Yutori)
+interface Startable {
+    suspend fun start(yutori: Yutori)
+    fun stop(yutori: Yutori)
+}
 
+abstract class Adapter : Module(), Startable {
+    companion object
+}
+
+abstract class Server : Module(), Startable {
+    abstract suspend fun pushEvent(event: Event<SigningEvent>)
     companion object
 }
 

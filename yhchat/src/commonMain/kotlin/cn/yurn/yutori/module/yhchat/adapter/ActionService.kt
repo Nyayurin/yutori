@@ -2,7 +2,7 @@
 
 package cn.yurn.yutori.module.yhchat.adapter
 
-import cn.yurn.yutori.ActionService
+import cn.yurn.yutori.AdapterActionService
 import cn.yurn.yutori.BidiPagingList
 import cn.yurn.yutori.FormData
 import cn.yurn.yutori.message.element.At
@@ -63,7 +63,7 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 
-class YhChatActionService(val properties: YhChatProperties, val name: String) : ActionService {
+class YhChatAdapterActionService(val properties: YhChatProperties, val name: String) : AdapterActionService {
     override suspend fun send(
         resource: String,
         method: String,

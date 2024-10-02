@@ -41,12 +41,12 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":yutori"))
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.server.core)
-            implementation(libs.ktor.server.cio)
-            implementation(libs.ktor.server.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
+            api(libs.ktor.client.core)
+            api(libs.ktor.client.content.negotiation)
+            api(libs.ktor.server.core)
+            api(libs.ktor.server.cio)
+            api(libs.ktor.server.content.negotiation)
+            api(libs.ktor.serialization.kotlinx.json)
         }
 
         jvmMain.dependencies {

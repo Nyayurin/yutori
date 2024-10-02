@@ -2,7 +2,7 @@
 
 package cn.yurn.yutori
 
-interface ActionService {
+interface AdapterActionService {
     suspend fun send(
         resource: String,
         method: String,
@@ -20,7 +20,12 @@ interface ActionService {
     ): Map<String, String>
 }
 
-interface EventService {
+interface AdapterEventService {
     suspend fun connect()
     fun disconnect()
+}
+
+interface ServerService {
+    suspend fun start()
+    fun stop()
 }

@@ -43,7 +43,7 @@ class Yutori(val name: String) {
     val server = Server()
     val modules = mutableListOf<Module>()
     val elements = mutableMapOf<String, MessageElementContainer>()
-    val actionsContainers = mutableMapOf<String, (String, String, ActionService) -> Actions>()
+    val actionsContainers = mutableMapOf<String, (String, String, AdapterActionService) -> Actions>()
     val messageBuilders = mutableMapOf<String, (MessageBuilder) -> ExtendedMessageBuilder>()
 
     init {
@@ -97,9 +97,13 @@ class Yutori(val name: String) {
     fun adapter(block: Adapter.() -> Unit) = adapter.block()
     fun server(block: Server.() -> Unit) = server.block()
     suspend fun start() = coroutineScope {
-        modules.filterIsInstance<cn.yurn.yutori.Adapter>().forEach { adapter ->
+        modules.filterIsInstance<Startable>().forEach { module ->
             launch {
-                adapter.start(this@Yutori)
+                try {
+                    module.start(this@Yutori)
+                } catch (e: Exception) {
+                    Logger.w(e) { "Module start failed" }
+                }
             }
         }
     }
@@ -110,13 +114,15 @@ class Yutori(val name: String) {
         var exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             Logger.w(name, throwable) { "监听器发生异常" }
         }
-        val container = ListenersContainer()
-        fun listening(block: ListenersContainer.() -> Unit) = container.block()
+        val container = AdapterListenersContainer()
+        fun listening(block: AdapterListenersContainer.() -> Unit) = container.block()
     }
 
     inner class Server {
-        fun routing(block: () -> Unit) {
-
+        var exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            Logger.w(name, throwable) { "监听器发生异常" }
         }
+        val container = ServerListenersContainer()
+        fun routing(block: ServerListenersContainer.() -> Unit) = container.block()
     }
 }

@@ -8,7 +8,7 @@ import cn.yurn.yutori.message.message
 
 abstract class Actions
 abstract class Action(
-    val platform: String?, val selfId: String?, val resource: String, val service: ActionService
+    val platform: String?, val selfId: String?, val resource: String, val service: AdapterActionService
 ) {
     protected suspend inline fun <reified T> send(
         method: String, vararg content: Pair<String, Any?>
@@ -21,7 +21,7 @@ abstract class Action(
 class RootActions(
     val platform: String,
     val selfId: String,
-    val service: ActionService,
+    val service: AdapterActionService,
     val yutori: Yutori
 ) : Actions() {
     val channel = ChannelAction(platform, selfId, service)
@@ -38,7 +38,7 @@ class RootActions(
             value(platform, selfId, service)
     }
 
-    class ChannelAction(platform: String, selfId: String, service: ActionService) : Action(
+    class ChannelAction(platform: String, selfId: String, service: AdapterActionService) : Action(
         platform, selfId, "channel", service
     ) {
         suspend fun get(
@@ -66,7 +66,7 @@ class RootActions(
         ): Unit = send("mute", "channel_id" to channelId, "duration" to duration, *contents)
     }
 
-    class GuildAction(platform: String, selfId: String, service: ActionService) : Action(
+    class GuildAction(platform: String, selfId: String, service: AdapterActionService) : Action(
         platform, selfId, "guild", service
     ) {
         val member = MemberAction(platform, selfId, service)
@@ -93,7 +93,7 @@ class RootActions(
             *contents
         )
 
-        class MemberAction(platform: String, selfId: String, service: ActionService) : Action(
+        class MemberAction(platform: String, selfId: String, service: AdapterActionService) : Action(
             platform, selfId, "guild.member", service
         ) {
             val role = RoleAction(platform, selfId, service)
@@ -148,7 +148,7 @@ class RootActions(
                 *contents
             )
 
-            class RoleAction(platform: String, selfId: String, service: ActionService) : Action(
+            class RoleAction(platform: String, selfId: String, service: AdapterActionService) : Action(
                 platform, selfId, "guild.member.role", service
             ) {
                 suspend fun set(
@@ -179,7 +179,7 @@ class RootActions(
             }
         }
 
-        class RoleAction(platform: String, selfId: String, service: ActionService) : Action(
+        class RoleAction(platform: String, selfId: String, service: AdapterActionService) : Action(
             platform, selfId, "guild.role", service
         ) {
             suspend fun list(
@@ -208,7 +208,7 @@ class RootActions(
         }
     }
 
-    class LoginAction(platform: String, selfId: String, service: ActionService) : Action(
+    class LoginAction(platform: String, selfId: String, service: AdapterActionService) : Action(
         platform, selfId, "login", service
     ) {
         suspend fun get(
@@ -217,7 +217,7 @@ class RootActions(
     }
 
     class MessageAction(
-        private val yutori: Yutori, platform: String, selfId: String, service: ActionService
+        private val yutori: Yutori, platform: String, selfId: String, service: AdapterActionService
     ) : Action(
         platform, selfId, "message", service
     ) {
@@ -280,7 +280,7 @@ class RootActions(
         )
     }
 
-    class ReactionAction(platform: String, selfId: String, service: ActionService) : Action(
+    class ReactionAction(platform: String, selfId: String, service: AdapterActionService) : Action(
         platform, selfId, "reaction", service
     ) {
         suspend fun create(
@@ -340,7 +340,7 @@ class RootActions(
         )
     }
 
-    class UserAction(platform: String, selfId: String, service: ActionService) : Action(
+    class UserAction(platform: String, selfId: String, service: AdapterActionService) : Action(
         platform, selfId, "user", service
     ) {
         val channel = ChannelAction(platform, selfId, service)
@@ -349,7 +349,7 @@ class RootActions(
             userId: String, vararg contents: Pair<String, Any> = arrayOf()
         ): User = send("get", "user_id" to userId, *contents)
 
-        class ChannelAction(platform: String, selfId: String, service: ActionService) : Action(
+        class ChannelAction(platform: String, selfId: String, service: AdapterActionService) : Action(
             platform, selfId, "user.channel", service
         ) {
             suspend fun create(
@@ -360,7 +360,7 @@ class RootActions(
         }
     }
 
-    class FriendAction(platform: String, selfId: String, service: ActionService) : Action(
+    class FriendAction(platform: String, selfId: String, service: AdapterActionService) : Action(
         platform, selfId, "friend", service
     ) {
         suspend fun list(
@@ -381,7 +381,7 @@ class RootActions(
         )
     }
 
-    class UploadAction(platform: String, selfId: String, service: ActionService) : Action(
+    class UploadAction(platform: String, selfId: String, service: AdapterActionService) : Action(
         platform, selfId, "upload", service
     ) {
         suspend fun create(
@@ -389,17 +389,17 @@ class RootActions(
         ): Map<String, String> = upload("create", contents.toList())
     }
 
-    class AdminAction(service: ActionService) {
+    class AdminAction(service: AdapterActionService) {
         val login = LoginAction(service)
         val webhook = WebhookAction(service)
 
-        class LoginAction(service: ActionService) : Action(null, null, "login", service) {
+        class LoginAction(service: AdapterActionService) : Action(null, null, "login", service) {
             suspend fun list(
                 vararg contents: Pair<String, Any> = arrayOf()
             ): List<Login> = send("list", *contents)
         }
 
-        class WebhookAction(service: ActionService) : Action(null, null, "webhook", service) {
+        class WebhookAction(service: AdapterActionService) : Action(null, null, "webhook", service) {
             suspend fun create(
                 url: String, token: String? = null, vararg contents: Pair<String, Any> = arrayOf()
             ): Unit = send("list", "url" to url, "token" to token, *contents)
