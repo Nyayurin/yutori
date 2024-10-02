@@ -109,7 +109,7 @@ suspend fun app() = coroutineScope {
                     if (event.message.content.textContent() == "test") {
                         // 调用 actions.message.create 来发送一条消息
                         actions.message.create(
-                            channel_id = event.channel.id,
+                            channelId = event.channel.id,
                             // 通过消息 builder 使用 DSL 构造一条消息
                             content = {
                                 // 添加一个纯文本

@@ -256,7 +256,7 @@ class Event<T : SigningEvent>(val properties: Map<String, Any?> = mapOf()) {
             "id" to id,
             "type" to type,
             "platform" to platform,
-            "self_id" to selfId,
+            "selfId" to selfId,
             "timestamp" to timestamp,
             "argv" to argv,
             "button" to button,
