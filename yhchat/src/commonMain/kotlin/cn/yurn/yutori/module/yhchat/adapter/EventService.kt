@@ -42,10 +42,13 @@ class YhChatAdapterEventService(
     val yutori: Yutori
 ) : AdapterEventService {
     val service = YhChatAdapterActionService(properties, yutori.name)
-    val actions = RootActions("yhchat", properties.selfId, service, yutori)
     private var job by atomic<Job?>(null)
     private val idMap = mapOf<Int, String>()
     private var last = 0
+
+    init {
+        yutori.actionsList += RootActions("yhchat", properties.selfId, service, yutori)
+    }
 
     override suspend fun connect() {
         coroutineScope {
@@ -373,7 +376,9 @@ class YhChatAdapterEventService(
                 else -> Logger.i(name) { "${event.platform}(${event.selfId}) 接收事件: ${event.type}" }
             }
             Logger.d(name) { "事件详细信息: $event" }
-            yutori.adapter.container(AdapterContext(actions, event, yutori))
+            yutori.adapter.container(AdapterContext(yutori.actionsList.first {
+                it.platform == "yhchat" && it.selfId == properties.selfId
+            }, event, yutori))
         } catch (e: Exception) {
             Logger.w(name, e) { "处理事件时出错: $event" }
         }

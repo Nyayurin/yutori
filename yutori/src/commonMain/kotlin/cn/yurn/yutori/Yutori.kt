@@ -45,6 +45,7 @@ class Yutori(val name: String) {
     val elements = mutableMapOf<String, MessageElementContainer>()
     val actionsContainers = mutableMapOf<String, (String, String, AdapterActionService) -> Actions>()
     val messageBuilders = mutableMapOf<String, (MessageBuilder) -> ExtendedMessageBuilder>()
+    val actionsList = mutableListOf<RootActions>()
     val adapters: List<cn.yurn.yutori.Adapter>
         get() = modules.filterIsInstance<cn.yurn.yutori.Adapter>()
     val servers: List<cn.yurn.yutori.Server>
