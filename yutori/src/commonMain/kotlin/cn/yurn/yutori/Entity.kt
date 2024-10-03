@@ -118,6 +118,7 @@ data class AdapterContext<T : SigningEvent>(
 data class ServerContext<T : SigningRequest>(
     val actionsList: List<RootActions>,
     val request: Request<T>,
+    val response: Response,
     val yutori: Yutori
 )
 
@@ -191,3 +192,7 @@ class Request<T : SigningRequest>(
     val api: String,
     val properties: Map<String, Any?> = mapOf()
 )
+
+class Response(private val onRespond: suspend (String) -> Unit) {
+    suspend fun respond(content: String) = onRespond(content)
+}
