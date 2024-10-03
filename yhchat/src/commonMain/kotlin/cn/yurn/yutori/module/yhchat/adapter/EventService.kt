@@ -3,7 +3,7 @@
 package cn.yurn.yutori.module.yhchat.adapter
 
 import cn.yurn.yutori.Channel
-import cn.yurn.yutori.Context
+import cn.yurn.yutori.AdapterContext
 import cn.yurn.yutori.Event
 import cn.yurn.yutori.AdapterEventService
 import cn.yurn.yutori.Guild
@@ -373,7 +373,7 @@ class YhChatAdapterEventService(
                 else -> Logger.i(name) { "${event.platform}(${event.selfId}) 接收事件: ${event.type}" }
             }
             Logger.d(name) { "事件详细信息: $event" }
-            yutori.adapter.container(Context(actions, event, yutori))
+            yutori.adapter.container(AdapterContext(actions, event, yutori))
         } catch (e: Exception) {
             Logger.w(name, e) { "处理事件时出错: $event" }
         }

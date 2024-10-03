@@ -27,5 +27,6 @@ interface AdapterEventService {
 
 interface ServerService {
     suspend fun start()
+    suspend fun pushEvent(event: Event<SigningEvent>)
     fun stop()
 }

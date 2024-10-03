@@ -21,7 +21,7 @@ object MessageUtil {
     }
 }
 
-suspend fun Context<MessageEvent>.reply(quote: Boolean = true, content: MessageBuilder.() -> Unit) {
+suspend fun AdapterContext<MessageEvent>.reply(quote: Boolean = true, content: MessageBuilder.() -> Unit) {
     actions.message.create(
         channelId = event.channel.id,
         content = {
