@@ -120,6 +120,32 @@ suspend fun app() = coroutineScope {
                 }
             }
         }
+        // 通用服务器设置
+        server {
+            // 设置路由器
+            routing {
+                // 路由消息发送
+                message.create {
+                    // 找到对应 actions
+                    val forwardActions = actionsList.first {
+                        it.platform == request.properties["platform"] && it.selfId == request.properties["selfId"]
+                    }
+                    // 转发, 并获取响应
+                    val forwardResponse = forwardActions.message.create(
+                        channelId = request.channelId,
+                        content = request.content
+                    )
+                    // 响应纯文本
+                    // 由于 Server 部分还处于早期, 因此还不具备 Adapter 那样的通用性
+                    response.respond(
+                        // 序列化响应实体类
+                        Json.encodeToString(
+                            forwardResponse.map { SerializableMessage.fromUniverse(it) }
+                        )
+                    )
+                }
+            }
+        }
     }
     // 启动 Yutori
     yutori.start()
