@@ -48,9 +48,9 @@ sealed class Interaction {
 
 data class Login(
     val adapter: String,
-    val user: User? = null,
     val platform: String? = null,
-    val status: Number,
+    val user: User? = null,
+    val status: Number? = null,
     val features: List<String> = listOf(),
     val proxyUrls: List<String> = listOf(),
 ) {
