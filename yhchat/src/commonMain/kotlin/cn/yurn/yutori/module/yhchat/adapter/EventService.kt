@@ -47,7 +47,7 @@ class YhChatAdapterEventService(
     private var last = 0
 
     init {
-        yutori.actionsList += RootActions("yhchat", properties.selfId, service, yutori)
+        yutori.actionsList += RootActions("yhchat", properties.userId, service, yutori)
     }
 
     override suspend fun connect() {
@@ -128,7 +128,7 @@ class YhChatAdapterEventService(
         id = last++,
         type = MessageEvents.CREATED,
         platform = "yhchat",
-        selfId = properties.selfId,
+        selfId = properties.userId,
         timestamp = timestamp,
         argv = null,
         button = null,
@@ -215,7 +215,7 @@ class YhChatAdapterEventService(
         id = last++,
         type = GuildMemberEvents.ADDED,
         platform = "yhchat",
-        selfId = properties.selfId,
+        selfId = properties.userId,
         timestamp = timestamp,
         argv = null,
         button = null,
@@ -268,7 +268,7 @@ class YhChatAdapterEventService(
         id = last++,
         type = GuildMemberEvents.REMOVED,
         platform = "yhchat",
-        selfId = properties.selfId,
+        selfId = properties.userId,
         timestamp = timestamp,
         argv = null,
         button = null,
@@ -377,7 +377,7 @@ class YhChatAdapterEventService(
             }
             Logger.d(name) { "事件详细信息: $event" }
             yutori.adapter.container(AdapterContext(yutori.actionsList.first {
-                it.platform == "yhchat" && it.selfId == properties.selfId
+                it.platform == "yhchat" && it.userId == properties.userId
             }, event, yutori))
         } catch (e: Exception) {
             Logger.w(name, e) { "处理事件时出错: $event" }

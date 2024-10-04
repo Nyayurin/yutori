@@ -47,14 +47,14 @@ sealed class Interaction {
 }
 
 data class Login(
+    val adapter: String,
     val user: User? = null,
-    val selfId: String? = null,
     val platform: String? = null,
     val status: Number,
     val features: List<String> = listOf(),
     val proxyUrls: List<String> = listOf(),
 ) {
-    object Status {
+    object LoginStatus {
         const val OFFLINE = 0
         const val ONLINE = 1
         const val CONNECT = 2

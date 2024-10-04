@@ -7,7 +7,7 @@ data class YhChatProperties(
     val port: Int = 8080,
     val path: String = "",
     val token: String = "",
-    val selfId: String = ""
+    val userId: String = ""
 )
 
 @Serializable

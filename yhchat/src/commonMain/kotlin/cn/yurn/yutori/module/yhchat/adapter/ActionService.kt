@@ -68,7 +68,7 @@ class YhChatAdapterActionService(val properties: YhChatProperties, val name: Str
         resource: String,
         method: String,
         platform: String?,
-        selfId: String?,
+        userId: String?,
         content: Map<String, Any?>
     ): Any = HttpClient {
         install(ContentNegotiation) {
@@ -333,7 +333,7 @@ class YhChatAdapterActionService(val properties: YhChatProperties, val name: Str
     }
 
     override suspend fun upload(
-        resource: String, method: String, platform: String, selfId: String, content: List<FormData>
+        resource: String, method: String, platform: String, userId: String, content: List<FormData>
     ): Map<String, String> = HttpClient {
         install(ContentNegotiation) {
             json(Json {

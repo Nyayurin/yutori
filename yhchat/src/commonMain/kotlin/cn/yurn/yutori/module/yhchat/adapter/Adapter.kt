@@ -19,7 +19,7 @@ class YhChatAdapter : Adapter(), Reinstallable {
     var port: Int = 8080
     var path: String = ""
     var token: String = ""
-    var selfId: String = ""
+    var userId: String = ""
     var onStart: suspend YhChatAdapterEventService.() -> Unit = { }
     private lateinit var properties: YhChatProperties
     private var service: YhChatAdapterEventService? by atomic(null)
@@ -29,7 +29,7 @@ class YhChatAdapter : Adapter(), Reinstallable {
     }
 
     override fun install(yutori: Yutori) {
-        properties = YhChatProperties(host, port, path, token, selfId)
+        properties = YhChatProperties(host, port, path, token, userId)
         yutori.messageBuilders["yhchat"] = { YhChatMessageBuilder(it) }
         yutori.actionsContainers["yhchat"] = { _, _, _ -> YhChatActions(properties) }
     }

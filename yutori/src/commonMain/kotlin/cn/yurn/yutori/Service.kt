@@ -7,7 +7,7 @@ interface AdapterActionService {
         resource: String,
         method: String,
         platform: String?,
-        selfId: String?,
+        userId: String?,
         content: Map<String, Any?>
     ): Any
 
@@ -15,7 +15,7 @@ interface AdapterActionService {
         resource: String,
         method: String,
         platform: String,
-        selfId: String,
+        userId: String,
         content: List<FormData>
     ): Map<String, String>
 }
