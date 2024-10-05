@@ -116,13 +116,12 @@ data class AdapterContext<T : SigningEvent>(
 )
 
 data class ServerContext<T : SigningRequest>(
-    val actionsList: List<RootActions>,
     val request: Request<T>,
     val response: Response,
     val yutori: Yutori
 )
 
-class Event<T : SigningEvent>(val properties: Map<String, Any?> = mapOf()) {
+class Event<T : SigningEvent>(val alias: String?, val properties: Map<String, Any?>) {
     val id: Number by properties
     val type: String by properties
     val platform: String by properties
@@ -150,6 +149,7 @@ class Event<T : SigningEvent>(val properties: Map<String, Any?> = mapOf()) {
         get() = properties["user"] as User?
 
     constructor(
+        alias: String?,
         id: Number,
         type: String,
         platform: String,
@@ -167,7 +167,8 @@ class Event<T : SigningEvent>(val properties: Map<String, Any?> = mapOf()) {
         user: User? = null,
         vararg pair: Pair<String, Any?> = arrayOf(),
     ) : this(
-        mapOf(
+        alias = alias,
+        properties = mapOf(
             "id" to id,
             "type" to type,
             "platform" to platform,
@@ -189,8 +190,10 @@ class Event<T : SigningEvent>(val properties: Map<String, Any?> = mapOf()) {
 }
 
 class Request<T : SigningRequest>(
+    val alias: String?,
     val api: String,
-    val properties: Map<String, Any?> = mapOf()
+    val header: Map<String, Any?>,
+    val body: Map<String, Any?>
 )
 
 class Response(private val onRespond: suspend (String) -> Unit) {

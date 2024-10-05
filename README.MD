@@ -127,7 +127,7 @@ suspend fun app() = coroutineScope {
                 // 路由消息发送
                 message.create {
                     // 找到对应 actions
-                    val forwardActions = actionsList.first {
+                    val forwardActions = yutori.actionsList.first {
                         it.platform == request.properties["platform"] && it.selfId == request.properties["selfId"]
                     }
                     // 转发, 并获取响应

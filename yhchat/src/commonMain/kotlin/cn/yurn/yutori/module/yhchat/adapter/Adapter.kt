@@ -10,11 +10,10 @@ import cn.yurn.yutori.module.yhchat.YhChatProperties
 import cn.yurn.yutori.module.yhchat.message.YhChatMessageBuilder
 import kotlinx.atomicfu.atomic
 
-val Adapter.Companion.YhChat: YhChatAdapter
-    get() = YhChatAdapter()
+fun Adapter.Companion.yhchat(alias: String? = null) = YhChatAdapter(alias)
 
 @BuilderMarker
-class YhChatAdapter : Adapter(), Reinstallable {
+class YhChatAdapter(alias: String?) : Adapter(alias), Reinstallable {
     var host: String = "0.0.0.0"
     var port: Int = 8080
     var path: String = ""
@@ -40,7 +39,7 @@ class YhChatAdapter : Adapter(), Reinstallable {
     }
 
     override suspend fun start(yutori: Yutori) {
-        service = YhChatAdapterEventService(properties, yutori)
+        service = YhChatAdapterEventService(alias, properties, yutori)
         service!!.onStart()
         service!!.connect()
     }

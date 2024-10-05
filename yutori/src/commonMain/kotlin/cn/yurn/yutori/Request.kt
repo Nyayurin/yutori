@@ -9,8 +9,8 @@ import kotlin.jvm.JvmName
 @Serializable
 abstract class SigningRequest
 
-interface SatoriPlatformNotNullRequest
-interface SatoriUserIdNotNullRequest
+interface PlatformNotNullRequest
+interface SelfIdNotNullRequest
 interface ChannelIdNotNullRequest
 interface GuildIdNotNullRequest
 interface NextNullableRequest
@@ -33,74 +33,74 @@ interface EmojiNotNullRequest
 interface UserIdNullableRequest
 interface EmojiNullableRequest
 
-val <T> Request<T>.satoriPlatform: String where T : SigningRequest, T : SatoriPlatformNotNullRequest
-    get() = properties["satoriPlatform"] as String
+val <T> Request<T>.platform: String where T : SigningRequest, T : PlatformNotNullRequest
+    get() = header["platform"] as String
 
-val <T> Request<T>.satoriUserId: String where T : SigningRequest, T : SatoriUserIdNotNullRequest
-    get() = properties["satoriUserId"] as String
+val <T> Request<T>.selfId: String where T : SigningRequest, T : SelfIdNotNullRequest
+    get() = header["selfId"] as String
 
 val <T> Request<T>.channelId: String where T : SigningRequest, T : ChannelIdNotNullRequest
-    get() = properties["channelId"] as String
+    get() = body["channelId"] as String
 
 val <T> Request<T>.guildId: String where T : SigningRequest, T : GuildIdNotNullRequest
-    get() = properties["guildId"] as String
+    get() = body["guildId"] as String
 
 val <T> Request<T>.next: String? where T : SigningRequest, T : NextNullableRequest
-    get() = properties["next"] as String?
+    get() = body["next"] as String?
 
 val <T> Request<T>.data: Channel where T : SigningRequest, T : ChannelDataNotNullRequest
-    get() = properties["data"] as Channel
+    get() = body["data"] as Channel
 
 val <T> Request<T>.duration: Number where T : SigningRequest, T : DurationNotNullRequest
-    get() = properties["duration"] as Number
+    get() = body["duration"] as Number
 
 val <T> Request<T>.userId: String where T : SigningRequest, T : UserIdNotNullRequest
-    get() = properties["userId"] as String
+    get() = body["userId"] as String
 
 val <T> Request<T>.guildId: String? where T : SigningRequest, T : GuildIdNullableRequest
-    @JvmName("nullableGuildId") get() = properties["guildId"] as String?
+    @JvmName("nullableGuildId") get() = body["guildId"] as String?
 
 val <T> Request<T>.messageId: String where T : SigningRequest, T : MessageIdNotNullRequest
-    get() = properties["messageId"] as String
+    get() = body["messageId"] as String
 
 val <T> Request<T>.approve: Boolean where T : SigningRequest, T : ApproveNotNullRequest
-    get() = properties["approve"] as Boolean
+    get() = body["approve"] as Boolean
 
 val <T> Request<T>.comment: String where T : SigningRequest, T : CommentNotNullRequest
-    get() = properties["comment"] as String
+    get() = body["comment"] as String
 
 val <T> Request<T>.permanent: Boolean? where T : SigningRequest, T : PermanentNullableRequest
-    get() = properties["permanent"] as Boolean?
+    get() = body["permanent"] as Boolean?
 
 val <T> Request<T>.comment: String? where T : SigningRequest, T : CommentNullableRequest
-    @JvmName("nullableComment") get() = properties["comment"] as String?
+    @JvmName("nullableComment") get() = body["comment"] as String?
 
 val <T> Request<T>.roleId: String where T : SigningRequest, T : RoleIdNotNullRequest
-    get() = properties["roleId"] as String
+    get() = body["roleId"] as String
 
 val <T> Request<T>.role: GuildRole where T : SigningRequest, T : RoleNotNullRequest
-    get() = properties["role"] as GuildRole
+    get() = body["role"] as GuildRole
 
 val <T> Request<T>.content: List<MessageElement> where T : SigningRequest, T : ContentNotNullRequest
-    get() = properties["content"] as List<MessageElement>
+    get() = body["content"] as List<MessageElement>
 
 val <T> Request<T>.direction: BidiPagingList.Direction? where T : SigningRequest, T : DirectionNullableRequest
-    get() = properties["direction"] as BidiPagingList.Direction?
+    get() = body["direction"] as BidiPagingList.Direction?
 
 val <T> Request<T>.limit: Number? where T : SigningRequest, T : LimitNullableRequest
-    get() = properties["limit"] as Number?
+    get() = body["limit"] as Number?
 
 val <T> Request<T>.order: BidiPagingList.Order? where T : SigningRequest, T : OrderNullableRequest
-    get() = properties["order"] as BidiPagingList.Order?
+    get() = body["order"] as BidiPagingList.Order?
 
 val <T> Request<T>.emoji: String where T : SigningRequest, T : EmojiNotNullRequest
-    get() = properties["emoji"] as String
+    get() = body["emoji"] as String
 
 val <T> Request<T>.userId: String? where T : SigningRequest, T : UserIdNullableRequest
-    @JvmName("nullableUserId") get() = properties["userId"] as String?
+    @JvmName("nullableUserId") get() = body["userId"] as String?
 
 val <T> Request<T>.emoji: String? where T : SigningRequest, T : EmojiNullableRequest
-    @JvmName("nullableEmoji") get() = properties["emoji"] as String?
+    @JvmName("nullableEmoji") get() = body["emoji"] as String?
 
 object ChannelRequests {
     const val GET = "/channel.get"
@@ -180,37 +180,37 @@ object FriendRequests {
     val Types = setOf(LIST, APPROVE)
 }
 
-object ChannelGetRequest : SigningRequest(), ChannelIdNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object ChannelListRequest : SigningRequest(), GuildIdNotNullRequest, NextNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object ChannelCreateRequest : SigningRequest(), GuildIdNotNullRequest, ChannelDataNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object ChannelUpdateRequest : SigningRequest(), ChannelIdNotNullRequest, ChannelDataNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object ChannelDeleteRequest : SigningRequest(), ChannelIdNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object ChannelMuteRequest : SigningRequest(), ChannelIdNotNullRequest, DurationNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object UserChannelCreateRequest : SigningRequest(), UserIdNotNullRequest, GuildIdNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildGetRequest : SigningRequest(), GuildIdNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildListRequest : SigningRequest(), NextNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildApproveRequest : SigningRequest(), MessageIdNotNullRequest, ApproveNotNullRequest, CommentNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildMemberGetRequest : SigningRequest(), GuildIdNotNullRequest, UserIdNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildMemberListRequest : SigningRequest(), GuildIdNotNullRequest, NextNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildMemberKickRequest : SigningRequest(), GuildIdNotNullRequest, UserIdNotNullRequest, PermanentNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildMemberMuteRequest : SigningRequest(), GuildIdNotNullRequest, UserIdNotNullRequest, DurationNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildMemberApproveRequest : SigningRequest(), MessageIdNotNullRequest, ApproveNotNullRequest, CommentNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildMemberRoleSetRequest : SigningRequest(), GuildIdNotNullRequest, UserIdNotNullRequest, RoleIdNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildMemberRoleUnsetRequest : SigningRequest(), GuildIdNotNullRequest, UserIdNotNullRequest, RoleIdNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildRoleListRequest : SigningRequest(), GuildIdNotNullRequest, NextNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildRoleCreateRequest : SigningRequest(), GuildIdNotNullRequest, RoleNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildRoleUpdateRequest : SigningRequest(), GuildIdNotNullRequest, RoleIdNotNullRequest, RoleNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object GuildRoleDeleteRequest : SigningRequest(), GuildIdNotNullRequest, RoleIdNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object LoginGetRequest : SigningRequest(), SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object MessageCreateRequest : SigningRequest(), ChannelIdNotNullRequest, ContentNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object MessageGetRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object MessageDeleteRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object MessageUpdateRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, ContentNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object MessageListRequest : SigningRequest(), ChannelIdNotNullRequest, NextNullableRequest, DirectionNullableRequest, LimitNullableRequest, OrderNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object ReactionCreateRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, EmojiNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object ReactionDeleteRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, EmojiNotNullRequest, UserIdNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object ReactionClearRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, EmojiNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object ReactionListRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, EmojiNotNullRequest, NextNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object UserGetRequest : SigningRequest(), UserIdNotNullRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object FriendListRequest : SigningRequest(), NextNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
-object FriendApproveRequest : SigningRequest(), MessageIdNotNullRequest, ApproveNotNullRequest, CommentNullableRequest, SatoriPlatformNotNullRequest, SatoriUserIdNotNullRequest
+object ChannelGetRequest : SigningRequest(), ChannelIdNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object ChannelListRequest : SigningRequest(), GuildIdNotNullRequest, NextNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object ChannelCreateRequest : SigningRequest(), GuildIdNotNullRequest, ChannelDataNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object ChannelUpdateRequest : SigningRequest(), ChannelIdNotNullRequest, ChannelDataNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object ChannelDeleteRequest : SigningRequest(), ChannelIdNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object ChannelMuteRequest : SigningRequest(), ChannelIdNotNullRequest, DurationNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object UserChannelCreateRequest : SigningRequest(), UserIdNotNullRequest, GuildIdNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildGetRequest : SigningRequest(), GuildIdNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildListRequest : SigningRequest(), NextNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildApproveRequest : SigningRequest(), MessageIdNotNullRequest, ApproveNotNullRequest, CommentNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildMemberGetRequest : SigningRequest(), GuildIdNotNullRequest, UserIdNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildMemberListRequest : SigningRequest(), GuildIdNotNullRequest, NextNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildMemberKickRequest : SigningRequest(), GuildIdNotNullRequest, UserIdNotNullRequest, PermanentNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildMemberMuteRequest : SigningRequest(), GuildIdNotNullRequest, UserIdNotNullRequest, DurationNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildMemberApproveRequest : SigningRequest(), MessageIdNotNullRequest, ApproveNotNullRequest, CommentNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildMemberRoleSetRequest : SigningRequest(), GuildIdNotNullRequest, UserIdNotNullRequest, RoleIdNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildMemberRoleUnsetRequest : SigningRequest(), GuildIdNotNullRequest, UserIdNotNullRequest, RoleIdNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildRoleListRequest : SigningRequest(), GuildIdNotNullRequest, NextNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildRoleCreateRequest : SigningRequest(), GuildIdNotNullRequest, RoleNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildRoleUpdateRequest : SigningRequest(), GuildIdNotNullRequest, RoleIdNotNullRequest, RoleNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object GuildRoleDeleteRequest : SigningRequest(), GuildIdNotNullRequest, RoleIdNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object LoginGetRequest : SigningRequest(), PlatformNotNullRequest, SelfIdNotNullRequest
+object MessageCreateRequest : SigningRequest(), ChannelIdNotNullRequest, ContentNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object MessageGetRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object MessageDeleteRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object MessageUpdateRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, ContentNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object MessageListRequest : SigningRequest(), ChannelIdNotNullRequest, NextNullableRequest, DirectionNullableRequest, LimitNullableRequest, OrderNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object ReactionCreateRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, EmojiNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object ReactionDeleteRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, EmojiNotNullRequest, UserIdNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object ReactionClearRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, EmojiNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object ReactionListRequest : SigningRequest(), ChannelIdNotNullRequest, MessageIdNotNullRequest, EmojiNotNullRequest, NextNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object UserGetRequest : SigningRequest(), UserIdNotNullRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object FriendListRequest : SigningRequest(), NextNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest
+object FriendApproveRequest : SigningRequest(), MessageIdNotNullRequest, ApproveNotNullRequest, CommentNullableRequest, PlatformNotNullRequest, SelfIdNotNullRequest

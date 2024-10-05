@@ -2,7 +2,7 @@
 
 package cn.yurn.yutori
 
-abstract class Module {
+abstract class Module(val alias: String?) {
     abstract fun install(yutori: Yutori)
     abstract fun uninstall(yutori: Yutori)
 
@@ -14,11 +14,11 @@ interface Startable {
     fun stop(yutori: Yutori)
 }
 
-abstract class Adapter : Module(), Startable {
+abstract class Adapter(alias: String?) : Module(alias), Startable {
     companion object
 }
 
-abstract class Server : Module(), Startable {
+abstract class Server(alias: String?) : Module(alias), Startable {
     abstract suspend fun pushEvent(event: Event<SigningEvent>)
     companion object
 }

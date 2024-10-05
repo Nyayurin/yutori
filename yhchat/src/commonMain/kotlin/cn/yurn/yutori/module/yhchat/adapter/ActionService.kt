@@ -63,7 +63,10 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonObject
 
-class YhChatAdapterActionService(val properties: YhChatProperties, val name: String) : AdapterActionService {
+class YhChatAdapterActionService(
+    val properties: YhChatProperties,
+    val name: String
+) : AdapterActionService() {
     override suspend fun send(
         resource: String,
         method: String,

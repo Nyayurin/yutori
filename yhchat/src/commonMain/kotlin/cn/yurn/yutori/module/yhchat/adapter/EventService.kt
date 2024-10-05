@@ -38,16 +38,17 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 class YhChatAdapterEventService(
+    alias: String?,
     val properties: YhChatProperties,
     val yutori: Yutori
-) : AdapterEventService {
+) : AdapterEventService(alias) {
     val service = YhChatAdapterActionService(properties, yutori.name)
     private var job by atomic<Job?>(null)
     private val idMap = mapOf<Int, String>()
     private var last = 0
 
     init {
-        yutori.actionsList += RootActions("yhchat", properties.userId, service, yutori)
+        yutori.actionsList += RootActions(alias, "yhchat", properties.userId, service, yutori)
     }
 
     override suspend fun connect() {
@@ -125,6 +126,7 @@ class YhChatAdapterEventService(
         timestamp: Long,
         event: cn.yurn.yutori.module.yhchat.Event
     ) = Event<SigningEvent>(
+        alias = alias,
         id = last++,
         type = MessageEvents.CREATED,
         platform = "yhchat",
@@ -212,6 +214,7 @@ class YhChatAdapterEventService(
         timestamp: Long,
         event: cn.yurn.yutori.module.yhchat.Event
     ) = Event<SigningEvent>(
+        alias = alias,
         id = last++,
         type = GuildMemberEvents.ADDED,
         platform = "yhchat",
@@ -265,6 +268,7 @@ class YhChatAdapterEventService(
         timestamp: Long,
         event: cn.yurn.yutori.module.yhchat.Event
     ) = Event<SigningEvent>(
+        alias = alias,
         id = last++,
         type = GuildMemberEvents.REMOVED,
         platform = "yhchat",

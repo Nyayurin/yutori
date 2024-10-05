@@ -89,9 +89,11 @@ class Yutori(val name: String) {
     }
 
     inline fun <reified T : Module> uninstall() {
-        for (module in modules.filterIsInstance<T>()) {
-            uninstall(module)
-        }
+        for (module in modules.filterIsInstance<T>()) uninstall(module)
+    }
+
+    fun uninstall(alias: String? = null) {
+        modules.find { it.alias == alias }?.let { uninstall(it) }
     }
 
     fun uninstall(module: Module) {
@@ -113,7 +115,7 @@ class Yutori(val name: String) {
         }
     }
 
-    fun stop() = modules.filterIsInstance<cn.yurn.yutori.Adapter>().forEach { adapter -> adapter.stop(this) }
+    fun stop() = modules.filterIsInstance<Startable>().forEach { adapter -> adapter.stop(this) }
 
     inner class Adapter {
         var exceptionHandler = CoroutineExceptionHandler { _, throwable ->
