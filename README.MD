@@ -73,8 +73,8 @@ implementation(libs.yutorix.module.yhchat) // 可选
 yutori = "version"
 
 [libraries]
-yutori = { module = "cn.yurn.yutori:yutori", version.ref = "yutori" }
-yutorix-module-yhchat = { module = "cn.yurn.yutorix:yutorix-module-yhchat", version.ref = "yutori" }
+yutori = { module = "cn.yurin.yutori:yutori", version.ref = "yutori" }
+yutorix-module-yhchat = { module = "cn.yurin.yutorix:yutorix-module-yhchat", version.ref = "yutori" }
 ```
 
 请从 [Github Packages](https://github.com/Nyayurin?tab=packages&repo_name=yutori) 获取版本<br>
