@@ -10,9 +10,9 @@ class Markdown(val content: String) : MessageElement(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
-        ) = Markdown(properties["content"] as String)
+        ) = Markdown(properties["content"]!!)
     }
 }
 
@@ -23,8 +23,8 @@ class HTML(val content: String) : MessageElement(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
-        ) = HTML(properties["content"] as String)
+        ) = HTML(properties["content"]!!)
     }
 }
