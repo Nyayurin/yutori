@@ -26,14 +26,14 @@ class Button(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = Button(
-            id = properties.remove("id") as String?,
-            type = properties.remove("type") as String?,
-            href = properties.remove("href") as String?,
-            text = properties.remove("text") as String?,
-            theme = properties.remove("theme") as String?,
+            id = properties.remove("id"),
+            type = properties.remove("type"),
+            href = properties.remove("href"),
+            text = properties.remove("text"),
+            theme = properties.remove("theme"),
             extendProperties = properties,
             children = children
         )

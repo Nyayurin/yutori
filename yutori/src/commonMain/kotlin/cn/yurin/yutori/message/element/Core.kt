@@ -4,9 +4,18 @@ package cn.yurin.yutori.message.element
 
 abstract class MessageElementContainer {
     abstract operator fun invoke(
-        properties: MutableMap<String, Any?>,
+        properties: MutableMap<String, String?>,
         children: List<MessageElement>
     ): MessageElement
+
+    protected inline fun <reified T : Any> String?.convert(): T = when (T::class) {
+        String::class -> this!!
+        Int::class -> this!!.toInt()
+        Long::class -> this!!.toLong()
+        Double::class -> this!!.toDouble()
+        Boolean::class -> this?.toBooleanStrict() ?: true
+        else -> throw RuntimeException("Message element property parse failed: ${T::class}")
+    } as T
 }
 
 open class MessageElement(

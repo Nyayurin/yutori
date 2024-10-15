@@ -11,7 +11,7 @@ object Br : MessageElement(
 ) {
     object Container : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = Br
     }
@@ -24,7 +24,7 @@ class Paragraph(children: List<MessageElement>) : MessageElement(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = Paragraph(children)
     }
@@ -42,11 +42,11 @@ class Message(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = Message(
-            id = properties.remove("id") as String?,
-            forward = properties.remove("forward") as Boolean?,
+            id = properties.remove("id"),
+            forward = properties.remove("forward")?.convert(),
             extendProperties = properties,
             children = children
         )

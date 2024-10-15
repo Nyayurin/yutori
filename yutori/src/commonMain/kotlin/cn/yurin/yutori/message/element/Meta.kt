@@ -16,11 +16,11 @@ class Quote(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = Quote(
-            id = properties.remove("id") as String?,
-            forward = properties.remove("forward") as Boolean?,
+            id = properties.remove("id"),
+            forward = properties.remove("forward")?.convert(),
             extendProperties = properties,
             children = children
         )
@@ -45,12 +45,12 @@ class Author(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = Author(
-            id = properties.remove("id") as String?,
-            name = properties.remove("name") as String?,
-            avatar = properties.remove("avatar") as String?,
+            id = properties.remove("id"),
+            name = properties.remove("name"),
+            avatar = properties.remove("avatar"),
             extendProperties = properties,
             children = children
         )

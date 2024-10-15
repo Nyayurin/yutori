@@ -11,9 +11,9 @@ class Text(val content: String) : MessageElement(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
-        ) = Text(properties["content"] as String)
+        ) = Text(properties["content"]!!)
     }
 }
 
@@ -37,13 +37,13 @@ class At(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = At(
-            id = properties.remove("id") as String?,
-            name = properties.remove("name") as String?,
-            role = properties.remove("role") as String?,
-            type = properties.remove("type") as String?,
+            id = properties.remove("id"),
+            name = properties.remove("name"),
+            role = properties.remove("role"),
+            type = properties.remove("type"),
             extendProperties = properties,
             children = children
         )
@@ -62,11 +62,11 @@ class Sharp(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = Sharp(
-            id = properties.remove("id") as String,
-            name = properties.remove("name") as String?,
+            id = properties.remove("id")!!,
+            name = properties.remove("name"),
             extendProperties = properties,
             children = children
         )
@@ -84,10 +84,10 @@ class Href(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = Href(
-            href = properties.remove("href") as String,
+            href = properties.remove("href")!!,
             extendProperties = properties,
             children = children
         )

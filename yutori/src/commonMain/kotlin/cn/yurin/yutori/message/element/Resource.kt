@@ -28,15 +28,15 @@ class Image(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = Image(
-            src = properties.remove("src") as String,
-            title = properties.remove("title") as String?,
-            cache = properties.remove("cache") as Boolean?,
-            timeout = properties.remove("timeout") as String?,
-            width = properties.remove("width") as Number?,
-            height = properties.remove("height") as Number?,
+            src = properties.remove("src")!!,
+            title = properties.remove("title"),
+            cache = properties.remove("cache")?.convert(),
+            timeout = properties.remove("timeout"),
+            width = properties.remove("width")?.convert<Int>(),
+            height = properties.remove("height")?.convert<Int>(),
             extendProperties = properties,
             children = children
         )
@@ -67,15 +67,15 @@ class Audio(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = Audio(
-            src = properties.remove("src") as String,
-            title = properties.remove("title") as String?,
-            cache = properties.remove("cache") as Boolean?,
-            timeout = properties.remove("timeout") as String?,
-            duration = properties.remove("duration") as Number?,
-            poster = properties.remove("poster") as String?,
+            src = properties.remove("src")!!,
+            title = properties.remove("title"),
+            cache = properties.remove("cache")?.convert(),
+            timeout = properties.remove("timeout"),
+            duration = properties.remove("duration")?.convert<Int>(),
+            poster = properties.remove("poster"),
             extendProperties = properties,
             children = children
         )
@@ -110,17 +110,17 @@ class Video(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = Video(
-            src = properties.remove("src") as String,
-            title = properties.remove("title") as String?,
-            cache = properties.remove("cache") as Boolean?,
-            timeout = properties.remove("timeout") as String?,
-            width = properties.remove("width") as Number?,
-            height = properties.remove("height") as Number?,
-            duration = properties.remove("duration") as Number?,
-            poster = properties.remove("poster") as String?,
+            src = properties.remove("src")!!,
+            title = properties.remove("title"),
+            cache = properties.remove("cache")?.convert(),
+            timeout = properties.remove("timeout"),
+            width = properties.remove("width")?.convert<Int>(),
+            height = properties.remove("height")?.convert<Int>(),
+            duration = properties.remove("duration")?.convert<Int>(),
+            poster = properties.remove("poster"),
             extendProperties = properties,
             children = children
         )
@@ -149,14 +149,14 @@ class File(
 ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            properties: MutableMap<String, Any?>,
+            properties: MutableMap<String, String?>,
             children: List<MessageElement>
         ) = File(
-            src = properties.remove("src") as String,
-            title = properties.remove("title") as String?,
-            cache = properties.remove("cache") as Boolean?,
-            timeout = properties.remove("timeout") as String?,
-            poster = properties.remove("poster") as String?,
+            src = properties.remove("src")!!,
+            title = properties.remove("title"),
+            cache = properties.remove("cache")?.convert(),
+            timeout = properties.remove("timeout"),
+            poster = properties.remove("poster"),
             extendProperties = properties,
             children = children
         )
