@@ -326,38 +326,38 @@ class YhChatAdapterEventService(
     private fun parseMessageContent(event: cn.yurn.yutori.module.yhchat.Event) =
         message(yutori) {
             when (event.message.contentType) {
-                "text" -> text { event.message.content.text!! }
-                "image" -> img {
-                    src = event.message.content.imageUrl!!
-                }
-
-                "file" -> file {
-                    src = event.message.content.fileUrl!!
+                "text" -> text(event.message.content.text!!)
+                "image" -> image(src = event.message.content.imageUrl!!)
+                "file" -> file(
+                    src = event.message.content.fileUrl!!,
                     title = event.message.content.fileName!!
-                }
+                )
 
-                "markdown" -> yhchat.markdown { event.message.content.text!! }
-                "html" -> yhchat.html { event.message.content.text!! }
+                "markdown" -> yhchat.markdown(event.message.content.text!!)
+                "html" -> yhchat.html(event.message.content.text!!)
             }
             event.message.content.buttons?.forEach { button ->
-                button {
-                    when (button.actionType) {
-                        1 -> {
-                            type = "link"
-                            href = button.url
-                        }
-
-                        2 -> {
-                            type = "input"
-                            text = button.value
-                        }
-
-                        3 -> {
-                            type = "action"
-                            id = button.value
-                        }
+                when (button.actionType) {
+                    1 -> button(
+                        type = "link",
+                        href = button.url
+                    ) {
+                        text(button.text)
                     }
-                    text { button.text }
+
+                    2 -> button(
+                        type = "input",
+                        text = button.value
+                    ) {
+                        text(button.text)
+                    }
+
+                    3 -> button(
+                        type = "action",
+                        id = button.value
+                    ) {
+                        text(button.text)
+                    }
                 }
             }
         }

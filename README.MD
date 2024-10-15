@@ -27,7 +27,7 @@ build.gradle.kts
 
 ```kotlin
 maven {
-    url = uri("https://maven.pkg.github.com/Nyayurn/yutori")
+    url = uri("https://maven.pkg.github.com/Nyayurin/yutori")
     credentials { 
         username = project.findProperty("gpr.actor") as String? ?: System.getenv("GITHUB_ACTOR")
         password = project.findProperty("gpr.token") as String? ?: System.getenv("GITHUB_TOKEN")
@@ -39,7 +39,7 @@ settings.gradle.kts
 
 ```kotlin
 maven {
-    url = uri("https://maven.pkg.github.com/Nyayurn/yutori")
+    url = uri("https://maven.pkg.github.com/Nyayurin/yutori")
     credentials {
         username = providers.gradleProperty("gpr.actor").orNull ?: System.getenv("GITHUB_ACTOR")
         password = providers.gradleProperty("gpr.token").orNull ?: System.getenv("GITHUB_TOKEN")
@@ -77,14 +77,14 @@ yutori = { module = "cn.yurn.yutori:yutori", version.ref = "yutori" }
 yutorix-module-yhchat = { module = "cn.yurn.yutorix:yutorix-module-yhchat", version.ref = "yutori" }
 ```
 
-请从 [Github Packages](https://github.com/Nyayurn?tab=packages&repo_name=yutori) 获取版本<br>
+请从 [Github Packages](https://github.com/Nyayurin?tab=packages&repo_name=yutori) 获取版本<br>
 对于稳定版, 它的版本号应该和 Release 中的 tag 一致<br>
 对于开发板, 它的版本号应该和 Commit 的完整 SHA 值一致<br>
 要获取一个 Commit 的完整 SHA 值, 请在 Commits 页面对应 Commit 处点击 Commit ID 右侧的复制按钮(Copy full SHA for *******)
 
 引入扩展模块
 
-请参考 [Yutorix-Satori](https://github.com/Nyayurn/yutorix-satori)
+请参考 [Yutorix-Satori](https://github.com/Nyayurin/yutorix-satori)
 
 编写代码
 
@@ -113,7 +113,7 @@ suspend fun app() = coroutineScope {
                             // 通过消息 builder 使用 DSL 构造一条消息
                             content = {
                                 // 添加一个纯文本
-                                text { "test done!" }
+                                text("test done!")
                             }
                         )
                     }

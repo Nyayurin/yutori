@@ -2,32 +2,57 @@
 
 package cn.yurn.yutori.message.element
 
-class Quote(
-    id: String? = null,
-    forward: Boolean? = null
-) : NodeMessageElement("quote", "id" to id, "forward" to forward) {
-    var id: String? by properties
-    var forward: Boolean? by properties
+import cn.yurn.yutori.toPairArray
 
-    companion object : MessageElementContainer("id" to "", "forward" to false) {
+class Quote(
+    val id: String?,
+    val forward: Boolean?,
+    extendProperties: Map<String, Any?>,
+    children: List<MessageElement>
+) : MessageElement(
+    elementName = "quote",
+    properties = mapOf("id" to id, "forward" to forward, *extendProperties.toPairArray()),
+    children = children
+) {
+    companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Quote()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Quote(
+            id = properties.remove("id") as String?,
+            forward = properties.remove("forward") as Boolean?,
+            extendProperties = properties,
+            children = children
+        )
     }
 }
 
 class Author(
-    id: String? = null,
-    name: String? = null,
-    avatar: String? = null
-) : NodeMessageElement("author", "id" to id, "name" to name, "avatar" to avatar) {
-    var id: String? by properties
-    var name: String? by properties
-    var avatar: String? by properties
-
-    companion object : MessageElementContainer("id" to "", "name" to "", "avatar" to "") {
+    val id: String?,
+    val name: String?,
+    val avatar: String?,
+    extendProperties: Map<String, Any?>,
+    children: List<MessageElement>
+) : MessageElement(
+    elementName = "author",
+    properties = mapOf(
+        "id" to id,
+        "name" to name,
+        "avatar" to avatar,
+        *extendProperties.toPairArray()
+    ),
+    children = children
+) {
+    companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Author()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Author(
+            id = properties.remove("id") as String?,
+            name = properties.remove("name") as String?,
+            avatar = properties.remove("avatar") as String?,
+            extendProperties = properties,
+            children = children
+        )
     }
 }

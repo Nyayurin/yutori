@@ -272,7 +272,7 @@ class YhChatAdapterActionService(
         val builder = StringBuilder()
         for (element in this@transToActions) {
             when (element) {
-                is Text -> builder.append(element.text)
+                is Text -> builder.append(element.content)
                 is At -> { }
                 is Sharp -> { }
                 is Href -> builder.append(element.href)

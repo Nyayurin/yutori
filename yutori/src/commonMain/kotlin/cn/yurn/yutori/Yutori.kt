@@ -28,6 +28,7 @@ import cn.yurn.yutori.message.element.Strikethrough
 import cn.yurn.yutori.message.element.Strong
 import cn.yurn.yutori.message.element.Sub
 import cn.yurn.yutori.message.element.Sup
+import cn.yurn.yutori.message.element.Text
 import cn.yurn.yutori.message.element.Underline
 import cn.yurn.yutori.message.element.Video
 import co.touchlab.kermit.Logger
@@ -52,27 +53,28 @@ class Yutori(val name: String) {
         get() = modules.filterIsInstance<cn.yurn.yutori.Server>()
 
     init {
+        elements["text"] = Text
         elements["at"] = At
         elements["sharp"] = Sharp
-        elements["a"] = Href
-        elements["img"] = Image
+        elements["href"] = Href
+        elements["image"] = Image
         elements["audio"] = Audio
         elements["video"] = Video
         elements["file"] = File
-        elements["b"] = Bold
+        elements["bold"] = Bold
         elements["strong"] = Strong
-        elements["i"] = Idiomatic
+        elements["idiomatic"] = Idiomatic
         elements["em"] = Em
-        elements["u"] = Underline
+        elements["underline"] = Underline
         elements["ins"] = Ins
-        elements["s"] = Strikethrough
-        elements["del"] = Delete
+        elements["strikethrough"] = Strikethrough
+        elements["delete"] = Delete
         elements["spl"] = Spl
         elements["code"] = Code
         elements["sup"] = Sup
         elements["sub"] = Sub
-        elements["br"] = Br
-        elements["p"] = Paragraph
+        elements["br"] = Br.Container
+        elements["paragraph"] = Paragraph
         elements["message"] = Message
         elements["quote"] = Quote
         elements["author"] = Author

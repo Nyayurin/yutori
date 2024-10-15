@@ -2,49 +2,94 @@
 
 package cn.yurn.yutori.message.element
 
-class Text(var text: String) : MessageElement() {
-    override fun toString() = "text{\"$text\"}"
+import cn.yurn.yutori.toPairArray
+
+class Text(val content: String) : MessageElement(
+    elementName = "text",
+    properties = mapOf("content" to content),
+    children = emptyList()
+) {
+    companion object : MessageElementContainer() {
+        override operator fun invoke(
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Text(properties["content"] as String)
+    }
 }
 
 class At(
-    id: String? = null,
-    name: String? = null,
-    role: String? = null,
-    type: String? = null
-) : NodeMessageElement("at", "id" to id, "name" to name, "role" to role, "type" to type) {
-    var id: String? by properties
-    var name: String? by properties
-    var role: String? by properties
-    var type: String? by properties
-
-    companion object :
-        MessageElementContainer("id" to "", "name" to "", "role" to "", "type" to "") {
+    val id: String?,
+    val name: String?,
+    val role: String?,
+    val type: String?,
+    extendProperties: Map<String, Any?>,
+    children: List<MessageElement>
+) : MessageElement(
+    elementName = "at",
+    properties = mapOf(
+        "id" to id,
+        "name" to name,
+        "role" to role,
+        "type" to type,
+        *extendProperties.toPairArray()
+    ),
+    children = children
+) {
+    companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = At()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = At(
+            id = properties.remove("id") as String?,
+            name = properties.remove("name") as String?,
+            role = properties.remove("role") as String?,
+            type = properties.remove("type") as String?,
+            extendProperties = properties,
+            children = children
+        )
     }
 }
 
 class Sharp(
-    id: String,
-    name: String? = null
-) : NodeMessageElement("sharp", "id" to id, "name" to name) {
-    var id: String by properties
-    var name: String? by properties
-
-    companion object : MessageElementContainer("id" to "", "name" to "") {
+    val id: String,
+    val name: String?,
+    extendProperties: Map<String, Any?>,
+    children: List<MessageElement>
+) : MessageElement(
+    elementName = "sharp",
+    properties = mapOf("id" to id, "name" to name, *extendProperties.toPairArray()),
+    children = children
+) {
+    companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Sharp(attributes["id"] as String)
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Sharp(
+            id = properties.remove("id") as String,
+            name = properties.remove("name") as String?,
+            extendProperties = properties,
+            children = children
+        )
     }
 }
 
-class Href(href: String) : NodeMessageElement("a", "href" to href) {
-    var href: String by properties
-
-    companion object : MessageElementContainer("href" to "") {
+class Href(
+    val href: String,
+    extendProperties: Map<String, Any?>,
+    children: List<MessageElement>
+) : MessageElement(
+    elementName = "href",
+    properties = mapOf("href" to href, *extendProperties.toPairArray()),
+    children = children
+) {
+    companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Href(attributes["href"] as String)
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Href(
+            href = properties.remove("href") as String,
+            extendProperties = properties,
+            children = children
+        )
     }
 }

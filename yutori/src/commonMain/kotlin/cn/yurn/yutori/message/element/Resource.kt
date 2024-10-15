@@ -2,154 +2,163 @@
 
 package cn.yurn.yutori.message.element
 
-class Image(
-    src: String,
-    title: String? = null,
-    cache: Boolean? = null,
-    timeout: String? = null,
-    width: Number? = null,
-    height: Number? = null
-) : NodeMessageElement(
-    "img",
-    "src" to src,
-    "title" to title,
-    "cache" to cache,
-    "timeout" to timeout,
-    "width" to width,
-    "height" to height
-) {
-    var src: String by properties
-    var title: String? by properties
-    var cache: Boolean? by properties
-    var timeout: String? by properties
-    var width: Number? by properties
-    var height: Number? by properties
+import cn.yurn.yutori.toPairArray
 
-    companion object : MessageElementContainer(
-        "src" to "",
-        "title" to "",
-        "cache" to false,
-        "timeout" to "",
-        "width" to 0,
-        "height" to 0
-    ) {
+class Image(
+    val src: String,
+    val title: String?,
+    val cache: Boolean?,
+    val timeout: String?,
+    val width: Number?,
+    val height: Number?,
+    extendProperties: Map<String, Any?>,
+    children: List<MessageElement>
+) : MessageElement(
+    elementName = "image",
+    properties = mapOf(
+        "src" to src,
+        "title" to title,
+        "cache" to cache,
+        "timeout" to timeout,
+        "width" to width,
+        "height" to height,
+        *extendProperties.toPairArray()
+    ),
+    children = children
+) {
+    companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Image(attributes["src"] as String)
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Image(
+            src = properties.remove("src") as String,
+            title = properties.remove("title") as String?,
+            cache = properties.remove("cache") as Boolean?,
+            timeout = properties.remove("timeout") as String?,
+            width = properties.remove("width") as Number?,
+            height = properties.remove("height") as Number?,
+            extendProperties = properties,
+            children = children
+        )
     }
 }
 
 class Audio(
-    src: String,
-    title: String? = null,
-    cache: Boolean? = null,
-    timeout: String? = null,
-    duration: Number? = null,
-    poster: String? = null
-) : NodeMessageElement(
-    "audio",
-    "src" to src,
-    "title" to title,
-    "cache" to cache,
-    "timeout" to timeout,
-    "duration" to duration,
-    "poster" to poster
+    val src: String,
+    val title: String?,
+    val cache: Boolean?,
+    val timeout: String?,
+    val duration: Number?,
+    val poster: String?,
+    extendProperties: Map<String, Any?>,
+    children: List<MessageElement>
+) : MessageElement(
+    elementName = "audio",
+    properties = mapOf(
+        "src" to src,
+        "title" to title,
+        "cache" to cache,
+        "timeout" to timeout,
+        "duration" to duration,
+        "poster" to poster,
+        *extendProperties.toPairArray()
+    ),
+    children = children
 ) {
-    var src: String by properties
-    var title: String? by properties
-    var cache: Boolean? by properties
-    var timeout: String? by properties
-    var duration: Number? by properties
-    var poster: String? by properties
-
-    companion object : MessageElementContainer(
-        "src" to "",
-        "title" to "",
-        "cache" to false,
-        "timeout" to "",
-        "duration" to 0,
-        "poster" to ""
-    ) {
+    companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Audio(attributes["src"] as String)
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Audio(
+            src = properties.remove("src") as String,
+            title = properties.remove("title") as String?,
+            cache = properties.remove("cache") as Boolean?,
+            timeout = properties.remove("timeout") as String?,
+            duration = properties.remove("duration") as Number?,
+            poster = properties.remove("poster") as String?,
+            extendProperties = properties,
+            children = children
+        )
     }
 }
 
 class Video(
-    src: String,
-    title: String? = null,
-    cache: Boolean? = null,
-    timeout: String? = null,
-    width: Number? = null,
-    height: Number? = null,
-    duration: Number? = null,
-    poster: String? = null
-) : NodeMessageElement(
-    "video",
-    "src" to src,
-    "title" to title,
-    "cache" to cache,
-    "timeout" to timeout,
-    "width" to width,
-    "height" to height,
-    "duration" to duration,
-    "poster" to poster
+    val src: String,
+    val title: String?,
+    val cache: Boolean?,
+    val timeout: String?,
+    val width: Number?,
+    val height: Number?,
+    val duration: Number?,
+    val poster: String?,
+    extendProperties: Map<String, Any?>,
+    children: List<MessageElement>
+) : MessageElement(
+    elementName = "video",
+    properties = mapOf(
+        "src" to src,
+        "title" to title,
+        "cache" to cache,
+        "timeout" to timeout,
+        "width" to width,
+        "height" to height,
+        "duration" to duration,
+        "poster" to poster,
+        *extendProperties.toPairArray()
+    ),
+    children = children
 ) {
-    var src: String by properties
-    var title: String? by properties
-    var cache: Boolean? by properties
-    var timeout: String? by properties
-    var width: Number? by properties
-    var height: Number? by properties
-    var duration: Number? by properties
-    var poster: String? by properties
-
-    companion object : MessageElementContainer(
-        "src" to "",
-        "title" to "",
-        "cache" to false,
-        "timeout" to "",
-        "width" to 0,
-        "height" to 0,
-        "duration" to 0,
-        "poster" to ""
-    ) {
+    companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Video(attributes["src"] as String)
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Video(
+            src = properties.remove("src") as String,
+            title = properties.remove("title") as String?,
+            cache = properties.remove("cache") as Boolean?,
+            timeout = properties.remove("timeout") as String?,
+            width = properties.remove("width") as Number?,
+            height = properties.remove("height") as Number?,
+            duration = properties.remove("duration") as Number?,
+            poster = properties.remove("poster") as String?,
+            extendProperties = properties,
+            children = children
+        )
     }
 }
 
 class File(
-    src: String,
-    title: String? = null,
-    cache: Boolean? = null,
-    timeout: String? = null,
-    poster: String? = null
-) : NodeMessageElement(
-    "file",
-    "src" to src,
-    "title" to title,
-    "cache" to cache,
-    "timeout" to timeout,
-    "poster" to poster
+    val src: String,
+    val title: String?,
+    val cache: Boolean?,
+    val timeout: String?,
+    val poster: String?,
+    extendProperties: Map<String, Any?>,
+    children: List<MessageElement>
+) : MessageElement(
+    elementName = "file",
+    properties = mapOf(
+        "src" to src,
+        "title" to title,
+        "cache" to cache,
+        "timeout" to timeout,
+        "poster" to poster,
+        *extendProperties.toPairArray()
+    ),
+    children = children
 ) {
-    var src: String by properties
-    var title: String? by properties
-    var cache: Boolean? by properties
-    var timeout: String? by properties
-    var poster: String? by properties
-
-    companion object : MessageElementContainer(
-        "src" to "",
-        "title" to "",
-        "cache" to false,
-        "timeout" to "",
-        "poster" to ""
-    ) {
+    companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = File(attributes["src"] as String)
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = File(
+            src = properties.remove("src") as String,
+            title = properties.remove("title") as String?,
+            cache = properties.remove("cache") as Boolean?,
+            timeout = properties.remove("timeout") as String?,
+            poster = properties.remove("poster") as String?,
+            extendProperties = properties,
+            children = children
+        )
     }
 }

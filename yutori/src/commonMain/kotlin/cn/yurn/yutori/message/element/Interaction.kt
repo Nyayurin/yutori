@@ -2,22 +2,40 @@
 
 package cn.yurn.yutori.message.element
 
-class Button(
-    id: String? = null,
-    type: String? = null,
-    href: String? = null,
-    text: String? = null,
-    theme: String? = null
-) : NodeMessageElement("button", "id" to id, "type" to type, "href" to href, "text" to text, "theme" to theme) {
-    var id: String? by properties
-    var type: String? by properties
-    var href: String? by properties
-    var text: String? by properties
-    var theme: String? by properties
+import cn.yurn.yutori.toPairArray
 
-    companion object : MessageElementContainer("id" to "", "type" to "", "href" to "", "text" to "", "theme" to "") {
+class Button(
+    val id: String?,
+    val type: String?,
+    val href: String?,
+    val text: String?,
+    val theme: String?,
+    extendProperties: Map<String, Any?>,
+    children: List<MessageElement>
+) : MessageElement(
+    elementName = "button",
+    properties = mapOf(
+        "id" to id,
+        "type" to type,
+        "href" to href,
+        "text" to text,
+        "theme" to theme,
+        *extendProperties.toPairArray()
+    ),
+    children = children
+) {
+    companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Button()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Button(
+            id = properties.remove("id") as String?,
+            type = properties.remove("type") as String?,
+            href = properties.remove("href") as String?,
+            text = properties.remove("text") as String?,
+            theme = properties.remove("theme") as String?,
+            extendProperties = properties,
+            children = children
+        )
     }
 }

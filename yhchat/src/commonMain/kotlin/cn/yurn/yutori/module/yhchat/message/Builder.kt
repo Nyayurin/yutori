@@ -11,9 +11,6 @@ val MessageBuilder.yhchat: YhChatMessageBuilder
 
 @BuilderMarker
 class YhChatMessageBuilder(builder: MessageBuilder) : ExtendedMessageBuilder(builder) {
-    inline fun markdown(block: () -> String) =
-        Markdown(block()).apply { elements += this }
-
-    inline fun html(block: () -> String) =
-        HTML(block()).apply { elements += this }
+    inline fun markdown(content: String) = Markdown(content).apply { elements += this }
+    inline fun html(content: String) = HTML(content).apply { elements += this }
 }

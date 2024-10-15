@@ -2,24 +2,20 @@
 
 package cn.yurn.yutori.message.element
 
-abstract class MessageElementContainer(vararg pairs: Pair<String, Any>) {
-    val propertiesDefault = mutableMapOf(*pairs)
-    abstract operator fun invoke(attributes: Map<String, Any?> = mapOf()): NodeMessageElement
+abstract class MessageElementContainer {
+    abstract operator fun invoke(
+        properties: MutableMap<String, Any?>,
+        children: List<MessageElement>
+    ): MessageElement
 }
 
-abstract class MessageElement {
-    abstract override fun toString(): String
-}
-
-open class NodeMessageElement(
-    val nodeName: String,
-    vararg pairs: Pair<String, Any?>
-) : MessageElement() {
-    val properties = mutableMapOf(*pairs)
-    val children = mutableListOf<MessageElement>()
-
-    override fun toString() = buildString {
-        append(nodeName)
+open class MessageElement(
+    val elementName: String,
+    val properties: Map<String, Any?>,
+    val children: List<MessageElement>
+) {
+    override fun toString(): String = buildString {
+        append(elementName)
         if (properties.isNotEmpty()) {
             append(properties.entries
                 .filter { (_, value) -> value != null }
@@ -41,13 +37,8 @@ open class NodeMessageElement(
     }
 
     fun select(element: String): MessageElement? {
-        if (nodeName == element) return this
-        for (child in children) {
-            if (element == "text" && child is Text) return child
-            child as NodeMessageElement
-            if (child.nodeName == element) return child
-            return child.select(element) ?: continue
-        }
+        if (elementName == element) return this
+        for (child in children) return child.select(element) ?: continue
         return null
     }
 }

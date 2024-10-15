@@ -2,98 +2,158 @@
 
 package cn.yurn.yutori.message.element
 
-class Bold : NodeMessageElement("b") {
+class Bold(children: List<MessageElement>) : MessageElement(
+    elementName = "bold",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Bold()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Bold(children)
     }
 }
 
-class Strong : NodeMessageElement("strong") {
+class Strong(children: List<MessageElement>) : MessageElement(
+    elementName = "strong",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Strong()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Strong(children)
     }
 }
 
-class Idiomatic : NodeMessageElement("i") {
+class Idiomatic(children: List<MessageElement>) : MessageElement(
+    elementName = "idiomatic",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Idiomatic()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Idiomatic(children)
     }
 }
 
-class Em : NodeMessageElement("em") {
+class Em(children: List<MessageElement>) : MessageElement(
+    elementName = "em",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Em()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Em(children)
     }
 }
 
-class Underline : NodeMessageElement("u") {
+class Underline(children: List<MessageElement>) : MessageElement(
+    elementName = "underline",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Underline()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Underline(children)
     }
 }
 
-class Ins : NodeMessageElement("ins") {
+class Ins(children: List<MessageElement>) : MessageElement(
+    elementName = "ins",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Ins()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Ins(children)
     }
 }
 
-class Strikethrough : NodeMessageElement("s") {
+class Strikethrough(children: List<MessageElement>) : MessageElement(
+    elementName = "strikethrough",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Strikethrough()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Strikethrough(children)
     }
 }
 
-class Delete : NodeMessageElement("del") {
+class Delete(children: List<MessageElement>) : MessageElement(
+    elementName = "delete",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Delete()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Delete(children)
     }
 }
 
-class Spl : NodeMessageElement("spl") {
+class Spl(children: List<MessageElement>) : MessageElement(
+    elementName = "spl",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Spl()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Spl(children)
     }
 }
 
-class Code : NodeMessageElement("code") {
+class Code(children: List<MessageElement>) : MessageElement(
+    elementName = "code",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Code()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Code(children)
     }
 }
 
-class Sup : NodeMessageElement("sup") {
+class Sup(children: List<MessageElement>) : MessageElement(
+    elementName = "sup",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Sup()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Sup(children)
     }
 }
 
-class Sub : NodeMessageElement("sub") {
+class Sub(children: List<MessageElement>) : MessageElement(
+    elementName = "sub",
+    properties = emptyMap(),
+    children = children
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
-            attributes: Map<String, Any?>
-        ) = Sub()
+            properties: MutableMap<String, Any?>,
+            children: List<MessageElement>
+        ) = Sub(children)
     }
 }
