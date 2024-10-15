@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.android.library)
 }
 
-group = "cn.yurn.yutori"
+group = "cn.yurin.yutori"
 
 kotlin {
     jvmToolchain(17)
@@ -77,7 +77,7 @@ kotlin {
 }
 
 android {
-    namespace = "cn.yurn.yutori"
+    namespace = "cn.yurin.yutori"
     compileSdk = 34
 
     defaultConfig {
@@ -95,17 +95,17 @@ publishing {
             name = "Yutori"
             version = System.getenv("VERSION")
             description = "Kotlin Multiplatform library"
-            url = "https://github.com/Nyayurn/yutori"
+            url = "https://github.com/Nyayurin/yutori"
 
             developers {
                 developer {
-                    id = "Nyayurn"
-                    name = "Yurn"
+                    id = "Nyayurin"
+                    name = "Yurin"
                     email = "Nyayurn@outlook.com"
                 }
             }
             scm {
-                url = "https://github.com/Nyayurn/yutori"
+                url = "https://github.com/Nyayurin/yutori"
             }
         }
     }

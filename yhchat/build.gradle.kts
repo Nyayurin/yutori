@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.android.library)
 }
 
-group = "cn.yurn.yutorix"
+group = "cn.yurin.yutorix"
 
 
 kotlin {
@@ -77,7 +77,7 @@ kotlin {
 }
 
 android {
-    namespace = "cn.yurn.yutorix.module.yhchat"
+    namespace = "cn.yurin.yutorix.module.yhchat"
     compileSdk = 34
 
     defaultConfig {
@@ -95,17 +95,17 @@ publishing {
             name = "Yutorix-Module-YhChat"
             version = System.getenv("VERSION")
             description = "Kotlin Multiplatform library"
-            url = "https://github.com/Nyayurn/yutori"
+            url = "https://github.com/Nyayurin/yutori"
 
             developers {
                 developer {
-                    id = "Nyayurn"
-                    name = "Yurn"
+                    id = "Nyayurin"
+                    name = "Yurin"
                     email = "Nyayurn@outlook.com"
                 }
             }
             scm {
-                url = "https://github.com/Nyayurn/yutori"
+                url = "https://github.com/Nyayurin/yutori"
             }
         }
     }
