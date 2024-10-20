@@ -15,6 +15,3 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-include(":yhchat")
-
-project(":yhchat").name = "yutorix-module-yhchat"
