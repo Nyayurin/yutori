@@ -11,23 +11,24 @@ class Button(
     val text: String?,
     val theme: String?,
     extendProperties: Map<String, Any?>,
-    children: List<MessageElement>
+    children: List<MessageElement>,
 ) : MessageElement(
-    elementName = "button",
-    properties = mapOf(
-        "id" to id,
-        "type" to type,
-        "href" to href,
-        "text" to text,
-        "theme" to theme,
-        *extendProperties.toPairArray()
-    ),
-    children = children
-) {
+        elementName = "button",
+        properties =
+            mapOf(
+                "id" to id,
+                "type" to type,
+                "href" to href,
+                "text" to text,
+                "theme" to theme,
+                *extendProperties.toPairArray(),
+            ),
+        children = children,
+    ) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
-            children: List<MessageElement>
+            children: List<MessageElement>,
         ) = Button(
             id = properties.remove("id"),
             type = properties.remove("type"),
@@ -35,7 +36,7 @@ class Button(
             text = properties.remove("text"),
             theme = properties.remove("theme"),
             extendProperties = properties,
-            children = children
+            children = children,
         )
     }
 }

@@ -1,3 +1,5 @@
 package cn.yurin.yutori
 
-class ModuleReinstallException(module: String) : RuntimeException(module)
+class ModuleReinstallException(
+    module: String,
+) : RuntimeException(module)

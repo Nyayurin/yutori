@@ -9,7 +9,10 @@ import cn.yurin.yutori.message.element.Text
 annotation class BuilderMarker
 
 object MessageUtil {
-    fun select(element: String, vararg elements: MessageElement): MessageElement? {
+    fun select(
+        element: String,
+        vararg elements: MessageElement,
+    ): MessageElement? {
         for (e in elements) return e.select(element) ?: continue
         return null
     }
@@ -17,7 +20,6 @@ object MessageUtil {
 
 fun Event<*>.nick() = nullableMember?.nick ?: nullableUser?.nick ?: nullableUser?.name
 
-fun List<MessageElement>.textContent(): String =
-    filterIsInstance<Text>().joinToString("") { it.content }
+fun List<MessageElement>.textContent(): String = filterIsInstance<Text>().joinToString("") { it.content }
 
 fun <K, V> Map<K, V>.toPairArray(): Array<Pair<K, V>> = map { it.key to it.value }.toTypedArray()

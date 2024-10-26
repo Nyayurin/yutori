@@ -51,8 +51,11 @@ class AdapterListenersContainer {
         val role = Role()
 
         fun added(listener: suspend AdapterContext<GuildEvent>.() -> Unit) = added.add { listener() }
+
         fun updated(listener: suspend AdapterContext<GuildEvent>.() -> Unit) = updated.add { listener() }
+
         fun removed(listener: suspend AdapterContext<GuildEvent>.() -> Unit) = removed.add { listener() }
+
         fun request(listener: suspend AdapterContext<GuildEvent>.() -> Unit) = request.add { listener() }
 
         suspend operator fun invoke(context: AdapterContext<SigningEvent>) {
@@ -63,31 +66,42 @@ class AdapterListenersContainer {
             }
             context as AdapterContext<GuildEvent>
             when (context.event.type) {
-                GuildEvents.ADDED -> coroutineScope {
-                    added.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+                GuildEvents.ADDED -> {
+                    coroutineScope {
+                        added.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
-                GuildEvents.UPDATED -> coroutineScope {
-                    updated.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+
+                GuildEvents.UPDATED -> {
+                    coroutineScope {
+                        updated.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
-                GuildEvents.REMOVED -> coroutineScope {
-                    removed.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+
+                GuildEvents.REMOVED -> {
+                    coroutineScope {
+                        removed.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
-                GuildEvents.REQUEST -> coroutineScope {
-                    request.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+
+                GuildEvents.REQUEST -> {
+                    coroutineScope {
+                        request.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
@@ -102,39 +116,53 @@ class AdapterListenersContainer {
             val request = mutableListOf<AdapterListener<GuildMemberEvent>>()
 
             fun added(listener: suspend AdapterContext<GuildMemberEvent>.() -> Unit) = added.add { listener() }
+
             fun updated(listener: suspend AdapterContext<GuildMemberEvent>.() -> Unit) = updated.add { listener() }
+
             fun removed(listener: suspend AdapterContext<GuildMemberEvent>.() -> Unit) = removed.add { listener() }
+
             fun request(listener: suspend AdapterContext<GuildMemberEvent>.() -> Unit) = request.add { listener() }
 
             suspend operator fun invoke(context: AdapterContext<SigningEvent>) {
                 if (context.event.type !in GuildMemberEvents.Types) return
                 context as AdapterContext<GuildMemberEvent>
                 when (context.event.type) {
-                    GuildMemberEvents.ADDED -> coroutineScope {
-                        added.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context)
+                    GuildMemberEvents.ADDED -> {
+                        coroutineScope {
+                            added.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context)
+                                }
                             }
                         }
                     }
-                    GuildMemberEvents.UPDATED -> coroutineScope {
-                        updated.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context)
+
+                    GuildMemberEvents.UPDATED -> {
+                        coroutineScope {
+                            updated.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context)
+                                }
                             }
                         }
                     }
-                    GuildMemberEvents.REMOVED -> coroutineScope {
-                        removed.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context)
+
+                    GuildMemberEvents.REMOVED -> {
+                        coroutineScope {
+                            removed.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context)
+                                }
                             }
                         }
                     }
-                    GuildMemberEvents.REQUEST -> coroutineScope {
-                        request.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context)
+
+                    GuildMemberEvents.REQUEST -> {
+                        coroutineScope {
+                            request.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context)
+                                }
                             }
                         }
                     }
@@ -149,31 +177,41 @@ class AdapterListenersContainer {
             val deleted = mutableListOf<AdapterListener<GuildRoleEvent>>()
 
             fun created(listener: suspend AdapterContext<GuildRoleEvent>.() -> Unit) = created.add { listener() }
+
             fun updated(listener: suspend AdapterContext<GuildRoleEvent>.() -> Unit) = updated.add { listener() }
+
             fun deleted(listener: suspend AdapterContext<GuildRoleEvent>.() -> Unit) = deleted.add { listener() }
 
             suspend operator fun invoke(context: AdapterContext<SigningEvent>) {
                 if (context.event.type !in GuildRoleEvents.Types) return
                 context as AdapterContext<GuildRoleEvent>
                 when (context.event.type) {
-                    GuildRoleEvents.CREATED -> coroutineScope {
-                        created.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context)
+                    GuildRoleEvents.CREATED -> {
+                        coroutineScope {
+                            created.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context)
+                                }
                             }
                         }
                     }
-                    GuildRoleEvents.UPDATED -> coroutineScope {
-                        updated.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context)
+
+                    GuildRoleEvents.UPDATED -> {
+                        coroutineScope {
+                            updated.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context)
+                                }
                             }
                         }
                     }
-                    GuildRoleEvents.DELETED -> coroutineScope {
-                        deleted.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context)
+
+                    GuildRoleEvents.DELETED -> {
+                        coroutineScope {
+                            deleted.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context)
+                                }
                             }
                         }
                     }
@@ -188,22 +226,27 @@ class AdapterListenersContainer {
         val command = mutableListOf<AdapterListener<InteractionCommandEvent>>()
 
         fun button(listener: suspend AdapterContext<InteractionButtonEvent>.() -> Unit) = button.add { listener() }
+
         fun command(listener: suspend AdapterContext<InteractionCommandEvent>.() -> Unit) = command.add { listener() }
 
         suspend operator fun invoke(context: AdapterContext<SigningEvent>) {
             when (context.event.type) {
-                InteractionEvents.BUTTON -> coroutineScope {
-                    button.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as AdapterContext<InteractionButtonEvent>)
+                InteractionEvents.BUTTON -> {
+                    coroutineScope {
+                        button.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as AdapterContext<InteractionButtonEvent>)
+                            }
                         }
                     }
                 }
 
-                InteractionEvents.COMMAND -> coroutineScope {
-                    command.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as AdapterContext<InteractionCommandEvent>)
+                InteractionEvents.COMMAND -> {
+                    coroutineScope {
+                        command.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as AdapterContext<InteractionCommandEvent>)
+                            }
                         }
                     }
                 }
@@ -218,31 +261,41 @@ class AdapterListenersContainer {
         val updated = mutableListOf<AdapterListener<LoginEvent>>()
 
         fun added(listener: suspend AdapterContext<LoginEvent>.() -> Unit) = added.add { listener() }
+
         fun removed(listener: suspend AdapterContext<LoginEvent>.() -> Unit) = removed.add { listener() }
+
         fun updated(listener: suspend AdapterContext<LoginEvent>.() -> Unit) = updated.add { listener() }
 
         suspend operator fun invoke(context: AdapterContext<SigningEvent>) {
             if (context.event.type !in LoginEvents.Types) return
             context as AdapterContext<LoginEvent>
             when (context.event.type) {
-                LoginEvents.ADDED -> coroutineScope {
-                    added.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+                LoginEvents.ADDED -> {
+                    coroutineScope {
+                        added.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
-                LoginEvents.REMOVED -> coroutineScope {
-                    removed.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+
+                LoginEvents.REMOVED -> {
+                    coroutineScope {
+                        removed.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
-                LoginEvents.UPDATED -> coroutineScope {
-                    updated.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+
+                LoginEvents.UPDATED -> {
+                    coroutineScope {
+                        updated.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
@@ -257,31 +310,41 @@ class AdapterListenersContainer {
         val deleted = mutableListOf<AdapterListener<MessageEvent>>()
 
         fun created(listener: suspend AdapterContext<MessageEvent>.() -> Unit) = created.add { listener() }
+
         fun updated(listener: suspend AdapterContext<MessageEvent>.() -> Unit) = updated.add { listener() }
+
         fun deleted(listener: suspend AdapterContext<MessageEvent>.() -> Unit) = deleted.add { listener() }
 
         suspend operator fun invoke(context: AdapterContext<SigningEvent>) {
             if (context.event.type !in MessageEvents.Types) return
             context as AdapterContext<MessageEvent>
             when (context.event.type) {
-                MessageEvents.CREATED -> coroutineScope {
-                    created.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+                MessageEvents.CREATED -> {
+                    coroutineScope {
+                        created.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
-                MessageEvents.UPDATED -> coroutineScope {
-                    updated.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+
+                MessageEvents.UPDATED -> {
+                    coroutineScope {
+                        updated.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
-                MessageEvents.DELETED -> coroutineScope {
-                    deleted.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+
+                MessageEvents.DELETED -> {
+                    coroutineScope {
+                        deleted.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
@@ -295,23 +358,29 @@ class AdapterListenersContainer {
         val removed = mutableListOf<AdapterListener<ReactionEvent>>()
 
         fun added(listener: suspend AdapterContext<ReactionEvent>.() -> Unit) = added.add { listener() }
+
         fun removed(listener: suspend AdapterContext<ReactionEvent>.() -> Unit) = removed.add { listener() }
 
         suspend operator fun invoke(context: AdapterContext<SigningEvent>) {
             if (context.event.type !in ReactionEvents.Types) return
             context as AdapterContext<ReactionEvent>
             when (context.event.type) {
-                ReactionEvents.ADDED -> coroutineScope {
-                    added.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+                ReactionEvents.ADDED -> {
+                    coroutineScope {
+                        added.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
-                ReactionEvents.REMOVED -> coroutineScope {
-                    removed.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context)
+
+                ReactionEvents.REMOVED -> {
+                    coroutineScope {
+                        removed.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context)
+                            }
                         }
                     }
                 }
@@ -327,10 +396,12 @@ class AdapterListenersContainer {
 
         suspend operator fun invoke(context: AdapterContext<SigningEvent>) {
             when (context.event.type) {
-                UserEvents.FRIEND_REQUEST -> coroutineScope {
-                    request.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as AdapterContext<UserEvent>)
+                UserEvents.FRIEND_REQUEST -> {
+                    coroutineScope {
+                        request.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as AdapterContext<UserEvent>)
+                            }
                         }
                     }
                 }

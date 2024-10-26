@@ -32,28 +32,40 @@ import cn.yurin.yutori.message.element.Text
 import cn.yurin.yutori.message.element.Underline
 import cn.yurin.yutori.message.element.Video
 
-inline fun message(yutori: Yutori, block: MessageBuilder.() -> Unit) =
-    MessageBuilder(yutori).apply(block).elements
+inline fun message(
+    yutori: Yutori,
+    block: MessageBuilder.() -> Unit,
+) = MessageBuilder(yutori).apply(block).elements
 
 interface ChildedMessageBuilder {
     val elements: MutableList<MessageElement>
+
     operator fun get(index: Int) = elements[index]
-    operator fun set(index: Int, element: MessageElement) {
+
+    operator fun set(
+        index: Int,
+        element: MessageElement,
+    ) {
         elements[index] = element
     }
 }
 
-abstract class ExtendedMessageBuilder(builder: MessageBuilder) {
+abstract class ExtendedMessageBuilder(
+    builder: MessageBuilder,
+) {
     val yutori: Yutori = builder.yutori
     val elements: MutableList<MessageElement> = builder.elements
 }
 
 @BuilderMarker
-open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
+open class MessageBuilder(
+    val yutori: Yutori,
+) : ChildedMessageBuilder {
     override val elements = mutableListOf<MessageElement>()
-    val builders = mutableMapOf<String, ExtendedMessageBuilder>().apply {
-        for ((key, value) in yutori.messageBuilders) this[key] = value(this@MessageBuilder)
-    }
+    val builders =
+        yutori.messageBuilders.mapValues { (_, value) ->
+            value(this@MessageBuilder)
+        }
 
     fun element(element: MessageElement) = elements.add(element)
 
@@ -62,11 +74,11 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
     inline fun node(
         name: String,
         properties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = MessageElement(
         elementName = name,
         properties = properties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
     inline fun at(
@@ -75,36 +87,36 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         role: String? = null,
         type: String? = null,
         extendProperties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = At(
         id = id,
         name = name,
         role = role,
         type = type,
         extendProperties = extendProperties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
     inline fun sharp(
         id: String,
         name: String? = null,
         extendProperties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = Sharp(
         id = id,
         name = name,
         extendProperties = extendProperties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
     inline fun href(
         href: String,
         extendProperties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = Href(
         href = href,
         extendProperties = extendProperties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
     inline fun image(
@@ -115,7 +127,7 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         width: Number? = null,
         height: Number? = null,
         extendProperties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = Image(
         src = src,
         title = title,
@@ -124,7 +136,7 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         width = width,
         height = height,
         extendProperties = extendProperties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
     inline fun audio(
@@ -135,7 +147,7 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         duration: Number? = null,
         poster: String? = null,
         extendProperties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = Audio(
         src = src,
         title = title,
@@ -144,7 +156,7 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         duration = duration,
         poster = poster,
         extendProperties = extendProperties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
     inline fun video(
@@ -157,7 +169,7 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         duration: Number? = null,
         poster: String? = null,
         extendProperties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = Video(
         src = src,
         title = title,
@@ -168,7 +180,7 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         duration = duration,
         poster = poster,
         extendProperties = extendProperties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
     inline fun file(
@@ -178,7 +190,7 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         timeout: String? = null,
         poster: String? = null,
         extendProperties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = File(
         src = src,
         title = title,
@@ -186,85 +198,98 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         timeout = timeout,
         poster = poster,
         extendProperties = extendProperties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
-    inline fun bold(children: MessageBuilder.() -> Unit = { }) = Bold(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun bold(children: MessageBuilder.() -> Unit = { }) =
+        Bold(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
-    inline fun strong(children: MessageBuilder.() -> Unit = { }) = Strong(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun strong(children: MessageBuilder.() -> Unit = { }) =
+        Strong(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
-    inline fun idiomatic(children: MessageBuilder.() -> Unit = { }) = Idiomatic(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun idiomatic(children: MessageBuilder.() -> Unit = { }) =
+        Idiomatic(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
-    inline fun em(children: MessageBuilder.() -> Unit = { }) = Em(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun em(children: MessageBuilder.() -> Unit = { }) =
+        Em(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
-    inline fun underline(children: MessageBuilder.() -> Unit = { }) = Underline(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun underline(children: MessageBuilder.() -> Unit = { }) =
+        Underline(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
-    inline fun ins(children: MessageBuilder.() -> Unit = { }) = Ins(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun ins(children: MessageBuilder.() -> Unit = { }) =
+        Ins(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
-    inline fun strikethrough(children: MessageBuilder.() -> Unit = { }) = Strikethrough(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun strikethrough(children: MessageBuilder.() -> Unit = { }) =
+        Strikethrough(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
-    inline fun delete(children: MessageBuilder.() -> Unit = { }) = Delete(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun delete(children: MessageBuilder.() -> Unit = { }) =
+        Delete(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
-    inline fun spl(children: MessageBuilder.() -> Unit = { }) = Spl(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun spl(children: MessageBuilder.() -> Unit = { }) =
+        Spl(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
-    inline fun code(children: MessageBuilder.() -> Unit = { }) = Code(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun code(children: MessageBuilder.() -> Unit = { }) =
+        Code(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
-    inline fun sup(children: MessageBuilder.() -> Unit = { }) = Sup(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun sup(children: MessageBuilder.() -> Unit = { }) =
+        Sup(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
-    inline fun sub(children: MessageBuilder.() -> Unit = { }) = Sub(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun sub(children: MessageBuilder.() -> Unit = { }) =
+        Sub(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
     inline fun br() = Br.apply { elements += this }
 
-    inline fun paragraph(children: MessageBuilder.() -> Unit = { }) = Paragraph(
-        children = MessageBuilder(yutori).apply(children).elements
-    ).apply { elements += this }
+    inline fun paragraph(children: MessageBuilder.() -> Unit = { }) =
+        Paragraph(
+            children = MessageBuilder(yutori).apply(children).elements,
+        ).apply { elements += this }
 
     inline fun message(
         id: String? = null,
         forward: Boolean? = null,
         extendProperties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = Message(
         id = id,
         forward = forward,
         extendProperties = extendProperties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
     inline fun quote(
         id: String? = null,
         forward: Boolean? = null,
         extendProperties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = Quote(
         id = id,
         forward = forward,
         extendProperties = extendProperties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
     inline fun author(
@@ -272,13 +297,13 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         name: String? = null,
         avatar: String? = null,
         extendProperties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = Author(
         id = id,
         name = name,
         avatar = avatar,
         extendProperties = extendProperties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
     inline fun button(
@@ -288,7 +313,7 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         text: String? = null,
         theme: String? = null,
         extendProperties: Map<String, Any?> = emptyMap(),
-        children: MessageBuilder.() -> Unit = { }
+        children: MessageBuilder.() -> Unit = { },
     ) = Button(
         id = id,
         type = type,
@@ -296,6 +321,6 @@ open class MessageBuilder(val yutori: Yutori) : ChildedMessageBuilder {
         text = text,
         theme = theme,
         extendProperties = extendProperties,
-        children = MessageBuilder(yutori).apply(children).elements
+        children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 }

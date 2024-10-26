@@ -5,7 +5,6 @@ package cn.yurin.yutori
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
-
 typealias ServerListener<T> = suspend ServerContext<T>.() -> Unit
 
 abstract class ExtendedServerListenersContainer {
@@ -53,73 +52,73 @@ class ServerListenersContainer {
         val delete = mutableListOf<ServerListener<ChannelDeleteRequest>>()
         val mute = mutableListOf<ServerListener<ChannelMuteRequest>>()
 
-        fun get(listener: suspend ServerContext<ChannelGetRequest>.() -> Unit) =
-            get.add { listener() }
+        fun get(listener: suspend ServerContext<ChannelGetRequest>.() -> Unit) = get.add { listener() }
 
-        fun list(listener: suspend ServerContext<ChannelListRequest>.() -> Unit) =
-            list.add { listener() }
+        fun list(listener: suspend ServerContext<ChannelListRequest>.() -> Unit) = list.add { listener() }
 
-        fun create(listener: suspend ServerContext<ChannelCreateRequest>.() -> Unit) =
-            create.add { listener() }
+        fun create(listener: suspend ServerContext<ChannelCreateRequest>.() -> Unit) = create.add { listener() }
 
-        fun update(listener: suspend ServerContext<ChannelUpdateRequest>.() -> Unit) =
-            update.add { listener() }
+        fun update(listener: suspend ServerContext<ChannelUpdateRequest>.() -> Unit) = update.add { listener() }
 
-        fun delete(listener: suspend ServerContext<ChannelDeleteRequest>.() -> Unit) =
-            delete.add { listener() }
+        fun delete(listener: suspend ServerContext<ChannelDeleteRequest>.() -> Unit) = delete.add { listener() }
 
-        fun mute(listener: suspend ServerContext<ChannelMuteRequest>.() -> Unit) =
-            mute.add { listener() }
+        fun mute(listener: suspend ServerContext<ChannelMuteRequest>.() -> Unit) = mute.add { listener() }
 
         suspend operator fun invoke(context: ServerContext<SigningRequest>) {
             when (context.request.api) {
-                ChannelRequests.GET -> coroutineScope {
-                    get.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<ChannelGetRequest>)
+                ChannelRequests.GET ->
+                    coroutineScope {
+                        get.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<ChannelGetRequest>)
+                            }
                         }
                     }
-                }
 
-                ChannelRequests.LIST -> coroutineScope {
-                    list.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<ChannelListRequest>)
+                ChannelRequests.LIST ->
+                    coroutineScope {
+                        list.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<ChannelListRequest>)
+                            }
                         }
                     }
-                }
 
-                ChannelRequests.CREATE -> coroutineScope {
-                    create.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<ChannelCreateRequest>)
+                ChannelRequests.CREATE ->
+                    coroutineScope {
+                        create.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<ChannelCreateRequest>)
+                            }
                         }
                     }
-                }
 
-                ChannelRequests.UPDATE -> coroutineScope {
-                    update.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<ChannelUpdateRequest>)
+                ChannelRequests.UPDATE ->
+                    coroutineScope {
+                        update.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<ChannelUpdateRequest>)
+                            }
                         }
                     }
-                }
 
-                ChannelRequests.DELETE -> coroutineScope {
-                    delete.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<ChannelDeleteRequest>)
+                ChannelRequests.DELETE ->
+                    coroutineScope {
+                        delete.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<ChannelDeleteRequest>)
+                            }
                         }
                     }
-                }
 
-                ChannelRequests.MUTE -> coroutineScope {
-                    mute.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<ChannelMuteRequest>)
+                ChannelRequests.MUTE ->
+                    coroutineScope {
+                        mute.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<ChannelMuteRequest>)
+                            }
                         }
                     }
-                }
             }
         }
     }
@@ -132,14 +131,11 @@ class ServerListenersContainer {
         val member = Member()
         val role = Role()
 
-        fun get(listener: suspend ServerContext<GuildGetRequest>.() -> Unit) =
-            get.add { listener() }
+        fun get(listener: suspend ServerContext<GuildGetRequest>.() -> Unit) = get.add { listener() }
 
-        fun list(listener: suspend ServerContext<GuildListRequest>.() -> Unit) =
-            list.add { listener() }
+        fun list(listener: suspend ServerContext<GuildListRequest>.() -> Unit) = list.add { listener() }
 
-        fun approve(listener: suspend ServerContext<GuildApproveRequest>.() -> Unit) =
-            approve.add { listener() }
+        fun approve(listener: suspend ServerContext<GuildApproveRequest>.() -> Unit) = approve.add { listener() }
 
         suspend operator fun invoke(context: ServerContext<SigningRequest>) {
             if (context.request.api !in GuildRequests.Types) {
@@ -148,29 +144,32 @@ class ServerListenersContainer {
                 return
             }
             when (context.request.api) {
-                GuildRequests.GET -> coroutineScope {
-                    get.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<GuildGetRequest>)
+                GuildRequests.GET ->
+                    coroutineScope {
+                        get.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<GuildGetRequest>)
+                            }
                         }
                     }
-                }
 
-                GuildRequests.LIST -> coroutineScope {
-                    list.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<GuildListRequest>)
+                GuildRequests.LIST ->
+                    coroutineScope {
+                        list.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<GuildListRequest>)
+                            }
                         }
                     }
-                }
 
-                GuildRequests.APPROVE -> coroutineScope {
-                    approve.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<GuildApproveRequest>)
+                GuildRequests.APPROVE ->
+                    coroutineScope {
+                        approve.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<GuildApproveRequest>)
+                            }
                         }
                     }
-                }
             }
         }
 
@@ -183,20 +182,15 @@ class ServerListenersContainer {
             val approve = mutableListOf<ServerListener<GuildMemberApproveRequest>>()
             val role = Role()
 
-            fun get(listener: suspend ServerContext<GuildMemberGetRequest>.() -> Unit) =
-                get.add { listener() }
+            fun get(listener: suspend ServerContext<GuildMemberGetRequest>.() -> Unit) = get.add { listener() }
 
-            fun list(listener: suspend ServerContext<GuildMemberListRequest>.() -> Unit) =
-                list.add { listener() }
+            fun list(listener: suspend ServerContext<GuildMemberListRequest>.() -> Unit) = list.add { listener() }
 
-            fun kick(listener: suspend ServerContext<GuildMemberKickRequest>.() -> Unit) =
-                kick.add { listener() }
+            fun kick(listener: suspend ServerContext<GuildMemberKickRequest>.() -> Unit) = kick.add { listener() }
 
-            fun mute(listener: suspend ServerContext<GuildMemberMuteRequest>.() -> Unit) =
-                mute.add { listener() }
+            fun mute(listener: suspend ServerContext<GuildMemberMuteRequest>.() -> Unit) = mute.add { listener() }
 
-            fun approve(listener: suspend ServerContext<GuildMemberApproveRequest>.() -> Unit) =
-                approve.add { listener() }
+            fun approve(listener: suspend ServerContext<GuildMemberApproveRequest>.() -> Unit) = approve.add { listener() }
 
             suspend operator fun invoke(context: ServerContext<SigningRequest>) {
                 if (context.request.api !in GuildMemberRequests.Types) {
@@ -204,45 +198,50 @@ class ServerListenersContainer {
                     return
                 }
                 when (context.request.api) {
-                    GuildMemberRequests.GET -> coroutineScope {
-                        get.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context as ServerContext<GuildMemberGetRequest>)
+                    GuildMemberRequests.GET ->
+                        coroutineScope {
+                            get.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context as ServerContext<GuildMemberGetRequest>)
+                                }
                             }
                         }
-                    }
 
-                    GuildMemberRequests.LIST -> coroutineScope {
-                        list.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context as ServerContext<GuildMemberListRequest>)
+                    GuildMemberRequests.LIST ->
+                        coroutineScope {
+                            list.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context as ServerContext<GuildMemberListRequest>)
+                                }
                             }
                         }
-                    }
 
-                    GuildMemberRequests.KICK -> coroutineScope {
-                        kick.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context as ServerContext<GuildMemberKickRequest>)
+                    GuildMemberRequests.KICK ->
+                        coroutineScope {
+                            kick.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context as ServerContext<GuildMemberKickRequest>)
+                                }
                             }
                         }
-                    }
 
-                    GuildMemberRequests.MUTE -> coroutineScope {
-                        mute.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context as ServerContext<GuildMemberMuteRequest>)
+                    GuildMemberRequests.MUTE ->
+                        coroutineScope {
+                            mute.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context as ServerContext<GuildMemberMuteRequest>)
+                                }
                             }
                         }
-                    }
 
-                    GuildMemberRequests.APPROVE -> coroutineScope {
-                        approve.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context as ServerContext<GuildMemberApproveRequest>)
+                    GuildMemberRequests.APPROVE ->
+                        coroutineScope {
+                            approve.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context as ServerContext<GuildMemberApproveRequest>)
+                                }
                             }
                         }
-                    }
                 }
             }
 
@@ -251,29 +250,29 @@ class ServerListenersContainer {
                 val set = mutableListOf<ServerListener<GuildMemberRoleSetRequest>>()
                 val unset = mutableListOf<ServerListener<GuildMemberRoleUnsetRequest>>()
 
-                fun set(listener: suspend ServerContext<GuildMemberRoleSetRequest>.() -> Unit) =
-                    set.add { listener() }
+                fun set(listener: suspend ServerContext<GuildMemberRoleSetRequest>.() -> Unit) = set.add { listener() }
 
-                fun unset(listener: suspend ServerContext<GuildMemberRoleUnsetRequest>.() -> Unit) =
-                    unset.add { listener() }
+                fun unset(listener: suspend ServerContext<GuildMemberRoleUnsetRequest>.() -> Unit) = unset.add { listener() }
 
                 suspend operator fun invoke(context: ServerContext<SigningRequest>) {
                     when (context.request.api) {
-                        GuildMemberRoleRequests.SET -> coroutineScope {
-                            set.forEach {
-                                launch(context.yutori.adapter.exceptionHandler) {
-                                    it(context as ServerContext<GuildMemberRoleSetRequest>)
+                        GuildMemberRoleRequests.SET ->
+                            coroutineScope {
+                                set.forEach {
+                                    launch(context.yutori.adapter.exceptionHandler) {
+                                        it(context as ServerContext<GuildMemberRoleSetRequest>)
+                                    }
                                 }
                             }
-                        }
 
-                        GuildMemberRoleRequests.UNSET -> coroutineScope {
-                            unset.forEach {
-                                launch(context.yutori.adapter.exceptionHandler) {
-                                    it(context as ServerContext<GuildMemberRoleUnsetRequest>)
+                        GuildMemberRoleRequests.UNSET ->
+                            coroutineScope {
+                                unset.forEach {
+                                    launch(context.yutori.adapter.exceptionHandler) {
+                                        it(context as ServerContext<GuildMemberRoleUnsetRequest>)
+                                    }
                                 }
                             }
-                        }
                     }
                 }
             }
@@ -286,51 +285,51 @@ class ServerListenersContainer {
             val update = mutableListOf<ServerListener<GuildRoleUpdateRequest>>()
             val delete = mutableListOf<ServerListener<GuildRoleDeleteRequest>>()
 
-            fun list(listener: suspend ServerContext<GuildRoleListRequest>.() -> Unit) =
-                list.add { listener() }
+            fun list(listener: suspend ServerContext<GuildRoleListRequest>.() -> Unit) = list.add { listener() }
 
-            fun create(listener: suspend ServerContext<GuildRoleCreateRequest>.() -> Unit) =
-                create.add { listener() }
+            fun create(listener: suspend ServerContext<GuildRoleCreateRequest>.() -> Unit) = create.add { listener() }
 
-            fun update(listener: suspend ServerContext<GuildRoleUpdateRequest>.() -> Unit) =
-                update.add { listener() }
+            fun update(listener: suspend ServerContext<GuildRoleUpdateRequest>.() -> Unit) = update.add { listener() }
 
-            fun delete(listener: suspend ServerContext<GuildRoleDeleteRequest>.() -> Unit) =
-                delete.add { listener() }
+            fun delete(listener: suspend ServerContext<GuildRoleDeleteRequest>.() -> Unit) = delete.add { listener() }
 
             suspend operator fun invoke(context: ServerContext<SigningRequest>) {
                 when (context.request.api) {
-                    GuildRoleRequests.LIST -> coroutineScope {
-                        list.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context as ServerContext<GuildRoleListRequest>)
+                    GuildRoleRequests.LIST ->
+                        coroutineScope {
+                            list.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context as ServerContext<GuildRoleListRequest>)
+                                }
                             }
                         }
-                    }
 
-                    GuildRoleRequests.CREATE -> coroutineScope {
-                        create.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context as ServerContext<GuildRoleCreateRequest>)
+                    GuildRoleRequests.CREATE ->
+                        coroutineScope {
+                            create.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context as ServerContext<GuildRoleCreateRequest>)
+                                }
                             }
                         }
-                    }
 
-                    GuildRoleRequests.UPDATE -> coroutineScope {
-                        update.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context as ServerContext<GuildRoleUpdateRequest>)
+                    GuildRoleRequests.UPDATE ->
+                        coroutineScope {
+                            update.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context as ServerContext<GuildRoleUpdateRequest>)
+                                }
                             }
                         }
-                    }
 
-                    GuildRoleRequests.DELETE -> coroutineScope {
-                        delete.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context as ServerContext<GuildRoleDeleteRequest>)
+                    GuildRoleRequests.DELETE ->
+                        coroutineScope {
+                            delete.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context as ServerContext<GuildRoleDeleteRequest>)
+                                }
                             }
                         }
-                    }
                 }
             }
         }
@@ -340,18 +339,18 @@ class ServerListenersContainer {
     class Login {
         val get = mutableListOf<ServerListener<LoginGetRequest>>()
 
-        fun get(listener: suspend ServerContext<LoginGetRequest>.() -> Unit) =
-            get.add { listener() }
+        fun get(listener: suspend ServerContext<LoginGetRequest>.() -> Unit) = get.add { listener() }
 
         suspend operator fun invoke(context: ServerContext<SigningRequest>) {
             when (context.request.api) {
-                LoginRequests.GET -> coroutineScope {
-                    get.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<LoginGetRequest>)
+                LoginRequests.GET ->
+                    coroutineScope {
+                        get.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<LoginGetRequest>)
+                            }
                         }
                     }
-                }
             }
         }
     }
@@ -364,62 +363,62 @@ class ServerListenersContainer {
         val update = mutableListOf<ServerListener<MessageUpdateRequest>>()
         val list = mutableListOf<ServerListener<MessageListRequest>>()
 
-        fun create(listener: suspend ServerContext<MessageCreateRequest>.() -> Unit) =
-            create.add { listener() }
+        fun create(listener: suspend ServerContext<MessageCreateRequest>.() -> Unit) = create.add { listener() }
 
-        fun get(listener: suspend ServerContext<MessageGetRequest>.() -> Unit) =
-            get.add { listener() }
+        fun get(listener: suspend ServerContext<MessageGetRequest>.() -> Unit) = get.add { listener() }
 
-        fun delete(listener: suspend ServerContext<MessageDeleteRequest>.() -> Unit) =
-            delete.add { listener() }
+        fun delete(listener: suspend ServerContext<MessageDeleteRequest>.() -> Unit) = delete.add { listener() }
 
-        fun update(listener: suspend ServerContext<MessageUpdateRequest>.() -> Unit) =
-            update.add { listener() }
+        fun update(listener: suspend ServerContext<MessageUpdateRequest>.() -> Unit) = update.add { listener() }
 
-        fun list(listener: suspend ServerContext<MessageListRequest>.() -> Unit) =
-            list.add { listener() }
+        fun list(listener: suspend ServerContext<MessageListRequest>.() -> Unit) = list.add { listener() }
 
         suspend operator fun invoke(context: ServerContext<SigningRequest>) {
             when (context.request.api) {
-                MessageRequests.CREATE -> coroutineScope {
-                    create.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<MessageCreateRequest>)
+                MessageRequests.CREATE ->
+                    coroutineScope {
+                        create.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<MessageCreateRequest>)
+                            }
                         }
                     }
-                }
 
-                MessageRequests.GET -> coroutineScope {
-                    get.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<MessageGetRequest>)
+                MessageRequests.GET ->
+                    coroutineScope {
+                        get.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<MessageGetRequest>)
+                            }
                         }
                     }
-                }
 
-                MessageRequests.DELETE -> coroutineScope {
-                    delete.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<MessageDeleteRequest>)
+                MessageRequests.DELETE ->
+                    coroutineScope {
+                        delete.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<MessageDeleteRequest>)
+                            }
                         }
                     }
-                }
 
-                MessageRequests.UPDATE -> coroutineScope {
-                    update.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<MessageUpdateRequest>)
+                MessageRequests.UPDATE ->
+                    coroutineScope {
+                        update.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<MessageUpdateRequest>)
+                            }
                         }
                     }
-                }
 
-                MessageRequests.LIST -> coroutineScope {
-                    list.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<MessageListRequest>)
+                MessageRequests.LIST ->
+                    coroutineScope {
+                        list.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<MessageListRequest>)
+                            }
                         }
                     }
-                }
             }
         }
     }
@@ -431,51 +430,51 @@ class ServerListenersContainer {
         val clear = mutableListOf<ServerListener<ReactionClearRequest>>()
         val list = mutableListOf<ServerListener<ReactionListRequest>>()
 
-        fun create(listener: suspend ServerContext<ReactionCreateRequest>.() -> Unit) =
-            create.add { listener() }
+        fun create(listener: suspend ServerContext<ReactionCreateRequest>.() -> Unit) = create.add { listener() }
 
-        fun delete(listener: suspend ServerContext<ReactionDeleteRequest>.() -> Unit) =
-            delete.add { listener() }
+        fun delete(listener: suspend ServerContext<ReactionDeleteRequest>.() -> Unit) = delete.add { listener() }
 
-        fun clear(listener: suspend ServerContext<ReactionClearRequest>.() -> Unit) =
-            clear.add { listener() }
+        fun clear(listener: suspend ServerContext<ReactionClearRequest>.() -> Unit) = clear.add { listener() }
 
-        fun list(listener: suspend ServerContext<ReactionListRequest>.() -> Unit) =
-            list.add { listener() }
+        fun list(listener: suspend ServerContext<ReactionListRequest>.() -> Unit) = list.add { listener() }
 
         suspend operator fun invoke(context: ServerContext<SigningRequest>) {
             when (context.request.api) {
-                ReactionRequests.CREATE -> coroutineScope {
-                    create.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<ReactionCreateRequest>)
+                ReactionRequests.CREATE ->
+                    coroutineScope {
+                        create.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<ReactionCreateRequest>)
+                            }
                         }
                     }
-                }
 
-                ReactionRequests.DELETE -> coroutineScope {
-                    delete.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<ReactionDeleteRequest>)
+                ReactionRequests.DELETE ->
+                    coroutineScope {
+                        delete.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<ReactionDeleteRequest>)
+                            }
                         }
                     }
-                }
 
-                ReactionRequests.CLEAR -> coroutineScope {
-                    clear.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<ReactionClearRequest>)
+                ReactionRequests.CLEAR ->
+                    coroutineScope {
+                        clear.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<ReactionClearRequest>)
+                            }
                         }
                     }
-                }
 
-                ReactionRequests.LIST -> coroutineScope {
-                    list.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<ReactionListRequest>)
+                ReactionRequests.LIST ->
+                    coroutineScope {
+                        list.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<ReactionListRequest>)
+                            }
                         }
                     }
-                }
             }
         }
     }
@@ -485,8 +484,7 @@ class ServerListenersContainer {
         val get = mutableListOf<ServerListener<UserGetRequest>>()
         val channel = Channel()
 
-        fun get(listener: suspend ServerContext<UserGetRequest>.() -> Unit) =
-            get.add { listener() }
+        fun get(listener: suspend ServerContext<UserGetRequest>.() -> Unit) = get.add { listener() }
 
         suspend operator fun invoke(context: ServerContext<SigningRequest>) {
             if (context.request.api !in UserRequests.Types) {
@@ -494,13 +492,14 @@ class ServerListenersContainer {
                 return
             }
             when (context.request.api) {
-                UserRequests.GET -> coroutineScope {
-                    get.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<UserGetRequest>)
+                UserRequests.GET ->
+                    coroutineScope {
+                        get.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<UserGetRequest>)
+                            }
                         }
                     }
-                }
             }
         }
 
@@ -508,18 +507,18 @@ class ServerListenersContainer {
         class Channel {
             val create = mutableListOf<ServerListener<UserChannelCreateRequest>>()
 
-            fun create(listener: suspend ServerContext<UserChannelCreateRequest>.() -> Unit) =
-                create.add { listener() }
+            fun create(listener: suspend ServerContext<UserChannelCreateRequest>.() -> Unit) = create.add { listener() }
 
             suspend operator fun invoke(context: ServerContext<SigningRequest>) {
                 when (context.request.api) {
-                    UserChannelRequests.CREATE -> coroutineScope {
-                        create.forEach {
-                            launch(context.yutori.adapter.exceptionHandler) {
-                                it(context as ServerContext<UserChannelCreateRequest>)
+                    UserChannelRequests.CREATE ->
+                        coroutineScope {
+                            create.forEach {
+                                launch(context.yutori.adapter.exceptionHandler) {
+                                    it(context as ServerContext<UserChannelCreateRequest>)
+                                }
                             }
                         }
-                    }
                 }
             }
         }
@@ -530,29 +529,29 @@ class ServerListenersContainer {
         val list = mutableListOf<ServerListener<FriendListRequest>>()
         val approve = mutableListOf<ServerListener<FriendApproveRequest>>()
 
-        fun list(listener: suspend ServerContext<FriendListRequest>.() -> Unit) =
-            list.add { listener() }
+        fun list(listener: suspend ServerContext<FriendListRequest>.() -> Unit) = list.add { listener() }
 
-        fun approve(listener: suspend ServerContext<FriendApproveRequest>.() -> Unit) =
-            approve.add { listener() }
+        fun approve(listener: suspend ServerContext<FriendApproveRequest>.() -> Unit) = approve.add { listener() }
 
         suspend operator fun invoke(context: ServerContext<SigningRequest>) {
             when (context.request.api) {
-                FriendRequests.LIST -> coroutineScope {
-                    list.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<FriendListRequest>)
+                FriendRequests.LIST ->
+                    coroutineScope {
+                        list.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<FriendListRequest>)
+                            }
                         }
                     }
-                }
 
-                FriendRequests.APPROVE -> coroutineScope {
-                    approve.forEach {
-                        launch(context.yutori.adapter.exceptionHandler) {
-                            it(context as ServerContext<FriendApproveRequest>)
+                FriendRequests.APPROVE ->
+                    coroutineScope {
+                        approve.forEach {
+                            launch(context.yutori.adapter.exceptionHandler) {
+                                it(context as ServerContext<FriendApproveRequest>)
+                            }
                         }
                     }
-                }
             }
         }
     }

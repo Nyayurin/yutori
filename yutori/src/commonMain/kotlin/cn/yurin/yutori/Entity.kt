@@ -8,7 +8,7 @@ data class Channel(
     val id: String,
     val type: Number,
     val name: String? = null,
-    val parentId: String? = null
+    val parentId: String? = null,
 ) {
     object Type {
         const val TEXT = 0
@@ -21,29 +21,31 @@ data class Channel(
 data class Guild(
     val id: String,
     val name: String? = null,
-    val avatar: String? = null
+    val avatar: String? = null,
 )
 
 data class GuildMember(
     val user: User? = null,
     val nick: String? = null,
     val avatar: String? = null,
-    val joinedAt: Number? = null
+    val joinedAt: Number? = null,
 )
 
 data class GuildRole(
     val id: String,
-    val name: String? = null
+    val name: String? = null,
 )
 
 sealed class Interaction {
     data class Argv(
         val name: String,
         val arguments: List<Any>,
-        val options: Any
+        val options: Any,
     ) : Interaction()
 
-    data class Button(val id: String) : Interaction()
+    data class Button(
+        val id: String,
+    ) : Interaction()
 }
 
 data class Login(
@@ -71,7 +73,7 @@ data class Message(
     val member: GuildMember? = null,
     val user: User? = null,
     val createdAt: Number? = null,
-    val updatedAt: Number? = null
+    val updatedAt: Number? = null,
 )
 
 data class User(
@@ -79,24 +81,36 @@ data class User(
     val name: String? = null,
     val nick: String? = null,
     val avatar: String? = null,
-    val isBot: Boolean? = null
+    val isBot: Boolean? = null,
 )
 
-data class PagingList<T>(val data: List<T>, val next: String? = null)
+data class PagingList<T>(
+    val data: List<T>,
+    val next: String? = null,
+)
 
 data class BidiPagingList<T>(
     val data: List<T>,
     val prev: String? = null,
-    val next: String? = null
+    val next: String? = null,
 ) {
-    enum class Direction(val value: String) {
-        Before("before"), After("after"), Around("around");
+    enum class Direction(
+        val value: String,
+    ) {
+        Before("before"),
+        After("after"),
+        Around("around"),
+        ;
 
         override fun toString() = value
     }
 
-    enum class Order(val value: String) {
-        Asc("asc"), Desc("desc");
+    enum class Order(
+        val value: String,
+    ) {
+        Asc("asc"),
+        Desc("desc"),
+        ;
 
         override fun toString() = value
     }
@@ -106,22 +120,25 @@ class FormData(
     val name: String,
     val filename: String? = null,
     val type: String,
-    val content: ByteArray
+    val content: ByteArray,
 )
 
 data class AdapterContext<T : SigningEvent>(
-    val actions: RootActions,
+    val actions: ActionRoot,
     val event: Event<T>,
-    val yutori: Yutori
+    val yutori: Yutori,
 )
 
 data class ServerContext<T : SigningRequest>(
     val request: Request<T>,
     val response: Response,
-    val yutori: Yutori
+    val yutori: Yutori,
 )
 
-class Event<T : SigningEvent>(val alias: String?, val properties: Map<String, Any?>) {
+class Event<T : SigningEvent>(
+    val alias: String?,
+    val properties: Map<String, Any?>,
+) {
     val id: Number by properties
     val type: String by properties
     val platform: String by properties
@@ -168,24 +185,25 @@ class Event<T : SigningEvent>(val alias: String?, val properties: Map<String, An
         vararg pair: Pair<String, Any?> = arrayOf(),
     ) : this(
         alias = alias,
-        properties = mapOf(
-            "id" to id,
-            "type" to type,
-            "platform" to platform,
-            "selfId" to selfId,
-            "timestamp" to timestamp,
-            "argv" to argv,
-            "button" to button,
-            "channel" to channel,
-            "guild" to guild,
-            "login" to login,
-            "member" to member,
-            "message" to message,
-            "operator" to operator,
-            "role" to role,
-            "user" to user,
-            *pair
-        )
+        properties =
+            mapOf(
+                "id" to id,
+                "type" to type,
+                "platform" to platform,
+                "selfId" to selfId,
+                "timestamp" to timestamp,
+                "argv" to argv,
+                "button" to button,
+                "channel" to channel,
+                "guild" to guild,
+                "login" to login,
+                "member" to member,
+                "message" to message,
+                "operator" to operator,
+                "role" to role,
+                "user" to user,
+                *pair,
+            ),
     )
 }
 
@@ -193,9 +211,11 @@ class Request<T : SigningRequest>(
     val alias: String?,
     val api: String,
     val header: Map<String, Any?>,
-    val body: Map<String, Any?>
+    val body: Map<String, Any?>,
 )
 
-class Response(private val onRespond: suspend (String) -> Unit) {
+class Response(
+    private val onRespond: suspend (String) -> Unit,
+) {
     suspend fun respond(content: String) = onRespond(content)
 }
