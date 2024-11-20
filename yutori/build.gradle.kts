@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.serialization)
     alias(libs.plugins.android.library)
+    id("maven-publish")
 }
 
 group = "cn.yurin.yutori"
@@ -44,7 +45,7 @@ kotlin {
         iosArm64(),
         iosSimulatorArm64(),
         macosX64(),
-        macosArm64()
+        macosArm64(),
     ).forEach {
         it.binaries.framework {
             baseName = "yutori"
@@ -53,8 +54,11 @@ kotlin {
     }
 
     // Linux
-    linuxX64 {
-        binaries.staticLib {
+    listOf(
+        linuxX64(),
+        linuxArm64(),
+    ).forEach {
+        it.binaries.staticLib {
             baseName = "yutori"
         }
     }
@@ -106,6 +110,16 @@ publishing {
             }
             scm {
                 url = "https://github.com/Nyayurin/yutori"
+            }
+        }
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/Nyayurin/yutori")
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
             }
         }
     }
