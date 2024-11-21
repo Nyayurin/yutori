@@ -87,20 +87,21 @@ class Yutori(
         elements["button"] = Button
     }
 
-    inline fun <reified T : Module> install(
-        module: T,
-        block: T.() -> Unit = {},
-    ) {
-        if (module !is Reinstallable && modules.filterIsInstance<T>().isNotEmpty()) {
+    inline fun <reified T : Module> install(module: T) {
+        if (module !is Reinstallable && modules.any { it::class == T::class }) {
             throw ModuleReinstallException(module.toString())
         }
-        module.block()
+        if (module.alias != null && modules.any { it.alias == module.alias }) {
+            throw ModuleAliasDuplicateException(module.alias)
+        }
         module.install(this)
         modules += module
     }
 
     inline fun <reified T : Module> uninstall() {
-        for (module in modules.filterIsInstance<T>()) uninstall(module)
+        for (module in modules.filterIsInstance<T>()) {
+            uninstall(module)
+        }
     }
 
     fun uninstall(alias: String? = null) {
