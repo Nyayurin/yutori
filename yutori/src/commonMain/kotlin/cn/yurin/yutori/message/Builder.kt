@@ -69,7 +69,7 @@ open class MessageBuilder(
 
     fun element(element: MessageElement) = elements.add(element)
 
-    inline fun text(content: String) = Text(content).apply { elements += this }
+    fun text(content: String) = Text(content).apply { elements += this }
 
     inline fun node(
         name: String,
@@ -261,7 +261,7 @@ open class MessageBuilder(
             children = MessageBuilder(yutori).apply(children).elements,
         ).apply { elements += this }
 
-    inline fun br() = Br.apply { elements += this }
+    fun br() = Br.apply { elements += this }
 
     inline fun paragraph(children: MessageBuilder.() -> Unit = { }) =
         Paragraph(
