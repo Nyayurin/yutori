@@ -370,7 +370,7 @@ class AdapterListenersContainerBuilder {
     val friend = Friend()
     val containers = mutableMapOf<String, ExtendedAdapterListenersContainerBuilder>()
 
-    fun any(listener: suspend AdapterContext<SigningEvent>.() -> Unit) = any.add { listener() }
+    fun any(listener: AdapterListener<SigningEvent>) = any.add(listener)
 
     fun build() =
         AdapterListenersContainer(
@@ -393,13 +393,13 @@ class AdapterListenersContainerBuilder {
         val member = Member()
         val role = Role()
 
-        fun added(listener: suspend AdapterContext<GuildEvent>.() -> Unit) = added.add { listener() }
+        fun added(listener: AdapterListener<GuildEvent>) = added.add(listener)
 
-        fun updated(listener: suspend AdapterContext<GuildEvent>.() -> Unit) = updated.add { listener() }
+        fun updated(listener: AdapterListener<GuildEvent>) = updated.add(listener)
 
-        fun removed(listener: suspend AdapterContext<GuildEvent>.() -> Unit) = removed.add { listener() }
+        fun removed(listener: AdapterListener<GuildEvent>) = removed.add(listener)
 
-        fun request(listener: suspend AdapterContext<GuildEvent>.() -> Unit) = request.add { listener() }
+        fun request(listener: AdapterListener<GuildEvent>) = request.add(listener)
 
         fun build() =
             AdapterListenersContainer.Guild(
@@ -418,13 +418,13 @@ class AdapterListenersContainerBuilder {
             val removed = mutableListOf<AdapterListener<GuildMemberEvent>>()
             val request = mutableListOf<AdapterListener<GuildMemberEvent>>()
 
-            fun added(listener: suspend AdapterContext<GuildMemberEvent>.() -> Unit) = added.add { listener() }
+            fun added(listener: AdapterListener<GuildMemberEvent>) = added.add(listener)
 
-            fun updated(listener: suspend AdapterContext<GuildMemberEvent>.() -> Unit) = updated.add { listener() }
+            fun updated(listener: AdapterListener<GuildMemberEvent>) = updated.add(listener)
 
-            fun removed(listener: suspend AdapterContext<GuildMemberEvent>.() -> Unit) = removed.add { listener() }
+            fun removed(listener: AdapterListener<GuildMemberEvent>) = removed.add(listener)
 
-            fun request(listener: suspend AdapterContext<GuildMemberEvent>.() -> Unit) = request.add { listener() }
+            fun request(listener: AdapterListener<GuildMemberEvent>) = request.add(listener)
 
             fun build() =
                 AdapterListenersContainer.Guild.Member(
@@ -441,11 +441,11 @@ class AdapterListenersContainerBuilder {
             val updated = mutableListOf<AdapterListener<GuildRoleEvent>>()
             val deleted = mutableListOf<AdapterListener<GuildRoleEvent>>()
 
-            fun created(listener: suspend AdapterContext<GuildRoleEvent>.() -> Unit) = created.add { listener() }
+            fun created(listener: AdapterListener<GuildRoleEvent>) = created.add(listener)
 
-            fun updated(listener: suspend AdapterContext<GuildRoleEvent>.() -> Unit) = updated.add { listener() }
+            fun updated(listener: AdapterListener<GuildRoleEvent>) = updated.add(listener)
 
-            fun deleted(listener: suspend AdapterContext<GuildRoleEvent>.() -> Unit) = deleted.add { listener() }
+            fun deleted(listener: AdapterListener<GuildRoleEvent>) = deleted.add(listener)
 
             fun build() =
                 AdapterListenersContainer.Guild.Role(
@@ -461,9 +461,9 @@ class AdapterListenersContainerBuilder {
         val button = mutableListOf<AdapterListener<InteractionButtonEvent>>()
         val command = mutableListOf<AdapterListener<InteractionCommandEvent>>()
 
-        fun button(listener: suspend AdapterContext<InteractionButtonEvent>.() -> Unit) = button.add { listener() }
+        fun button(listener: AdapterListener<InteractionButtonEvent>) = button.add(listener)
 
-        fun command(listener: suspend AdapterContext<InteractionCommandEvent>.() -> Unit) = command.add { listener() }
+        fun command(listener: AdapterListener<InteractionCommandEvent>) = command.add(listener)
 
         fun build() =
             AdapterListenersContainer.Interaction(
@@ -478,11 +478,11 @@ class AdapterListenersContainerBuilder {
         val removed = mutableListOf<AdapterListener<LoginEvent>>()
         val updated = mutableListOf<AdapterListener<LoginEvent>>()
 
-        fun added(listener: suspend AdapterContext<LoginEvent>.() -> Unit) = added.add { listener() }
+        fun added(listener: AdapterListener<LoginEvent>) = added.add(listener)
 
-        fun removed(listener: suspend AdapterContext<LoginEvent>.() -> Unit) = removed.add { listener() }
+        fun removed(listener: AdapterListener<LoginEvent>) = removed.add(listener)
 
-        fun updated(listener: suspend AdapterContext<LoginEvent>.() -> Unit) = updated.add { listener() }
+        fun updated(listener: AdapterListener<LoginEvent>) = updated.add(listener)
 
         fun build() =
             AdapterListenersContainer.Login(
@@ -498,11 +498,11 @@ class AdapterListenersContainerBuilder {
         val updated = mutableListOf<AdapterListener<MessageEvent>>()
         val deleted = mutableListOf<AdapterListener<MessageEvent>>()
 
-        fun created(listener: suspend AdapterContext<MessageEvent>.() -> Unit) = created.add { listener() }
+        fun created(listener: AdapterListener<MessageEvent>) = created.add(listener)
 
-        fun updated(listener: suspend AdapterContext<MessageEvent>.() -> Unit) = updated.add { listener() }
+        fun updated(listener: AdapterListener<MessageEvent>) = updated.add(listener)
 
-        fun deleted(listener: suspend AdapterContext<MessageEvent>.() -> Unit) = deleted.add { listener() }
+        fun deleted(listener: AdapterListener<MessageEvent>) = deleted.add(listener)
 
         fun build() =
             AdapterListenersContainer.Message(
@@ -517,9 +517,9 @@ class AdapterListenersContainerBuilder {
         val added = mutableListOf<AdapterListener<ReactionEvent>>()
         val removed = mutableListOf<AdapterListener<ReactionEvent>>()
 
-        fun added(listener: suspend AdapterContext<ReactionEvent>.() -> Unit) = added.add { listener() }
+        fun added(listener: AdapterListener<ReactionEvent>) = added.add(listener)
 
-        fun removed(listener: suspend AdapterContext<ReactionEvent>.() -> Unit) = removed.add { listener() }
+        fun removed(listener: AdapterListener<ReactionEvent>) = removed.add(listener)
 
         fun build() =
             AdapterListenersContainer.Reaction(
@@ -532,7 +532,7 @@ class AdapterListenersContainerBuilder {
     class Friend {
         val request = mutableListOf<AdapterListener<UserEvent>>()
 
-        fun request(listener: suspend AdapterContext<UserEvent>.() -> Unit) = request.add { listener() }
+        fun request(listener: AdapterListener<UserEvent>) = request.add(listener)
 
         fun build() =
             AdapterListenersContainer.Friend(

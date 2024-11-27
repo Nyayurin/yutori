@@ -491,7 +491,7 @@ class ServerListenersContainerBuilder {
     val friend = Friend()
     val containers = mutableMapOf<String, ExtendedServerListenersContainerBuilder>()
 
-    fun any(listener: suspend ServerContext<SigningRequest>.() -> Unit) = any.add { listener() }
+    fun any(listener: ServerListener<SigningRequest>) = any.add(listener)
 
     fun build() =
         ServerListenersContainer(
@@ -515,17 +515,17 @@ class ServerListenersContainerBuilder {
         val delete = mutableListOf<ServerListener<ChannelDeleteRequest>>()
         val mute = mutableListOf<ServerListener<ChannelMuteRequest>>()
 
-        fun get(listener: suspend ServerContext<ChannelGetRequest>.() -> Unit) = get.add { listener() }
+        fun get(listener: ServerListener<ChannelGetRequest>) = get.add(listener)
 
-        fun list(listener: suspend ServerContext<ChannelListRequest>.() -> Unit) = list.add { listener() }
+        fun list(listener: ServerListener<ChannelListRequest>) = list.add(listener)
 
-        fun create(listener: suspend ServerContext<ChannelCreateRequest>.() -> Unit) = create.add { listener() }
+        fun create(listener: ServerListener<ChannelCreateRequest>) = create.add(listener)
 
-        fun update(listener: suspend ServerContext<ChannelUpdateRequest>.() -> Unit) = update.add { listener() }
+        fun update(listener: ServerListener<ChannelUpdateRequest>) = update.add(listener)
 
-        fun delete(listener: suspend ServerContext<ChannelDeleteRequest>.() -> Unit) = delete.add { listener() }
+        fun delete(listener: ServerListener<ChannelDeleteRequest>) = delete.add(listener)
 
-        fun mute(listener: suspend ServerContext<ChannelMuteRequest>.() -> Unit) = mute.add { listener() }
+        fun mute(listener: ServerListener<ChannelMuteRequest>) = mute.add(listener)
 
         fun build() =
             ServerListenersContainer.Channel(
@@ -546,11 +546,11 @@ class ServerListenersContainerBuilder {
         val member = Member()
         val role = Role()
 
-        fun get(listener: suspend ServerContext<GuildGetRequest>.() -> Unit) = get.add { listener() }
+        fun get(listener: ServerListener<GuildGetRequest>) = get.add(listener)
 
-        fun list(listener: suspend ServerContext<GuildListRequest>.() -> Unit) = list.add { listener() }
+        fun list(listener: ServerListener<GuildListRequest>) = list.add(listener)
 
-        fun approve(listener: suspend ServerContext<GuildApproveRequest>.() -> Unit) = approve.add { listener() }
+        fun approve(listener: ServerListener<GuildApproveRequest>) = approve.add(listener)
 
         fun build() =
             ServerListenersContainer.Guild(
@@ -570,15 +570,15 @@ class ServerListenersContainerBuilder {
             val approve = mutableListOf<ServerListener<GuildMemberApproveRequest>>()
             val role = Role()
 
-            fun get(listener: suspend ServerContext<GuildMemberGetRequest>.() -> Unit) = get.add { listener() }
+            fun get(listener: ServerListener<GuildMemberGetRequest>) = get.add(listener)
 
-            fun list(listener: suspend ServerContext<GuildMemberListRequest>.() -> Unit) = list.add { listener() }
+            fun list(listener: ServerListener<GuildMemberListRequest>) = list.add(listener)
 
-            fun kick(listener: suspend ServerContext<GuildMemberKickRequest>.() -> Unit) = kick.add { listener() }
+            fun kick(listener: ServerListener<GuildMemberKickRequest>) = kick.add(listener)
 
-            fun mute(listener: suspend ServerContext<GuildMemberMuteRequest>.() -> Unit) = mute.add { listener() }
+            fun mute(listener: ServerListener<GuildMemberMuteRequest>) = mute.add(listener)
 
-            fun approve(listener: suspend ServerContext<GuildMemberApproveRequest>.() -> Unit) = approve.add { listener() }
+            fun approve(listener: ServerListener<GuildMemberApproveRequest>) = approve.add(listener)
 
             fun build() =
                 ServerListenersContainer.Guild.Member(
@@ -595,9 +595,9 @@ class ServerListenersContainerBuilder {
                 val set = mutableListOf<ServerListener<GuildMemberRoleSetRequest>>()
                 val unset = mutableListOf<ServerListener<GuildMemberRoleUnsetRequest>>()
 
-                fun set(listener: suspend ServerContext<GuildMemberRoleSetRequest>.() -> Unit) = set.add { listener() }
+                fun set(listener: ServerListener<GuildMemberRoleSetRequest>) = set.add(listener)
 
-                fun unset(listener: suspend ServerContext<GuildMemberRoleUnsetRequest>.() -> Unit) = unset.add { listener() }
+                fun unset(listener: ServerListener<GuildMemberRoleUnsetRequest>) = unset.add(listener)
 
                 fun build() =
                     ServerListenersContainer.Guild.Member.Role(
@@ -614,13 +614,13 @@ class ServerListenersContainerBuilder {
             val update = mutableListOf<ServerListener<GuildRoleUpdateRequest>>()
             val delete = mutableListOf<ServerListener<GuildRoleDeleteRequest>>()
 
-            fun list(listener: suspend ServerContext<GuildRoleListRequest>.() -> Unit) = list.add { listener() }
+            fun list(listener: ServerListener<GuildRoleListRequest>) = list.add(listener)
 
-            fun create(listener: suspend ServerContext<GuildRoleCreateRequest>.() -> Unit) = create.add { listener() }
+            fun create(listener: ServerListener<GuildRoleCreateRequest>) = create.add(listener)
 
-            fun update(listener: suspend ServerContext<GuildRoleUpdateRequest>.() -> Unit) = update.add { listener() }
+            fun update(listener: ServerListener<GuildRoleUpdateRequest>) = update.add(listener)
 
-            fun delete(listener: suspend ServerContext<GuildRoleDeleteRequest>.() -> Unit) = delete.add { listener() }
+            fun delete(listener: ServerListener<GuildRoleDeleteRequest>) = delete.add(listener)
 
             fun build() =
                 ServerListenersContainer.Guild.Role(
@@ -636,7 +636,7 @@ class ServerListenersContainerBuilder {
     class Login {
         val get = mutableListOf<ServerListener<LoginGetRequest>>()
 
-        fun get(listener: suspend ServerContext<LoginGetRequest>.() -> Unit) = get.add { listener() }
+        fun get(listener: ServerListener<LoginGetRequest>) = get.add(listener)
 
         fun build() =
             ServerListenersContainer.Login(
@@ -652,15 +652,15 @@ class ServerListenersContainerBuilder {
         val update = mutableListOf<ServerListener<MessageUpdateRequest>>()
         val list = mutableListOf<ServerListener<MessageListRequest>>()
 
-        fun create(listener: suspend ServerContext<MessageCreateRequest>.() -> Unit) = create.add { listener() }
+        fun create(listener: ServerListener<MessageCreateRequest>) = create.add(listener)
 
-        fun get(listener: suspend ServerContext<MessageGetRequest>.() -> Unit) = get.add { listener() }
+        fun get(listener: ServerListener<MessageGetRequest>) = get.add(listener)
 
-        fun delete(listener: suspend ServerContext<MessageDeleteRequest>.() -> Unit) = delete.add { listener() }
+        fun delete(listener: ServerListener<MessageDeleteRequest>) = delete.add(listener)
 
-        fun update(listener: suspend ServerContext<MessageUpdateRequest>.() -> Unit) = update.add { listener() }
+        fun update(listener: ServerListener<MessageUpdateRequest>) = update.add(listener)
 
-        fun list(listener: suspend ServerContext<MessageListRequest>.() -> Unit) = list.add { listener() }
+        fun list(listener: ServerListener<MessageListRequest>) = list.add(listener)
 
         fun build() =
             ServerListenersContainer.Message(
@@ -679,13 +679,13 @@ class ServerListenersContainerBuilder {
         val clear = mutableListOf<ServerListener<ReactionClearRequest>>()
         val list = mutableListOf<ServerListener<ReactionListRequest>>()
 
-        fun create(listener: suspend ServerContext<ReactionCreateRequest>.() -> Unit) = create.add { listener() }
+        fun create(listener: ServerListener<ReactionCreateRequest>) = create.add(listener)
 
-        fun delete(listener: suspend ServerContext<ReactionDeleteRequest>.() -> Unit) = delete.add { listener() }
+        fun delete(listener: ServerListener<ReactionDeleteRequest>) = delete.add(listener)
 
-        fun clear(listener: suspend ServerContext<ReactionClearRequest>.() -> Unit) = clear.add { listener() }
+        fun clear(listener: ServerListener<ReactionClearRequest>) = clear.add(listener)
 
-        fun list(listener: suspend ServerContext<ReactionListRequest>.() -> Unit) = list.add { listener() }
+        fun list(listener: ServerListener<ReactionListRequest>) = list.add(listener)
 
         fun build() =
             ServerListenersContainer.Reaction(
@@ -701,7 +701,7 @@ class ServerListenersContainerBuilder {
         val get = mutableListOf<ServerListener<UserGetRequest>>()
         val channel = Channel()
 
-        fun get(listener: suspend ServerContext<UserGetRequest>.() -> Unit) = get.add { listener() }
+        fun get(listener: ServerListener<UserGetRequest>) = get.add(listener)
 
         fun build() =
             ServerListenersContainer.User(
@@ -713,7 +713,7 @@ class ServerListenersContainerBuilder {
         class Channel {
             val create = mutableListOf<ServerListener<UserChannelCreateRequest>>()
 
-            fun create(listener: suspend ServerContext<UserChannelCreateRequest>.() -> Unit) = create.add { listener() }
+            fun create(listener: ServerListener<UserChannelCreateRequest>) = create.add(listener)
 
             fun build() =
                 ServerListenersContainer.User.Channel(
@@ -727,9 +727,9 @@ class ServerListenersContainerBuilder {
         val list = mutableListOf<ServerListener<FriendListRequest>>()
         val approve = mutableListOf<ServerListener<FriendApproveRequest>>()
 
-        fun list(listener: suspend ServerContext<FriendListRequest>.() -> Unit) = list.add { listener() }
+        fun list(listener: ServerListener<FriendListRequest>) = list.add(listener)
 
-        fun approve(listener: suspend ServerContext<FriendApproveRequest>.() -> Unit) = approve.add { listener() }
+        fun approve(listener: ServerListener<FriendApproveRequest>) = approve.add(listener)
 
         fun build() =
             ServerListenersContainer.Friend(
