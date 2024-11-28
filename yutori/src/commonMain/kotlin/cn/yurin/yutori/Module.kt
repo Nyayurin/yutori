@@ -5,9 +5,9 @@ package cn.yurin.yutori
 abstract class Module(
     val alias: String?,
 ) {
-    abstract fun install(yutori: YutoriBuilder)
+    abstract fun install(builder: YutoriBuilder)
 
-    abstract fun uninstall(yutori: YutoriBuilder)
+    abstract fun uninstall(builder: YutoriBuilder)
 
     companion object
 }

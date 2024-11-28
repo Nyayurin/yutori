@@ -24,7 +24,7 @@ class Yutori(
     val elements: Map<String, MessageElementContainer>,
     val actionsContainers: Map<String, (String, String, AdapterActionService) -> ActionBranch>,
     val messageBuilders: Map<String, (MessageBuilder) -> ExtendedMessageBuilder>,
-    val actionsList: List<ActionRoot>,
+    val actionsList: MutableList<ActionRoot>,
 ) {
     val adapters: List<Adapter>
         get() = modules.filterIsInstance<Adapter>()
@@ -139,7 +139,7 @@ class YutoriBuilder(
             elements = elements.toMap(),
             actionsContainers = actionsContainers.toMap(),
             messageBuilders = messageBuilders.toMap(),
-            actionsList = actionsList.toList(),
+            actionsList = actionsList,
         )
 
     class Adapter(
