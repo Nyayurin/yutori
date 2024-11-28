@@ -149,7 +149,7 @@ class YutoriBuilder(
             CoroutineExceptionHandler { _, throwable ->
                 Logger.w(name, throwable) { "监听器发生异常" }
             }
-        private var container = AdapterListenersContainerBuilder()
+        var container = AdapterListenersContainerBuilder()
 
         fun listening(block: @BuilderMarker AdapterListenersContainerBuilder.() -> Unit) {
             container = AdapterListenersContainerBuilder().apply(block)
@@ -165,7 +165,7 @@ class YutoriBuilder(
             CoroutineExceptionHandler { _, throwable ->
                 Logger.w(name, throwable) { "监听器发生异常" }
             }
-        private var container = ServerListenersContainerBuilder()
+        var container = ServerListenersContainerBuilder()
 
         fun routing(block: ServerListenersContainerBuilder.() -> Unit) {
             container = ServerListenersContainerBuilder().apply(block)
