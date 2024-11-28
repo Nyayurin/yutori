@@ -5,7 +5,7 @@ package cn.yurin.yutori
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
-typealias ServerListener<T> = suspend ServerContext<T>.() -> Unit
+typealias ServerListener<T> = @BuilderMarker suspend ServerContext<T>.() -> Unit
 
 abstract class ExtendedServerListenersContainer {
     abstract operator fun invoke(context: ServerContext<SigningRequest>)
@@ -479,7 +479,6 @@ abstract class ExtendedServerListenersContainerBuilder {
     abstract fun build(): ExtendedServerListenersContainer
 }
 
-@BuilderMarker
 class ServerListenersContainerBuilder {
     val any = mutableListOf<ServerListener<SigningRequest>>()
     val channel = Channel()
@@ -506,7 +505,6 @@ class ServerListenersContainerBuilder {
             containers = containers.mapValues { it.value.build() },
         )
 
-    @BuilderMarker
     class Channel {
         val get = mutableListOf<ServerListener<ChannelGetRequest>>()
         val list = mutableListOf<ServerListener<ChannelListRequest>>()
@@ -538,7 +536,6 @@ class ServerListenersContainerBuilder {
             )
     }
 
-    @BuilderMarker
     class Guild {
         val get = mutableListOf<ServerListener<GuildGetRequest>>()
         val list = mutableListOf<ServerListener<GuildListRequest>>()
@@ -561,7 +558,6 @@ class ServerListenersContainerBuilder {
                 role = role.build(),
             )
 
-        @BuilderMarker
         class Member {
             val get = mutableListOf<ServerListener<GuildMemberGetRequest>>()
             val list = mutableListOf<ServerListener<GuildMemberListRequest>>()
@@ -590,7 +586,6 @@ class ServerListenersContainerBuilder {
                     role = role.build(),
                 )
 
-            @BuilderMarker
             class Role {
                 val set = mutableListOf<ServerListener<GuildMemberRoleSetRequest>>()
                 val unset = mutableListOf<ServerListener<GuildMemberRoleUnsetRequest>>()
@@ -607,7 +602,6 @@ class ServerListenersContainerBuilder {
             }
         }
 
-        @BuilderMarker
         class Role {
             val list = mutableListOf<ServerListener<GuildRoleListRequest>>()
             val create = mutableListOf<ServerListener<GuildRoleCreateRequest>>()
@@ -632,7 +626,6 @@ class ServerListenersContainerBuilder {
         }
     }
 
-    @BuilderMarker
     class Login {
         val get = mutableListOf<ServerListener<LoginGetRequest>>()
 
@@ -644,7 +637,6 @@ class ServerListenersContainerBuilder {
             )
     }
 
-    @BuilderMarker
     class Message {
         val create = mutableListOf<ServerListener<MessageCreateRequest>>()
         val get = mutableListOf<ServerListener<MessageGetRequest>>()
@@ -672,7 +664,6 @@ class ServerListenersContainerBuilder {
             )
     }
 
-    @BuilderMarker
     class Reaction {
         val create = mutableListOf<ServerListener<ReactionCreateRequest>>()
         val delete = mutableListOf<ServerListener<ReactionDeleteRequest>>()
@@ -696,7 +687,6 @@ class ServerListenersContainerBuilder {
             )
     }
 
-    @BuilderMarker
     class User {
         val get = mutableListOf<ServerListener<UserGetRequest>>()
         val channel = Channel()
@@ -709,7 +699,6 @@ class ServerListenersContainerBuilder {
                 channel = channel.build(),
             )
 
-        @BuilderMarker
         class Channel {
             val create = mutableListOf<ServerListener<UserChannelCreateRequest>>()
 
@@ -722,7 +711,6 @@ class ServerListenersContainerBuilder {
         }
     }
 
-    @BuilderMarker
     class Friend {
         val list = mutableListOf<ServerListener<FriendListRequest>>()
         val approve = mutableListOf<ServerListener<FriendApproveRequest>>()

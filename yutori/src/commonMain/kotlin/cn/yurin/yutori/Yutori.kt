@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 fun yutori(
     name: String = "Yutori",
-    block: YutoriBuilder.() -> Unit,
+    block: @BuilderMarker YutoriBuilder.() -> Unit,
 ) = YutoriBuilder(name).apply(block).build()
 
 class Yutori(
@@ -57,12 +57,11 @@ class Yutori(
     )
 }
 
-@BuilderMarker
 class YutoriBuilder(
     private val name: String,
 ) {
-    private var adapter = Adapter(name)
-    private var server = Server(name)
+    var adapter = Adapter(name)
+    var server = Server(name)
     val modules = mutableListOf<Module>()
     val elements =
         mutableMapOf(
@@ -123,11 +122,11 @@ class YutoriBuilder(
         modules -= module
     }
 
-    fun adapter(block: Adapter.() -> Unit) {
+    fun adapter(block: @BuilderMarker Adapter.() -> Unit) {
         adapter = Adapter(name).apply(block)
     }
 
-    fun server(block: Server.() -> Unit) {
+    fun server(block: @BuilderMarker Server.() -> Unit) {
         server = Server(name).apply(block)
     }
 
@@ -143,7 +142,6 @@ class YutoriBuilder(
             actionsList = actionsList.toList(),
         )
 
-    @BuilderMarker
     class Adapter(
         name: String,
     ) {
@@ -153,14 +151,13 @@ class YutoriBuilder(
             }
         private var container = AdapterListenersContainerBuilder()
 
-        fun listening(block: AdapterListenersContainerBuilder.() -> Unit) {
+        fun listening(block: @BuilderMarker AdapterListenersContainerBuilder.() -> Unit) {
             container = AdapterListenersContainerBuilder().apply(block)
         }
 
         fun build() = Yutori.AdapterConfig(exceptionHandler, container.build())
     }
 
-    @BuilderMarker
     class Server(
         name: String,
     ) {

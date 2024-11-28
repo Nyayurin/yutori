@@ -5,7 +5,7 @@ package cn.yurin.yutori
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
-typealias AdapterListener<T> = suspend AdapterContext<T>.() -> Unit
+typealias AdapterListener<T> = @BuilderMarker suspend AdapterContext<T>.() -> Unit
 
 abstract class ExtendedAdapterListenersContainer {
     abstract operator fun invoke(context: AdapterContext<SigningEvent>)
@@ -359,7 +359,6 @@ abstract class ExtendedAdapterListenersContainerBuilder {
     abstract fun build(): ExtendedAdapterListenersContainer
 }
 
-@BuilderMarker
 class AdapterListenersContainerBuilder {
     val any = mutableListOf<AdapterListener<SigningEvent>>()
     val guild = Guild()
@@ -384,7 +383,6 @@ class AdapterListenersContainerBuilder {
             containers = containers.mapValues { it.value.build() },
         )
 
-    @BuilderMarker
     class Guild {
         val added = mutableListOf<AdapterListener<GuildEvent>>()
         val updated = mutableListOf<AdapterListener<GuildEvent>>()
@@ -411,7 +409,6 @@ class AdapterListenersContainerBuilder {
                 role = role.build(),
             )
 
-        @BuilderMarker
         class Member {
             val added = mutableListOf<AdapterListener<GuildMemberEvent>>()
             val updated = mutableListOf<AdapterListener<GuildMemberEvent>>()
@@ -435,7 +432,6 @@ class AdapterListenersContainerBuilder {
                 )
         }
 
-        @BuilderMarker
         class Role {
             val created = mutableListOf<AdapterListener<GuildRoleEvent>>()
             val updated = mutableListOf<AdapterListener<GuildRoleEvent>>()
@@ -456,7 +452,6 @@ class AdapterListenersContainerBuilder {
         }
     }
 
-    @BuilderMarker
     class Interaction {
         val button = mutableListOf<AdapterListener<InteractionButtonEvent>>()
         val command = mutableListOf<AdapterListener<InteractionCommandEvent>>()
@@ -472,7 +467,6 @@ class AdapterListenersContainerBuilder {
             )
     }
 
-    @BuilderMarker
     class Login {
         val added = mutableListOf<AdapterListener<LoginEvent>>()
         val removed = mutableListOf<AdapterListener<LoginEvent>>()
@@ -492,7 +486,6 @@ class AdapterListenersContainerBuilder {
             )
     }
 
-    @BuilderMarker
     class Message {
         val created = mutableListOf<AdapterListener<MessageEvent>>()
         val updated = mutableListOf<AdapterListener<MessageEvent>>()
@@ -512,7 +505,6 @@ class AdapterListenersContainerBuilder {
             )
     }
 
-    @BuilderMarker
     class Reaction {
         val added = mutableListOf<AdapterListener<ReactionEvent>>()
         val removed = mutableListOf<AdapterListener<ReactionEvent>>()
@@ -528,7 +520,6 @@ class AdapterListenersContainerBuilder {
             )
     }
 
-    @BuilderMarker
     class Friend {
         val request = mutableListOf<AdapterListener<UserEvent>>()
 

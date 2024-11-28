@@ -56,36 +56,36 @@ class ChannelAction(
 ) : ActionLeaf(platform, userId, "channel", service) {
     suspend fun get(
         channelId: String,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Channel> = action("get", "channel_id" to channelId, *contents)
 
     suspend fun list(
         guildId: String,
         next: String? = null,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<PagingList<Channel>> = action("list", "guild_id" to guildId, "next" to next, *contents)
 
     suspend fun create(
         guildId: String,
         data: Channel,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Channel> = action("create", "guild_id" to guildId, "data" to data, *contents)
 
     suspend fun update(
         channelId: String,
         data: Channel,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Unit> = action("update", "channel_id" to channelId, "data" to data, *contents)
 
     suspend fun delete(
         channelId: String,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Unit> = action("delete", "channel_id" to channelId, *contents)
 
     suspend fun mute(
         channelId: String,
         duration: Number,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Unit> = action("mute", "channel_id" to channelId, "duration" to duration, *contents)
 }
 
@@ -99,19 +99,19 @@ class GuildAction(
 
     suspend fun get(
         guildId: String,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Guild> = action("get", "guild_id" to guildId, *contents)
 
     suspend fun list(
         next: String? = null,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<PagingList<Guild>> = action("list", "next" to next, *contents)
 
     suspend fun approve(
         messageId: String,
         approve: Boolean,
         comment: String,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Unit> =
         action(
             "approve",
@@ -131,20 +131,20 @@ class GuildAction(
         suspend fun get(
             guildId: String,
             userId: String,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<GuildMember> = action("get", "guild_id" to guildId, "user_id" to userId, *contents)
 
         suspend fun list(
             guildId: String,
             next: String? = null,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<PagingList<GuildMember>> = action("list", "guild_id" to guildId, "next" to next, *contents)
 
         suspend fun kick(
             guildId: String,
             userId: String,
             permanent: Boolean? = null,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<Unit> =
             action(
                 "kick",
@@ -158,7 +158,7 @@ class GuildAction(
             guildId: String,
             userId: String,
             duration: Number,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<Unit> =
             action(
                 "mute",
@@ -172,7 +172,7 @@ class GuildAction(
             messageId: String,
             approve: Boolean,
             comment: String,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<Unit> =
             action(
                 "approve",
@@ -191,7 +191,7 @@ class GuildAction(
                 guildId: String,
                 userId: String,
                 roleId: String,
-                vararg contents: Pair<String, Any> = arrayOf(),
+                vararg contents: Pair<String, Any>,
             ): Result<Unit> =
                 action(
                     "set",
@@ -205,7 +205,7 @@ class GuildAction(
                 guildId: String,
                 userId: String,
                 roleId: String,
-                vararg contents: Pair<String, Any> = arrayOf(),
+                vararg contents: Pair<String, Any>,
             ): Result<Unit> =
                 action(
                     "unset",
@@ -225,20 +225,20 @@ class GuildAction(
         suspend fun list(
             guildId: String,
             next: String? = null,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<PagingList<GuildRole>> = action("list", "guild_id" to guildId, "next" to next, *contents)
 
         suspend fun create(
             guildId: String,
             role: GuildRole,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<GuildRole> = action("create", "guild_id" to guildId, "role" to role, *contents)
 
         suspend fun update(
             guildId: String,
             roleId: String,
             role: GuildRole,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<Unit> =
             action(
                 "update",
@@ -251,7 +251,7 @@ class GuildAction(
         suspend fun delete(
             guildId: String,
             roleId: String,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<Unit> = action("delete", "guild_id" to guildId, "role_id" to roleId, *contents)
     }
 }
@@ -261,7 +261,7 @@ class LoginAction(
     userId: String,
     service: AdapterActionService,
 ) : ActionLeaf(platform, userId, "login", service) {
-    suspend fun get(vararg contents: Pair<String, Any> = arrayOf()): Result<Login> = action("get", *contents)
+    suspend fun get(vararg contents: Pair<String, Any>): Result<Login> = action("get", *contents)
 }
 
 class MessageAction(
@@ -273,32 +273,32 @@ class MessageAction(
     suspend fun create(
         channelId: String,
         content: List<MessageElement>,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<List<Message>> = action("create", "channel_id" to channelId, "content" to content, *contents)
 
     suspend fun create(
         channelId: String,
         content: MessageBuilder.() -> Unit,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<List<Message>> = create(channelId, message(yutori, content), *contents)
 
     suspend fun get(
         channelId: String,
         messageId: String,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Message> = action("get", "channel_id" to channelId, "message_id" to messageId, *contents)
 
     suspend fun delete(
         channelId: String,
         messageId: String,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Unit> = action("delete", "channel_id" to channelId, "message_id" to messageId, *contents)
 
     suspend fun update(
         channelId: String,
         messageId: String,
         content: List<MessageElement>,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Unit> =
         action(
             "update",
@@ -312,7 +312,7 @@ class MessageAction(
         channelId: String,
         messageId: String,
         content: MessageBuilder.() -> Unit,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Unit> = update(channelId, messageId, message(yutori, content), *contents)
 
     suspend fun list(
@@ -321,7 +321,7 @@ class MessageAction(
         direction: BidiPagingList.Direction? = null,
         limit: Number? = null,
         order: BidiPagingList.Order? = null,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<BidiPagingList<Message>> =
         action(
             "list",
@@ -343,7 +343,7 @@ class ReactionAction(
         channelId: String,
         messageId: String,
         emoji: String,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Unit> =
         action(
             "create",
@@ -358,7 +358,7 @@ class ReactionAction(
         messageId: String,
         emoji: String,
         userId: String? = null,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Unit> =
         action(
             "delete",
@@ -373,7 +373,7 @@ class ReactionAction(
         channelId: String,
         messageId: String,
         emoji: String? = null,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Unit> =
         action(
             "clear",
@@ -388,7 +388,7 @@ class ReactionAction(
         messageId: String,
         emoji: String,
         next: String? = null,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<PagingList<User>> =
         action(
             "list",
@@ -409,7 +409,7 @@ class UserAction(
 
     suspend fun get(
         userId: String,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<User> = action("get", "user_id" to userId, *contents)
 
     class ChannelAction(
@@ -420,7 +420,7 @@ class UserAction(
         suspend fun create(
             userId: String,
             guildId: String? = null,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<Channel> = action("create", "user_id" to userId, "guild_id" to guildId, *contents)
     }
 }
@@ -432,14 +432,14 @@ class FriendAction(
 ) : ActionLeaf(platform, userId, "friend", service) {
     suspend fun list(
         next: String? = null,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<PagingList<User>> = action("list", "next" to next, *contents)
 
     suspend fun approve(
         messageId: String,
         approve: Boolean,
         comment: String? = null,
-        vararg contents: Pair<String, Any> = arrayOf(),
+        vararg contents: Pair<String, Any>,
     ): Result<Unit> =
         action(
             "approve",
@@ -467,7 +467,7 @@ class AdminAction(
     class LoginAction(
         service: AdapterActionService,
     ) : ActionLeaf(null, null, "login", service) {
-        suspend fun list(vararg contents: Pair<String, Any> = arrayOf()): Result<List<Login>> = action("list", *contents)
+        suspend fun list(vararg contents: Pair<String, Any>): Result<List<Login>> = action("list", *contents)
     }
 
     class WebhookAction(
@@ -476,12 +476,12 @@ class AdminAction(
         suspend fun create(
             url: String,
             token: String? = null,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<Unit> = action("list", "url" to url, "token" to token, *contents)
 
         suspend fun delete(
             url: String,
-            vararg contents: Pair<String, Any> = arrayOf(),
+            vararg contents: Pair<String, Any>,
         ): Result<Unit> = action("approve", "url" to url, *contents)
     }
 }

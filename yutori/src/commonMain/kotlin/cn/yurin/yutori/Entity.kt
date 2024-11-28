@@ -215,7 +215,7 @@ class Request<T : SigningRequest>(
 )
 
 class Response(
-    val onRespond: suspend (String) -> Unit,
+    private val onRespond: suspend (String) -> Unit,
 ) {
     suspend fun respond(content: String) = onRespond(content)
 }

@@ -5,6 +5,7 @@ package cn.yurin.yutori
 import cn.yurin.yutori.message.element.MessageElement
 import cn.yurin.yutori.message.element.Text
 
+@Target(AnnotationTarget.TYPE)
 @DslMarker
 annotation class BuilderMarker
 

@@ -34,7 +34,7 @@ import cn.yurin.yutori.message.element.Video
 
 inline fun message(
     yutori: Yutori,
-    block: MessageBuilder.() -> Unit,
+    block: @BuilderMarker MessageBuilder.() -> Unit,
 ) = MessageBuilder(yutori).apply(block).elements
 
 interface ChildedMessageBuilder {
@@ -57,7 +57,6 @@ abstract class ExtendedMessageBuilder(
     val elements: MutableList<MessageElement> = builder.elements
 }
 
-@BuilderMarker
 open class MessageBuilder(
     val yutori: Yutori,
 ) : ChildedMessageBuilder {
