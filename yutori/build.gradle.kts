@@ -10,7 +10,7 @@ plugins {
 group = "cn.yurin.yutori"
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(8)
 
     jvm()
 
