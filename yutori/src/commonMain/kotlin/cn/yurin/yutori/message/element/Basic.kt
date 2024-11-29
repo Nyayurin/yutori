@@ -7,10 +7,10 @@ import cn.yurin.yutori.toPairArray
 class Text(
     val content: String,
 ) : MessageElement(
-        elementName = "text",
-        properties = mapOf("content" to content),
-        children = emptyList(),
-    ) {
+    elementName = "text",
+    properties = mapOf("content" to content),
+    children = emptyList(),
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -27,17 +27,16 @@ class At(
     extendProperties: Map<String, Any?>,
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "at",
-        properties =
-            mapOf(
-                "id" to id,
-                "name" to name,
-                "role" to role,
-                "type" to type,
-                *extendProperties.toPairArray(),
-            ),
-        children = children,
-    ) {
+    elementName = "at",
+    properties = mapOf(
+        "id" to id,
+        "name" to name,
+        "role" to role,
+        "type" to type,
+        *extendProperties.toPairArray(),
+    ),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -59,10 +58,14 @@ class Sharp(
     extendProperties: Map<String, Any?>,
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "sharp",
-        properties = mapOf("id" to id, "name" to name, *extendProperties.toPairArray()),
-        children = children,
-    ) {
+    elementName = "sharp",
+    properties = mapOf(
+        "id" to id,
+        "name" to name,
+        *extendProperties.toPairArray()
+    ),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -81,10 +84,13 @@ class Href(
     extendProperties: Map<String, Any?>,
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "href",
-        properties = mapOf("href" to href, *extendProperties.toPairArray()),
-        children = children,
-    ) {
+    elementName = "href",
+    properties = mapOf(
+        "href" to href,
+        *extendProperties.toPairArray()
+    ),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,

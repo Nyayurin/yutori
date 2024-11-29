@@ -41,7 +41,6 @@ interface ChildedMessageBuilder {
     val elements: MutableList<MessageElement>
 
     operator fun get(index: Int) = elements[index]
-
     operator fun set(
         index: Int,
         element: MessageElement,
@@ -61,10 +60,9 @@ open class MessageBuilder(
     val yutori: Yutori,
 ) : ChildedMessageBuilder {
     override val elements = mutableListOf<MessageElement>()
-    val builders =
-        yutori.messageBuilders.mapValues { (_, value) ->
-            value(this@MessageBuilder)
-        }
+    val builders = yutori.messageBuilders.mapValues { (_, value) ->
+        value(this@MessageBuilder)
+    }
 
     fun element(element: MessageElement) = elements.add(element)
 
@@ -200,72 +198,85 @@ open class MessageBuilder(
         children = MessageBuilder(yutori).apply(children).elements,
     ).apply { elements += this }
 
-    inline fun bold(children: MessageBuilder.() -> Unit = { }) =
-        Bold(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun bold(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Bold(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
-    inline fun strong(children: MessageBuilder.() -> Unit = { }) =
-        Strong(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun strong(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Strong(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
-    inline fun idiomatic(children: MessageBuilder.() -> Unit = { }) =
-        Idiomatic(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun idiomatic(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Idiomatic(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
-    inline fun em(children: MessageBuilder.() -> Unit = { }) =
-        Em(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun em(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Em(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
-    inline fun underline(children: MessageBuilder.() -> Unit = { }) =
-        Underline(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun underline(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Underline(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
-    inline fun ins(children: MessageBuilder.() -> Unit = { }) =
-        Ins(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun ins(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Ins(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
-    inline fun strikethrough(children: MessageBuilder.() -> Unit = { }) =
-        Strikethrough(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun strikethrough(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Strikethrough(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
-    inline fun delete(children: MessageBuilder.() -> Unit = { }) =
-        Delete(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun delete(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Delete(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
-    inline fun spl(children: MessageBuilder.() -> Unit = { }) =
-        Spl(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun spl(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Spl(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
-    inline fun code(children: MessageBuilder.() -> Unit = { }) =
-        Code(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun code(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Code(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
-    inline fun sup(children: MessageBuilder.() -> Unit = { }) =
-        Sup(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun sup(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Sup(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
-    inline fun sub(children: MessageBuilder.() -> Unit = { }) =
-        Sub(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun sub(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Sub(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
     fun br() = Br.apply { elements += this }
 
-    inline fun paragraph(children: MessageBuilder.() -> Unit = { }) =
-        Paragraph(
-            children = MessageBuilder(yutori).apply(children).elements,
-        ).apply { elements += this }
+    inline fun paragraph(
+        children: MessageBuilder.() -> Unit = { }
+    ) = Paragraph(
+        children = MessageBuilder(yutori).apply(children).elements,
+    ).apply { elements += this }
 
     inline fun message(
         id: String? = null,

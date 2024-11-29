@@ -5,10 +5,10 @@ package cn.yurin.yutori.message.element
 class Bold(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "bold",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "bold",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -20,10 +20,10 @@ class Bold(
 class Strong(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "strong",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "strong",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -35,10 +35,10 @@ class Strong(
 class Idiomatic(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "idiomatic",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "idiomatic",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -50,10 +50,10 @@ class Idiomatic(
 class Em(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "em",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "em",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -65,10 +65,10 @@ class Em(
 class Underline(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "underline",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "underline",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -80,10 +80,10 @@ class Underline(
 class Ins(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "ins",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "ins",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -95,10 +95,10 @@ class Ins(
 class Strikethrough(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "strikethrough",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "strikethrough",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -110,10 +110,10 @@ class Strikethrough(
 class Delete(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "delete",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "delete",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -125,10 +125,10 @@ class Delete(
 class Spl(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "spl",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "spl",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -140,10 +140,10 @@ class Spl(
 class Code(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "code",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "code",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -155,10 +155,10 @@ class Code(
 class Sup(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "sup",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "sup",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -170,10 +170,10 @@ class Sup(
 class Sub(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "sub",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "sub",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,

@@ -10,10 +10,14 @@ class Quote(
     extendProperties: Map<String, Any?>,
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "quote",
-        properties = mapOf("id" to id, "forward" to forward, *extendProperties.toPairArray()),
-        children = children,
-    ) {
+    elementName = "quote",
+    properties = mapOf(
+        "id" to id,
+        "forward" to forward,
+        *extendProperties.toPairArray()
+    ),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -34,16 +38,15 @@ class Author(
     extendProperties: Map<String, Any?>,
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "author",
-        properties =
-            mapOf(
-                "id" to id,
-                "name" to name,
-                "avatar" to avatar,
-                *extendProperties.toPairArray(),
-            ),
-        children = children,
-    ) {
+    elementName = "author",
+    properties = mapOf(
+        "id" to id,
+        "name" to name,
+        "avatar" to avatar,
+        *extendProperties.toPairArray(),
+    ),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,

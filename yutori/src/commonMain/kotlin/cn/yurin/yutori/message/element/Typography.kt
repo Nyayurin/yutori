@@ -20,10 +20,10 @@ object Br : MessageElement(
 class Paragraph(
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "paragraph",
-        properties = emptyMap(),
-        children = children,
-    ) {
+    elementName = "paragraph",
+    properties = emptyMap(),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -38,10 +38,10 @@ class Message(
     extendProperties: Map<String, Any?> = emptyMap(),
     children: List<MessageElement> = emptyList(),
 ) : MessageElement(
-        elementName = "message",
-        properties = mapOf("id" to id, "forward" to forward, *extendProperties.toPairArray()),
-        children = children,
-    ) {
+    elementName = "message",
+    properties = mapOf("id" to id, "forward" to forward, *extendProperties.toPairArray()),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,

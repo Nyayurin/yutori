@@ -14,19 +14,18 @@ class Image(
     extendProperties: Map<String, Any?>,
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "image",
-        properties =
-            mapOf(
-                "src" to src,
-                "title" to title,
-                "cache" to cache,
-                "timeout" to timeout,
-                "width" to width,
-                "height" to height,
-                *extendProperties.toPairArray(),
-            ),
-        children = children,
-    ) {
+    elementName = "image",
+    properties = mapOf(
+        "src" to src,
+        "title" to title,
+        "cache" to cache,
+        "timeout" to timeout,
+        "width" to width,
+        "height" to height,
+        *extendProperties.toPairArray(),
+    ),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -54,19 +53,18 @@ class Audio(
     extendProperties: Map<String, Any?>,
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "audio",
-        properties =
-            mapOf(
-                "src" to src,
-                "title" to title,
-                "cache" to cache,
-                "timeout" to timeout,
-                "duration" to duration,
-                "poster" to poster,
-                *extendProperties.toPairArray(),
-            ),
-        children = children,
-    ) {
+    elementName = "audio",
+    properties = mapOf(
+        "src" to src,
+        "title" to title,
+        "cache" to cache,
+        "timeout" to timeout,
+        "duration" to duration,
+        "poster" to poster,
+        *extendProperties.toPairArray(),
+    ),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -96,21 +94,20 @@ class Video(
     extendProperties: Map<String, Any?>,
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "video",
-        properties =
-            mapOf(
-                "src" to src,
-                "title" to title,
-                "cache" to cache,
-                "timeout" to timeout,
-                "width" to width,
-                "height" to height,
-                "duration" to duration,
-                "poster" to poster,
-                *extendProperties.toPairArray(),
-            ),
-        children = children,
-    ) {
+    elementName = "video",
+    properties = mapOf(
+        "src" to src,
+        "title" to title,
+        "cache" to cache,
+        "timeout" to timeout,
+        "width" to width,
+        "height" to height,
+        "duration" to duration,
+        "poster" to poster,
+        *extendProperties.toPairArray(),
+    ),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,
@@ -139,18 +136,17 @@ class File(
     extendProperties: Map<String, Any?>,
     children: List<MessageElement>,
 ) : MessageElement(
-        elementName = "file",
-        properties =
-            mapOf(
-                "src" to src,
-                "title" to title,
-                "cache" to cache,
-                "timeout" to timeout,
-                "poster" to poster,
-                *extendProperties.toPairArray(),
-            ),
-        children = children,
-    ) {
+    elementName = "file",
+    properties = mapOf(
+        "src" to src,
+        "title" to title,
+        "cache" to cache,
+        "timeout" to timeout,
+        "poster" to poster,
+        *extendProperties.toPairArray(),
+    ),
+    children = children,
+) {
     companion object : MessageElementContainer() {
         override operator fun invoke(
             properties: MutableMap<String, String?>,

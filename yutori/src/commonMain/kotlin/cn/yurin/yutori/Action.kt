@@ -33,287 +33,218 @@ class ActionRoot(
 abstract class ActionBranch : ActionNode()
 
 abstract class ActionLeaf(
-    val platform: String?,
-    val userId: String?,
-    val resource: String,
-    val service: AdapterActionService,
-) : ActionNode() {
-    protected suspend inline fun <reified T> action(
-        method: String,
-        vararg content: Pair<String, Any?>,
-    ): Result<T> = service.send(resource, method, platform, userId, mapOf(*content))
-
-    protected suspend fun upload(
-        method: String,
-        content: List<FormData>,
-    ): Result<Map<String, String>> = service.upload(resource, method, platform!!, userId!!, content)
-}
+    protected val service: AdapterActionService,
+) : ActionNode()
 
 class ChannelAction(
-    platform: String,
-    userId: String,
+    private val platform: String,
+    private val userId: String,
     service: AdapterActionService,
-) : ActionLeaf(platform, userId, "channel", service) {
+) : ActionLeaf(service) {
     suspend fun get(
         channelId: String,
         vararg contents: Pair<String, Any>,
-    ): Result<Channel> = action("get", "channel_id" to channelId, *contents)
+    ) = service.channelGet(platform, userId, channelId, contents)
 
     suspend fun list(
         guildId: String,
         next: String? = null,
         vararg contents: Pair<String, Any>,
-    ): Result<PagingList<Channel>> = action("list", "guild_id" to guildId, "next" to next, *contents)
+    ) = service.channelList(platform, userId, guildId, next, contents)
 
     suspend fun create(
         guildId: String,
         data: Channel,
         vararg contents: Pair<String, Any>,
-    ): Result<Channel> = action("create", "guild_id" to guildId, "data" to data, *contents)
+    ) = service.channelCreate(platform, userId, guildId, data, contents)
 
     suspend fun update(
         channelId: String,
         data: Channel,
         vararg contents: Pair<String, Any>,
-    ): Result<Unit> = action("update", "channel_id" to channelId, "data" to data, *contents)
+    ) = service.channelUpdate(platform, userId, channelId, data, contents)
 
     suspend fun delete(
         channelId: String,
         vararg contents: Pair<String, Any>,
-    ): Result<Unit> = action("delete", "channel_id" to channelId, *contents)
+    ) = service.channelDelete(platform, userId, channelId, contents)
 
     suspend fun mute(
         channelId: String,
         duration: Number,
         vararg contents: Pair<String, Any>,
-    ): Result<Unit> = action("mute", "channel_id" to channelId, "duration" to duration, *contents)
+    ) = service.channelMute(platform, userId, channelId, duration, contents)
 }
 
 class GuildAction(
-    platform: String,
-    userId: String,
+    private val platform: String,
+    private val userId: String,
     service: AdapterActionService,
-) : ActionLeaf(platform, userId, "guild", service) {
+) : ActionLeaf(service) {
     val member = MemberAction(platform, userId, service)
     val role = RoleAction(platform, userId, service)
 
     suspend fun get(
         guildId: String,
         vararg contents: Pair<String, Any>,
-    ): Result<Guild> = action("get", "guild_id" to guildId, *contents)
+    ) = service.guildGet(platform, userId, guildId, contents)
 
     suspend fun list(
         next: String? = null,
         vararg contents: Pair<String, Any>,
-    ): Result<PagingList<Guild>> = action("list", "next" to next, *contents)
+    ) = service.guildList(platform, userId, next, contents)
 
     suspend fun approve(
         messageId: String,
         approve: Boolean,
         comment: String,
         vararg contents: Pair<String, Any>,
-    ): Result<Unit> =
-        action(
-            "approve",
-            "message_id" to messageId,
-            "approve" to approve,
-            "comment" to comment,
-            *contents,
-        )
+    ) = service.guildApprove(platform, userId, messageId, approve, comment, contents)
 
     class MemberAction(
-        platform: String,
-        userId: String,
+        private val platform: String,
+        private val userId: String,
         service: AdapterActionService,
-    ) : ActionLeaf(platform, userId, "guild.member", service) {
+    ) : ActionLeaf(service) {
         val role = RoleAction(platform, userId, service)
 
         suspend fun get(
             guildId: String,
             userId: String,
             vararg contents: Pair<String, Any>,
-        ): Result<GuildMember> = action("get", "guild_id" to guildId, "user_id" to userId, *contents)
+        ) = service.guildMemberGet(platform, this.userId, guildId, userId, contents)
 
         suspend fun list(
             guildId: String,
             next: String? = null,
             vararg contents: Pair<String, Any>,
-        ): Result<PagingList<GuildMember>> = action("list", "guild_id" to guildId, "next" to next, *contents)
+        ) = service.guildMemberList(platform, userId, guildId, next, contents)
 
         suspend fun kick(
             guildId: String,
             userId: String,
             permanent: Boolean? = null,
             vararg contents: Pair<String, Any>,
-        ): Result<Unit> =
-            action(
-                "kick",
-                "guild_id" to guildId,
-                "user_id" to userId,
-                "permanent" to permanent,
-                *contents,
-            )
+        ) = service.guildMemberKick(platform, this.userId, guildId, userId, permanent, contents)
 
         suspend fun mute(
             guildId: String,
             userId: String,
             duration: Number,
             vararg contents: Pair<String, Any>,
-        ): Result<Unit> =
-            action(
-                "mute",
-                "guild_id" to guildId,
-                "user_id" to userId,
-                "duration" to duration,
-                *contents,
-            )
+        ) = service.guildMemberMute(platform, this.userId, guildId, userId, duration, contents)
 
         suspend fun approve(
             messageId: String,
             approve: Boolean,
             comment: String,
             vararg contents: Pair<String, Any>,
-        ): Result<Unit> =
-            action(
-                "approve",
-                "message_id" to messageId,
-                "approve" to approve,
-                "comment" to comment,
-                *contents,
-            )
+        ) = service.guildMemberApprove(platform, userId, messageId, approve, comment, contents)
 
         class RoleAction(
-            platform: String,
-            userId: String,
+            private val platform: String,
+            private val userId: String,
             service: AdapterActionService,
-        ) : ActionLeaf(platform, userId, "guild.member.role", service) {
+        ) : ActionLeaf(service) {
             suspend fun set(
                 guildId: String,
                 userId: String,
                 roleId: String,
                 vararg contents: Pair<String, Any>,
-            ): Result<Unit> =
-                action(
-                    "set",
-                    "guild_id" to guildId,
-                    "user_id" to userId,
-                    "role_id" to roleId,
-                    *contents,
-                )
+            ) = service.guildMemberRoleSet(platform, this.userId, guildId, userId, roleId, contents)
 
             suspend fun unset(
                 guildId: String,
                 userId: String,
                 roleId: String,
                 vararg contents: Pair<String, Any>,
-            ): Result<Unit> =
-                action(
-                    "unset",
-                    "guild_id" to guildId,
-                    "user_id" to userId,
-                    "role_id" to roleId,
-                    *contents,
-                )
+            ) = service.guildMemberRoleUnset(platform, this.userId, guildId, userId, roleId, contents)
         }
     }
 
     class RoleAction(
-        platform: String,
-        userId: String,
+        private val platform: String,
+        private val userId: String,
         service: AdapterActionService,
-    ) : ActionLeaf(platform, userId, "guild.role", service) {
+    ) : ActionLeaf(service) {
         suspend fun list(
             guildId: String,
             next: String? = null,
             vararg contents: Pair<String, Any>,
-        ): Result<PagingList<GuildRole>> = action("list", "guild_id" to guildId, "next" to next, *contents)
+        ) = service.guildRoleList(platform, userId, guildId, next, contents)
 
         suspend fun create(
             guildId: String,
             role: GuildRole,
             vararg contents: Pair<String, Any>,
-        ): Result<GuildRole> = action("create", "guild_id" to guildId, "role" to role, *contents)
+        ) = service.guildRoleCreate(platform, userId, guildId, role, contents)
 
         suspend fun update(
             guildId: String,
             roleId: String,
             role: GuildRole,
             vararg contents: Pair<String, Any>,
-        ): Result<Unit> =
-            action(
-                "update",
-                "guild_id" to guildId,
-                "role_id" to roleId,
-                "role" to role,
-                *contents,
-            )
+        ) = service.guildRoleUpdate(platform, userId, guildId, roleId, role, contents)
 
         suspend fun delete(
             guildId: String,
             roleId: String,
             vararg contents: Pair<String, Any>,
-        ): Result<Unit> = action("delete", "guild_id" to guildId, "role_id" to roleId, *contents)
+        ) = service.guildRoleDelete(platform, userId, guildId, roleId, contents)
     }
 }
 
 class LoginAction(
-    platform: String,
-    userId: String,
+    private val platform: String,
+    private val userId: String,
     service: AdapterActionService,
-) : ActionLeaf(platform, userId, "login", service) {
-    suspend fun get(vararg contents: Pair<String, Any>): Result<Login> = action("get", *contents)
+) : ActionLeaf(service) {
+    suspend fun get(vararg contents: Pair<String, Any>) = service.loginGet(platform, userId, contents)
 }
 
 class MessageAction(
     private val yutori: Yutori,
-    platform: String,
-    userId: String,
+    private val platform: String,
+    private val userId: String,
     service: AdapterActionService,
-) : ActionLeaf(platform, userId, "message", service) {
+) : ActionLeaf(service) {
     suspend fun create(
         channelId: String,
         content: List<MessageElement>,
         vararg contents: Pair<String, Any>,
-    ): Result<List<Message>> = action("create", "channel_id" to channelId, "content" to content, *contents)
+    ) = service.messageCreate(platform, userId, channelId, content, contents)
 
     suspend fun create(
         channelId: String,
         content: MessageBuilder.() -> Unit,
         vararg contents: Pair<String, Any>,
-    ): Result<List<Message>> = create(channelId, message(yutori, content), *contents)
+    ) = service.messageCreate(platform, userId, channelId, message(yutori, content), contents)
 
     suspend fun get(
         channelId: String,
         messageId: String,
         vararg contents: Pair<String, Any>,
-    ): Result<Message> = action("get", "channel_id" to channelId, "message_id" to messageId, *contents)
+    ) = service.messageGet(platform, userId, channelId, messageId, contents)
 
     suspend fun delete(
         channelId: String,
         messageId: String,
         vararg contents: Pair<String, Any>,
-    ): Result<Unit> = action("delete", "channel_id" to channelId, "message_id" to messageId, *contents)
+    ) = service.messageDelete(platform, userId, channelId, messageId, contents)
 
     suspend fun update(
         channelId: String,
         messageId: String,
         content: List<MessageElement>,
         vararg contents: Pair<String, Any>,
-    ): Result<Unit> =
-        action(
-            "update",
-            "channel_id" to channelId,
-            "message_id" to messageId,
-            "content" to content,
-            *contents,
-        )
+    ) = service.messageUpdate(platform, userId, channelId, messageId, content, contents)
 
     suspend fun update(
         channelId: String,
         messageId: String,
         content: MessageBuilder.() -> Unit,
         vararg contents: Pair<String, Any>,
-    ): Result<Unit> = update(channelId, messageId, message(yutori, content), *contents)
+    ) = service.messageUpdate(platform, userId, channelId, messageId, message(yutori, content), contents)
 
     suspend fun list(
         channelId: String,
@@ -322,36 +253,20 @@ class MessageAction(
         limit: Number? = null,
         order: BidiPagingList.Order? = null,
         vararg contents: Pair<String, Any>,
-    ): Result<BidiPagingList<Message>> =
-        action(
-            "list",
-            "channel_id" to channelId,
-            "next" to next,
-            "direction" to direction?.value,
-            "limit" to limit,
-            "order" to order?.value,
-            *contents,
-        )
+    ) = service.messageList(platform, userId, channelId, next, direction, limit, order, contents)
 }
 
 class ReactionAction(
-    platform: String,
-    userId: String,
+    private val platform: String,
+    private val userId: String,
     service: AdapterActionService,
-) : ActionLeaf(platform, userId, "reaction", service) {
+) : ActionLeaf(service) {
     suspend fun create(
         channelId: String,
         messageId: String,
         emoji: String,
         vararg contents: Pair<String, Any>,
-    ): Result<Unit> =
-        action(
-            "create",
-            "channel_id" to channelId,
-            "message_id" to messageId,
-            "emoji" to emoji,
-            *contents,
-        )
+    ) = service.reactionCreate(platform, userId, channelId, messageId, emoji, contents)
 
     suspend fun delete(
         channelId: String,
@@ -359,29 +274,14 @@ class ReactionAction(
         emoji: String,
         userId: String? = null,
         vararg contents: Pair<String, Any>,
-    ): Result<Unit> =
-        action(
-            "delete",
-            "channel_id" to channelId,
-            "message_id" to messageId,
-            "emoji" to emoji,
-            "user_id" to userId,
-            *contents,
-        )
+    ) = service.reactionDelete(platform, this.userId, channelId, messageId, emoji, userId, contents)
 
     suspend fun clear(
         channelId: String,
         messageId: String,
         emoji: String? = null,
         vararg contents: Pair<String, Any>,
-    ): Result<Unit> =
-        action(
-            "clear",
-            "channel_id" to channelId,
-            "message_id" to messageId,
-            "emoji" to emoji,
-            *contents,
-        )
+    ) = service.reactionClear(platform, userId, channelId, messageId, emoji, contents)
 
     suspend fun list(
         channelId: String,
@@ -389,73 +289,58 @@ class ReactionAction(
         emoji: String,
         next: String? = null,
         vararg contents: Pair<String, Any>,
-    ): Result<PagingList<User>> =
-        action(
-            "list",
-            "channel_id" to channelId,
-            "message_id" to messageId,
-            "emoji" to emoji,
-            "next" to next,
-            *contents,
-        )
+    ) = service.reactionList(platform, userId, channelId, messageId, emoji, next, contents)
 }
 
 class UserAction(
-    platform: String,
-    userId: String,
+    private val platform: String,
+    private val userId: String,
     service: AdapterActionService,
-) : ActionLeaf(platform, userId, "user", service) {
+) : ActionLeaf(service) {
     val channel = ChannelAction(platform, userId, service)
 
     suspend fun get(
         userId: String,
         vararg contents: Pair<String, Any>,
-    ): Result<User> = action("get", "user_id" to userId, *contents)
+    ) = service.userGet(platform, this.userId, userId, contents)
 
     class ChannelAction(
-        platform: String,
-        userId: String,
+        private val platform: String,
+        private val userId: String,
         service: AdapterActionService,
-    ) : ActionLeaf(platform, userId, "user.channel", service) {
+    ) : ActionLeaf(service) {
         suspend fun create(
             userId: String,
             guildId: String? = null,
             vararg contents: Pair<String, Any>,
-        ): Result<Channel> = action("create", "user_id" to userId, "guild_id" to guildId, *contents)
+        ) = service.userChannelCreate(platform, this.userId, userId, guildId, contents)
     }
 }
 
 class FriendAction(
-    platform: String,
-    userId: String,
+    private val platform: String,
+    private val userId: String,
     service: AdapterActionService,
-) : ActionLeaf(platform, userId, "friend", service) {
+) : ActionLeaf(service) {
     suspend fun list(
         next: String? = null,
         vararg contents: Pair<String, Any>,
-    ): Result<PagingList<User>> = action("list", "next" to next, *contents)
+    ) = service.friendList(platform, userId, next, contents)
 
     suspend fun approve(
         messageId: String,
         approve: Boolean,
         comment: String? = null,
         vararg contents: Pair<String, Any>,
-    ): Result<Unit> =
-        action(
-            "approve",
-            "message_id" to messageId,
-            "approve" to approve,
-            "comment" to comment,
-            *contents,
-        )
+    ) = service.friendApprove(platform, userId, messageId, approve, comment, contents)
 }
 
 class UploadAction(
-    platform: String,
-    userId: String,
+    private val platform: String,
+    private val userId: String,
     service: AdapterActionService,
-) : ActionLeaf(platform, userId, "upload", service) {
-    suspend fun create(vararg contents: FormData): Result<Map<String, String>> = upload("create", contents.toList())
+) : ActionLeaf(service) {
+    suspend fun create(vararg contents: FormData) = service.uploadCreate(platform, userId, contents)
 }
 
 class AdminAction(
@@ -466,22 +351,22 @@ class AdminAction(
 
     class LoginAction(
         service: AdapterActionService,
-    ) : ActionLeaf(null, null, "login", service) {
-        suspend fun list(vararg contents: Pair<String, Any>): Result<List<Login>> = action("list", *contents)
+    ) : ActionLeaf(service) {
+        suspend fun list(vararg contents: Pair<String, Any>) = service.adminLoginList(contents)
     }
 
     class WebhookAction(
         service: AdapterActionService,
-    ) : ActionLeaf(null, null, "webhook", service) {
+    ) : ActionLeaf(service) {
         suspend fun create(
             url: String,
             token: String? = null,
             vararg contents: Pair<String, Any>,
-        ): Result<Unit> = action("list", "url" to url, "token" to token, *contents)
+        ) = service.adminWebhookCreate(url, token, contents)
 
         suspend fun delete(
             url: String,
             vararg contents: Pair<String, Any>,
-        ): Result<Unit> = action("approve", "url" to url, *contents)
+        ) = service.adminWebhookDelete(url, contents)
     }
 }

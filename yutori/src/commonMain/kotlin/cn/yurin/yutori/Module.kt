@@ -6,7 +6,6 @@ abstract class Module(
     val alias: String?,
 ) {
     abstract fun install(builder: YutoriBuilder)
-
     abstract fun uninstall(builder: YutoriBuilder)
 
     companion object

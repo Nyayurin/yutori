@@ -8,51 +8,28 @@ import kotlin.jvm.JvmName
 
 @Serializable
 abstract class SigningRequest
-
 interface PlatformNotNullRequest
-
 interface SelfIdNotNullRequest
-
 interface ChannelIdNotNullRequest
-
 interface GuildIdNotNullRequest
-
 interface NextNullableRequest
-
 interface ChannelDataNotNullRequest
-
 interface DurationNotNullRequest
-
 interface UserIdNotNullRequest
-
 interface GuildIdNullableRequest
-
 interface MessageIdNotNullRequest
-
 interface ApproveNotNullRequest
-
 interface CommentNotNullRequest
-
 interface PermanentNullableRequest
-
 interface CommentNullableRequest
-
 interface RoleIdNotNullRequest
-
 interface RoleNotNullRequest
-
 interface ContentNotNullRequest
-
 interface DirectionNullableRequest
-
 interface LimitNullableRequest
-
 interface OrderNullableRequest
-
 interface EmojiNotNullRequest
-
 interface UserIdNullableRequest
-
 interface EmojiNullableRequest
 
 val <T> Request<T>.platform: String where T : SigningRequest, T : PlatformNotNullRequest
