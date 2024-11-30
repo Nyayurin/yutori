@@ -10,7 +10,7 @@ abstract class AdapterActionService {
         headerUserId: String,
         channelId: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Channel>
+    ): Channel
 
     abstract suspend fun channelList(
         headerPlatform: String,
@@ -18,7 +18,7 @@ abstract class AdapterActionService {
         guildId: String,
         next: String?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<PagingList<Channel>>
+    ): PagingList<Channel>
 
     abstract suspend fun channelCreate(
         headerPlatform: String,
@@ -26,7 +26,7 @@ abstract class AdapterActionService {
         guildId: String,
         data: Channel,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Channel>
+    ): Channel
 
     abstract suspend fun channelUpdate(
         headerPlatform: String,
@@ -34,14 +34,14 @@ abstract class AdapterActionService {
         channelId: String,
         data: Channel,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun channelDelete(
         headerPlatform: String,
         headerUserId: String,
         channelId: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun channelMute(
         headerPlatform: String,
@@ -49,21 +49,21 @@ abstract class AdapterActionService {
         channelId: String,
         duration: Number,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun guildGet(
         headerPlatform: String,
         headerUserId: String,
         guildId: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Guild>
+    ): Guild
 
     abstract suspend fun guildList(
         headerPlatform: String,
         headerUserId: String,
         next: String?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<PagingList<Guild>>
+    ): PagingList<Guild>
 
     abstract suspend fun guildApprove(
         headerPlatform: String,
@@ -72,7 +72,7 @@ abstract class AdapterActionService {
         approve: Boolean,
         comment: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun guildMemberGet(
         headerPlatform: String,
@@ -80,7 +80,7 @@ abstract class AdapterActionService {
         guildId: String,
         userId: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<GuildMember>
+    ): GuildMember
 
     abstract suspend fun guildMemberList(
         headerPlatform: String,
@@ -88,7 +88,7 @@ abstract class AdapterActionService {
         guildId: String,
         next: String?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<PagingList<GuildMember>>
+    ): PagingList<GuildMember>
 
     abstract suspend fun guildMemberKick(
         headerPlatform: String,
@@ -97,7 +97,7 @@ abstract class AdapterActionService {
         userId: String,
         permanent: Boolean?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun guildMemberMute(
         headerPlatform: String,
@@ -106,7 +106,7 @@ abstract class AdapterActionService {
         userId: String,
         duration: Number,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun guildMemberApprove(
         headerPlatform: String,
@@ -115,7 +115,7 @@ abstract class AdapterActionService {
         approve: Boolean,
         comment: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun guildMemberRoleSet(
         headerPlatform: String,
@@ -124,7 +124,7 @@ abstract class AdapterActionService {
         userId: String,
         roleId: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun guildMemberRoleUnset(
         headerPlatform: String,
@@ -133,7 +133,7 @@ abstract class AdapterActionService {
         userId: String,
         roleId: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun guildRoleList(
         headerPlatform: String,
@@ -141,7 +141,7 @@ abstract class AdapterActionService {
         guildId: String,
         next: String?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<PagingList<GuildRole>>
+    ): PagingList<GuildRole>
 
     abstract suspend fun guildRoleCreate(
         headerPlatform: String,
@@ -149,7 +149,7 @@ abstract class AdapterActionService {
         guildId: String,
         role: GuildRole,
         contents: Array<out Pair<String, Any>>,
-    ): Result<GuildRole>
+    ): GuildRole
 
     abstract suspend fun guildRoleUpdate(
         headerPlatform: String,
@@ -158,7 +158,7 @@ abstract class AdapterActionService {
         roleId: String,
         role: GuildRole,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun guildRoleDelete(
         headerPlatform: String,
@@ -166,13 +166,13 @@ abstract class AdapterActionService {
         guildId: String,
         roleId: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun loginGet(
         headerPlatform: String,
         headerUserId: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Login>
+    ): Login
 
     abstract suspend fun messageCreate(
         headerPlatform: String,
@@ -180,7 +180,7 @@ abstract class AdapterActionService {
         channelId: String,
         content: List<MessageElement>,
         contents: Array<out Pair<String, Any>>,
-    ): Result<List<Message>>
+    ): List<Message>
 
     abstract suspend fun messageGet(
         headerPlatform: String,
@@ -188,7 +188,7 @@ abstract class AdapterActionService {
         channelId: String,
         messageId: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Message>
+    ): Message
 
     abstract suspend fun messageDelete(
         headerPlatform: String,
@@ -196,7 +196,7 @@ abstract class AdapterActionService {
         channelId: String,
         messageId: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun messageUpdate(
         headerPlatform: String,
@@ -205,7 +205,7 @@ abstract class AdapterActionService {
         messageId: String,
         content: List<MessageElement>,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun messageList(
         headerPlatform: String,
@@ -216,7 +216,7 @@ abstract class AdapterActionService {
         limit: Number?,
         order: BidiPagingList.Order?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<BidiPagingList<Message>>
+    ): BidiPagingList<Message>
 
     abstract suspend fun reactionCreate(
         headerPlatform: String,
@@ -225,7 +225,7 @@ abstract class AdapterActionService {
         messageId: String,
         emoji: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun reactionDelete(
         headerPlatform: String,
@@ -235,7 +235,7 @@ abstract class AdapterActionService {
         emoji: String,
         userId: String?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun reactionClear(
         headerPlatform: String,
@@ -244,7 +244,7 @@ abstract class AdapterActionService {
         messageId: String,
         emoji: String?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun reactionList(
         headerPlatform: String,
@@ -254,14 +254,14 @@ abstract class AdapterActionService {
         emoji: String,
         next: String?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<PagingList<User>>
+    ): PagingList<User>
 
     abstract suspend fun userGet(
         headerPlatform: String,
         headerUserId: String,
         userId: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<User>
+    ): User
 
     abstract suspend fun userChannelCreate(
         headerPlatform: String,
@@ -269,14 +269,14 @@ abstract class AdapterActionService {
         userId: String,
         guildId: String?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Channel>
+    ): Channel
 
     abstract suspend fun friendList(
         headerPlatform: String,
         headerUserId: String,
         next: String?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<PagingList<User>>
+    ): PagingList<User>
 
     abstract suspend fun friendApprove(
         headerPlatform: String,
@@ -285,26 +285,28 @@ abstract class AdapterActionService {
         approve: Boolean,
         comment: String?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun uploadCreate(
         headerPlatform: String,
         headerUserId: String,
         contents: Array<out FormData>,
-    ): Result<Map<String, String>>
+    ): Map<String, String>
 
-    abstract suspend fun adminLoginList(contents: Array<out Pair<String, Any>>): Result<List<Login>>
+    abstract suspend fun adminLoginList(
+        contents: Array<out Pair<String, Any>>
+    ): List<Login>
 
     abstract suspend fun adminWebhookCreate(
         url: String,
         token: String?,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 
     abstract suspend fun adminWebhookDelete(
         url: String,
         contents: Array<out Pair<String, Any>>,
-    ): Result<Unit>
+    )
 }
 
 abstract class AdapterEventService(
