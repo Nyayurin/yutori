@@ -135,7 +135,7 @@ data class ServerContext<T : SigningRequest>(
     val yutori: Yutori,
 )
 
-class Event<T : SigningEvent>(
+data class Event<T : SigningEvent>(
     val alias: String?,
     val properties: Map<String, Any?>,
 ) {

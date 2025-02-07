@@ -4,7 +4,7 @@ on:
     branches: [ master ]
 jobs:
   publish-kotlin-multiplatform:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     permissions:
       contents: read
       packages: write
