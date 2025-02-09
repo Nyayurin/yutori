@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     alias(libs.plugins.multiplatform)
-    alias(libs.plugins.serialization)
     alias(libs.plugins.android.library)
     id("maven-publish")
 }
@@ -73,8 +72,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(libs.kotlinx.coroutines.core)
-            api(libs.kotlinx.datetime)
-            api(libs.kotlinx.serialization.json)
             api(libs.kermit)
         }
     }

@@ -6,7 +6,6 @@ import cn.yurin.yutori.message.ExtendedMessageBuilder
 import cn.yurin.yutori.message.MessageBuilder
 import cn.yurin.yutori.message.element.*
 import cn.yurin.yutori.message.element.Message
-import co.touchlab.kermit.Logger
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -38,7 +37,7 @@ class Yutori(
                     try {
                         module.start(this@Yutori)
                     } catch (e: Exception) {
-                        Logger.w(e) { "Module start failed" }
+                        Log.w(e) { "Module start failed" }
                     }
                 }
             }
@@ -147,7 +146,7 @@ class YutoriBuilder(
     ) {
         var exceptionHandler =
             CoroutineExceptionHandler { _, throwable ->
-                Logger.w(name, throwable) { "监听器发生异常" }
+                Log.w(throwable) { "Exception in listener: $name" }
             }
         var container = AdapterListenersContainerBuilder()
 
@@ -163,7 +162,7 @@ class YutoriBuilder(
     ) {
         var exceptionHandler =
             CoroutineExceptionHandler { _, throwable ->
-                Logger.w(name, throwable) { "监听器发生异常" }
+                Log.w(throwable) { "Exception in listener: $name" }
             }
         var container = ServerListenersContainerBuilder()
 

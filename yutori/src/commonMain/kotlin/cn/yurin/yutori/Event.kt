@@ -2,10 +2,8 @@
 
 package cn.yurin.yutori
 
-import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmName
 
-@Serializable
 abstract class SigningEvent :
     ArgvNullableEvent,
     ButtonNullableEvent,

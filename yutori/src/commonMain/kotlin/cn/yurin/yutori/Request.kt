@@ -3,10 +3,8 @@
 package cn.yurin.yutori
 
 import cn.yurin.yutori.message.element.MessageElement
-import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmName
 
-@Serializable
 abstract class SigningRequest
 interface PlatformNotNullRequest
 interface SelfIdNotNullRequest
