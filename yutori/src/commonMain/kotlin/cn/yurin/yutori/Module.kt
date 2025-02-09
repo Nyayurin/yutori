@@ -3,38 +3,38 @@
 package cn.yurin.yutori
 
 abstract class Module(
-    val alias: String?,
+	val alias: String?,
 ) {
-    abstract fun install(builder: YutoriBuilder)
-    abstract fun uninstall(builder: YutoriBuilder)
+	abstract fun install(builder: YutoriBuilder)
+	abstract fun uninstall(builder: YutoriBuilder)
 
-    companion object
+	companion object
 }
 
 interface Startable {
-    suspend fun start(yutori: Yutori)
+	suspend fun start(yutori: Yutori)
 }
 
 interface Stopable {
-    fun stop(yutori: Yutori)
+	fun stop(yutori: Yutori)
 }
 
 abstract class Adapter(
-    alias: String?,
+	alias: String?,
 ) : Module(alias),
-    Startable,
-    Stopable {
-    companion object
+	Startable,
+	Stopable {
+	companion object
 }
 
 abstract class Server(
-    alias: String?,
+	alias: String?,
 ) : Module(alias),
-    Startable,
-    Stopable {
-    abstract suspend fun pushEvent(event: Event<SigningEvent>)
+	Startable,
+	Stopable {
+	abstract suspend fun pushEvent(event: Event<SigningEvent>)
 
-    companion object
+	companion object
 }
 
 interface Reinstallable

@@ -10,13 +10,13 @@ import cn.yurin.yutori.message.element.Text
 annotation class BuilderMarker
 
 object MessageUtil {
-    fun select(
-        element: String,
-        vararg elements: MessageElement,
-    ): MessageElement? {
-        for (e in elements) return e.select(element) ?: continue
-        return null
-    }
+	fun select(
+		element: String,
+		vararg elements: MessageElement,
+	): MessageElement? {
+		for (e in elements) return e.select(element) ?: continue
+		return null
+	}
 }
 
 fun Event<*>.nick() = nullableMember?.nick ?: nullableUser?.nick ?: nullableUser?.name

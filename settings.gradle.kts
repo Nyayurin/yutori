@@ -2,16 +2,17 @@ rootProject.name = "Yutori"
 include(":yutori")
 
 pluginManagement {
-    repositories {
-        google()
-        gradlePluginPortal()
-        mavenCentral()
-    }
+	repositories {
+		google()
+		gradlePluginPortal()
+		mavenCentral()
+	}
 }
 
 dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-    }
+	@Suppress("UnstableApiUsage")
+	repositories {
+	    google()
+	    mavenCentral()
+	}
 }

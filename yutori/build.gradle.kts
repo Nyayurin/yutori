@@ -1,123 +1,123 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
-    alias(libs.plugins.multiplatform)
-    alias(libs.plugins.android.library)
-    id("maven-publish")
+	alias(libs.plugins.multiplatform)
+	alias(libs.plugins.android.library)
+	id("maven-publish")
 }
 
 group = "cn.yurin.yutori"
 
 kotlin {
-    jvmToolchain(21)
+	jvmToolchain(21)
 
-    jvm()
+	jvm()
 
-    androidTarget {
-        publishLibraryVariants("release", "debug")
-    }
+	androidTarget {
+		publishLibraryVariants("release", "debug")
+	}
 
-    js {
-        browser {
-            webpackTask {
-                mainOutputFileName = "yutori.js"
-            }
-        }
-        nodejs()
-        binaries.library()
-    }
+	js {
+		browser {
+			webpackTask {
+				mainOutputFileName = "yutori.js"
+			}
+		}
+		nodejs()
+		binaries.library()
+	}
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        browser {
-            webpackTask {
-                mainOutputFileName = "yutori.js"
-            }
-        }
-        nodejs()
-        binaries.library()
-    }
+	@OptIn(ExperimentalWasmDsl::class)
+	wasmJs {
+		browser {
+			webpackTask {
+				mainOutputFileName = "yutori.js"
+			}
+		}
+		nodejs()
+		binaries.library()
+	}
 
-    // Apple(IOS & MacOS)
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64(),
-        macosX64(),
-        macosArm64(),
-    ).forEach {
-        it.binaries.framework {
-            baseName = "yutori"
-            isStatic = true
-        }
-    }
+	// Apple(IOS & MacOS)
+	listOf(
+		iosX64(),
+		iosArm64(),
+		iosSimulatorArm64(),
+		macosX64(),
+		macosArm64(),
+	).forEach {
+		it.binaries.framework {
+			baseName = "yutori"
+			isStatic = true
+		}
+	}
 
-    // Linux
-    listOf(
-        linuxX64(),
-        linuxArm64(),
-    ).forEach {
-        it.binaries.staticLib {
-            baseName = "yutori"
-        }
-    }
+	// Linux
+	listOf(
+		linuxX64(),
+		linuxArm64(),
+	).forEach {
+		it.binaries.staticLib {
+			baseName = "yutori"
+		}
+	}
 
-    // Windows
-    mingwX64 {
-        binaries.staticLib {
-            baseName = "yutori"
-        }
-    }
+	// Windows
+	mingwX64 {
+		binaries.staticLib {
+			baseName = "yutori"
+		}
+	}
 
-    sourceSets {
-        commonMain.dependencies {
-            api(libs.kotlinx.coroutines.core)
-            api(libs.kermit)
-        }
-    }
+	sourceSets {
+		commonMain.dependencies {
+			api(libs.kotlinx.coroutines.core)
+			api(libs.kermit)
+		}
+	}
 }
 
 android {
-    namespace = "cn.yurin.yutori"
-    compileSdk = 34
+	namespace = "cn.yurin.yutori"
+	compileSdk = 34
 
-    defaultConfig {
-        minSdk = 24
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
+	defaultConfig {
+		minSdk = 24
+	}
+	compileOptions {
+		sourceCompatibility = JavaVersion.VERSION_21
+		targetCompatibility = JavaVersion.VERSION_21
+	}
 }
 
 publishing {
-    publications.withType<MavenPublication> {
-        pom {
-            name = "Yutori"
-            version = System.getenv("VERSION")
-            description = "Kotlin Multiplatform library"
-            url = "https://github.com/Nyayurin/yutori"
+	publications.withType<MavenPublication> {
+		pom {
+			name = "Yutori"
+			version = System.getenv("VERSION")
+			description = "Kotlin Multiplatform library"
+			url = "https://github.com/Nyayurin/yutori"
 
-            developers {
-                developer {
-                    id = "Nyayurin"
-                    name = "Yurin"
-                    email = "Nyayurn@outlook.com"
-                }
-            }
-            scm {
-                url = "https://github.com/Nyayurin/yutori"
-            }
-        }
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/Nyayurin/yutori")
-                credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
-                }
-            }
-        }
-    }
+			developers {
+				developer {
+					id = "Nyayurin"
+					name = "Yurin"
+					email = "Nyayurn@outlook.com"
+				}
+			}
+			scm {
+				url = "https://github.com/Nyayurin/yutori"
+			}
+		}
+		repositories {
+			maven {
+				name = "GitHubPackages"
+				url = uri("https://maven.pkg.github.com/Nyayurin/yutori")
+				credentials {
+					username = System.getenv("GITHUB_ACTOR")
+					password = System.getenv("GITHUB_TOKEN")
+				}
+			}
+		}
+	}
 }

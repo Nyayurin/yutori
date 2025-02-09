@@ -1,9 +1,9 @@
 package cn.yurin.yutori
 
 class ModuleReinstallException(
-    module: String,
+	module: String,
 ) : RuntimeException(module)
 
 class ModuleAliasDuplicateException(
-    alias: String,
+	alias: String,
 ) : RuntimeException(alias)
